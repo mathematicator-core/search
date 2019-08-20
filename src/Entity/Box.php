@@ -74,7 +74,7 @@ class Box
 	{
 		$this->type = $type;
 		$this->title = $title;
-		$this->text = Strings::normalize($text);
+		$this->text = Strings::normalize((string) $text);
 		$this->url = $url === '' ? null : $url;
 		$this->setRank($rank);
 	}

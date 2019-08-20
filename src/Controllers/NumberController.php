@@ -1,21 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathematicator\SearchController;
+
 
 use App\VikiTron\Model\Number\NumberHelper;
 use Math\Steps\Model\RomanIntSteps;
 use Mathematicator\Engine\DivisionByZero;
+use Mathematicator\Engine\Helper\Czech;
+use Mathematicator\Engine\Helper\DateTime;
+use Mathematicator\Engine\Translator;
 use Mathematicator\Numbers\NumberFactory;
 use Mathematicator\Numbers\SmartNumber;
 use Mathematicator\Search\Box;
 use Model\Math\Step\StepFactory;
-use Model\Translator\Translator;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
-use ShopUp\FunctionUtils\Czech;
-use ShopUp\FunctionUtils\Date;
-use ShopUp\FunctionUtils\Time;
 
 class NumberController extends BaseController
 {
@@ -325,11 +327,11 @@ class NumberController extends BaseController
 		$currentTimestamp = \time();
 		$dateDiff = abs($currentTimestamp - $int);
 
-		$timestamp = '<b>' . Date::getDateTimeIso((int) $int) . '</b>'
+		$timestamp = '<b>' . DateTime::getDateTimeIso((int) $int) . '</b>'
 			. '<br><br>'
 			. ($currentTimestamp < $int
-				? 'Bude za ' . $dateDiff . ' sekund (' . Time::formatTimeAgo($currentTimestamp - $dateDiff) . ')'
-				: 'Bylo před ' . $dateDiff . ' sekundami (' . Time::formatTimeAgo($int) . ').'
+				? 'Bude za ' . $dateDiff . ' sekund (' . DateTime::formatTimeAgo($currentTimestamp - $dateDiff) . ')'
+				: 'Bylo před ' . $dateDiff . ' sekundami (' . DateTime::formatTimeAgo($int) . ').'
 			)
 			. ((int) date('Y', $int) >= 2038
 				? '<br><br>Pozor: Po roce 2038 nemusí tento timestamp fungovat na 32-bitových počítačích, protože překračuje maximální hodnotu, kterou je možné uložit do 32-bitového integeru.'
@@ -471,6 +473,12 @@ class NumberController extends BaseController
 		}
 	}
 
+	/**
+	 * @param string $data
+	 * @param int $x
+	 * @param int $y
+	 * @return string
+	 */
 	private function renderTable(string $data, int $x, int $y): string
 	{
 		$return = '';

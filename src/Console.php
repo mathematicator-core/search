@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathematicator\Search;
 
 
 use Mathematicator\Engine\EngineSingleResult;
+use Mathematicator\Engine\Helper\Terminal;
 use Nette\Utils\Strings;
-use ShopUp\FunctionUtils\Terminal;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

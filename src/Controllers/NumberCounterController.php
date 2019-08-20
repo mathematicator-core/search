@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathematicator\SearchController;
+
 
 use App\VikiTron\Model\Number\NumberHelper;
 use Mathematicator\Calculator\Calculator;
 use Mathematicator\Calculator\Step;
 use Mathematicator\Engine\DivisionByZero;
+use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\MathErrorException;
+use Mathematicator\Engine\Translator;
 use Mathematicator\Engine\UndefinedOperationException;
 use Mathematicator\Search\Box;
 use Mathematicator\Tokenizer\Token\ComparatorToken;
@@ -18,11 +23,9 @@ use Mathematicator\Tokenizer\Token\OperatorToken;
 use Mathematicator\Tokenizer\Tokenizer;
 use Model\Math\MathFunction\FunctionDoesNotExistsException;
 use Model\Math\Step\StepFactory;
-use Model\Translator\Translator;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
-use ShopUp\FunctionUtils\Czech;
 
 class NumberCounterController extends BaseController
 {
@@ -216,7 +219,7 @@ class NumberCounterController extends BaseController
 						. '<span style="font-size:27pt;padding:8px">-</span>'
 						. '</div>'
 						. '<div style="border-left:1px solid #aaa;float:left;min-height:70px;margin:4px;padding:4px">'
-						. $this->renderNumber(abs($int))
+						. $this->renderNumber((string) abs($int))
 						. '</div></div>';
 				}
 			} else {
@@ -447,7 +450,7 @@ class NumberCounterController extends BaseController
 						$zeros = preg_replace('/^\d+?(0+)$/', '$1', $int);
 						$this->addBox(Box::TYPE_LATEX)
 							->setTitle('Počet nul na konci')
-							->setText(\strlen($zeros));
+							->setText((string) \strlen($zeros));
 					}
 				}
 			}
@@ -515,10 +518,10 @@ class NumberCounterController extends BaseController
 	}
 
 	/**
-	 * @param int $int
+	 * @param string $int
 	 * @return string
 	 */
-	private function renderNumber(int $int): string
+	private function renderNumber(string $int): string
 	{
 		$render = '';
 		for ($i = 1; $i <= $int; $i++) {

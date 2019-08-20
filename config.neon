@@ -5,7 +5,6 @@ parameters:
 services:
 	- Mathematicator\Search\Search
 	search: Mathematicator\Search\SearchAccessor
-	searchContent: Mathematicator\Search\SearchContent # deprecated!!!
 	searchConsole: Mathematicator\Search\Console
 	boxRenderer: Mathematicator\Search\Renderer
 

@@ -4,11 +4,11 @@ namespace Mathematicator\SearchController;
 
 
 use Martindilling\Sunny\Sunny;
+use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Source;
 use Mathematicator\Search\Box;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
-use ShopUp\FunctionUtils\Czech;
 use Solaris\MoonPhase;
 
 class DateController extends BaseController
@@ -24,7 +24,7 @@ class DateController extends BaseController
 
 	public function actionDefault(): void
 	{
-		$date = new DateTime($this->getQuery());
+		$date = DateTime::from($this->getQuery());
 		$timestamp = $date->getTimestamp();
 
 		$this->setInterpret(
