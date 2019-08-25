@@ -7,7 +7,7 @@ namespace Mathematicator\SearchController;
 
 use Mathematicator\Engine\Source;
 use Mathematicator\Search\Box;
-use Model\Math\Statistics\StatisticsManager;
+use Mathematicator\Statistics\StatisticsManager;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 

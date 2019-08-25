@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Mathematicator\SearchController;
 
 
-use App\VikiTron\Model\Number\NumberHelper;
-use Math\Steps\Model\RomanIntSteps;
 use Mathematicator\Engine\DivisionByZero;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Helper\DateTime;
 use Mathematicator\Engine\Translator;
+use Mathematicator\NumberHelper;
 use Mathematicator\Numbers\NumberFactory;
 use Mathematicator\Numbers\SmartNumber;
 use Mathematicator\Search\Box;
-use Model\Math\Step\StepFactory;
+use Mathematicator\Step\RomanIntSteps;
+use Mathematicator\Step\StepFactory;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;

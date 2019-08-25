@@ -1,6 +1,6 @@
 parameters:
 	search:
-		controllerNamespace: 'App\Model\Search\SearchController\{{name}}Controller'
+		controllerNamespace: 'Mathematicator\SearchController\{{name}}Controller'
 
 services:
 	- Mathematicator\Search\Search

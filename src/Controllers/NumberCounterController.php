@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mathematicator\SearchController;
 
 
-use App\VikiTron\Model\Number\NumberHelper;
 use Mathematicator\Calculator\Calculator;
 use Mathematicator\Calculator\Step;
 use Mathematicator\Engine\DivisionByZero;
@@ -13,7 +12,10 @@ use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\MathErrorException;
 use Mathematicator\Engine\Translator;
 use Mathematicator\Engine\UndefinedOperationException;
+use Mathematicator\MathFunction\FunctionDoesNotExistsException;
+use Mathematicator\NumberHelper;
 use Mathematicator\Search\Box;
+use Mathematicator\Step\StepFactory;
 use Mathematicator\Tokenizer\Token\ComparatorToken;
 use Mathematicator\Tokenizer\Token\EquationToken;
 use Mathematicator\Tokenizer\Token\InfinityToken;
@@ -21,8 +23,6 @@ use Mathematicator\Tokenizer\Token\IToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Token\OperatorToken;
 use Mathematicator\Tokenizer\Tokenizer;
-use Model\Math\MathFunction\FunctionDoesNotExistsException;
-use Model\Math\Step\StepFactory;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;

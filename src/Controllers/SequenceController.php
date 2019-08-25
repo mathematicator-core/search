@@ -9,11 +9,11 @@ use Mathematicator\Calculator\Operation\AddNumbers;
 use Mathematicator\Engine\Source;
 use Mathematicator\Search\Box;
 use Mathematicator\Statistics\Entity\Sequence;
+use Mathematicator\Statistics\StatisticsManager;
+use Mathematicator\Step\StepFactory;
 use Mathematicator\Tokenizer\Token\IToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Tokenizer;
-use Model\Math\Statistics\StatisticsManager;
-use Model\Math\Step\StepFactory;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 
