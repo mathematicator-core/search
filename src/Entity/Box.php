@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathematicator\Search;
+
 
 use Latte\Runtime\Filters;
 use Mathematicator\Calculator\Step;
 use Nette\SmartObject;
 use Nette\Utils\Json;
 use Nette\Utils\Strings;
-
 
 class Box
 {

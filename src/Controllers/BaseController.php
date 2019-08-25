@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathematicator\SearchController;
+
 
 use Mathematicator\Engine\InvalidBoxException;
 use Mathematicator\Engine\InvalidDataException;

@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathematicator\SearchController;
+
 
 use Mathematicator\Calculator\Operation\AddNumbers;
 use Mathematicator\Engine\Source;
