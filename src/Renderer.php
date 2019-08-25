@@ -1,42 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathematicator\Search;
 
-use Mathematicator\Search\Box;
+
 use Mathematicator\Engine\MathematicatorException;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
-use Texy\Texy;
 
-class Renderer
+final class Renderer
 {
 
 	/**
-	 * @var Texy
+	 * @param mixed $data
+	 * @param string $type
+	 * @return string
+	 * @throws MathematicatorException
 	 */
-	private $texy;
-
-	public function __construct(Texy $texy)
-	{
-		$this->texy = $texy;
-	}
-
 	public function render($data, string $type): string
 	{
-		switch ($type) {
-			case Box::TYPE_TEXT:
-				return $this->renderText($data);
-			case Box::TYPE_LATEX:
-				return $this->renderLatex($data);
-			case Box::TYPE_HTML:
-				return $this->renderHtml($data);
-			case Box::TYPE_TABLE:
-				return $this->renderTable($data);
+		static $services = [
+			Box::TYPE_TEXT => 'renderText',
+			Box::TYPE_LATEX => 'renderLatex',
+			Box::TYPE_HTML => 'renderHtml',
+			Box::TYPE_TABLE => 'renderTable',
+		];
+
+		if (isset($services[$type])) {
+			return $this->{$services[$type]}($data);
 		}
 
 		throw new MathematicatorException('Unknown box type "' . $type . '"');
 	}
 
+	/**
+	 * @param string $data
+	 * @return string
+	 */
 	public function renderTable(string $data): string
 	{
 		$return = '';
@@ -47,20 +48,22 @@ class Renderer
 				if (Strings::startsWith($column, '!')) {
 					$return .= '<th style="text-align:right;max-width:200px">' . preg_replace('/^!/', '', $column) . '</th>';
 				} else {
-					$return .= '<td>' . preg_replace_callback('/^(?<left>[=])?(?<content>.+?)(?<right>[=])?$/', function ($row) {
-							if ($row['left'] === $row['right']) {
-								switch ($row['left']) {
-									case '=':
+					$return .= '<td>'
+						. preg_replace_callback(
+							'/^(?<left>[=])?(?<content>.+?)(?<right>[=])?$/',
+							function (array $row): string {
+								if ($row['left'] === $row['right']) {
+									if ($row['left'] === '=') {
 										return '<div style="text-align:center">' . $row['content'] . '</div>';
-										break;
+									}
 
-									default:
-										return $row['content'];
+
+									return (string) $row['content'];
 								}
-							} else {
-								return $row[0];
-							}
-						}, $column) . '</td>';
+
+								return (string) $row[0];
+							}, $column)
+						. '</td>';
 				}
 			}
 			$return .= '</tr>';
@@ -69,6 +72,10 @@ class Renderer
 		return '<table>' . $return . '</table>';
 	}
 
+	/**
+	 * @param string $title
+	 * @return string
+	 */
 	public function renderTitle(string $title): string
 	{
 		$title = $title ?? 'Box bez názvu';
@@ -89,12 +96,22 @@ class Renderer
 		return $return;
 	}
 
-	private function renderText(string $data): string
+	/**
+	 * @internal
+	 * @param string $data
+	 * @return string
+	 */
+	public function renderText(string $data): string
 	{
-		return $this->texy->process($data);
+		return TextRenderer::process($data);
 	}
 
-	private function renderLatex(string $data): string
+	/**
+	 * @internal
+	 * @param string $data
+	 * @return string
+	 */
+	public function renderLatex(string $data): string
 	{
 		$return = '';
 
@@ -112,11 +129,12 @@ class Renderer
 	}
 
 	/**
+	 * @internal
 	 * @param string $number
 	 * @param bool $isLookLeft
 	 * @return string
 	 */
-	private function numberFormat(string $number, bool $isLookLeft = true): string
+	public function numberFormat(string $number, bool $isLookLeft = true): string
 	{
 		$return = null;
 
@@ -162,8 +180,14 @@ class Renderer
 		return $return === null ? $number : preg_replace('/(^\\\\\s*)|(\\\\\s*$)/', '', $return);
 	}
 
-	private function renderHtml(string $data): string
+	/**
+	 * @internal
+	 * @param string $data
+	 * @return string
+	 */
+	public function renderHtml(string $data): string
 	{
+		// TODO: Implement automatic escaping and tag-whitelist!
 		return $data;
 	}
 

@@ -10,6 +10,7 @@
 	],
 	"require": {
 		"php": ">=7.1",
+		"nette/utils": "^3.0",
 		"mathematicator-core/engine": "~1.0",
 		"mathematicator-core/router": "~1.0",
 		"mathematicator-core/calculator": "~1.0",
