@@ -112,7 +112,7 @@ class NumberController extends BaseController
 			$this->setInterpret(
 				Box::TYPE_LATEX,
 				'\frac{' . $fraction[0] . '}{' . $fraction[1]
-				. '} ≈ ' . Strings::substring($this->number->getFloat(),
+				. '} ≈ ' . Strings::substring((string) $this->number->getFloat(),
 					0, 50
 				)
 			);
@@ -331,7 +331,7 @@ class NumberController extends BaseController
 			. '<br><br>'
 			. ($currentTimestamp < $int
 				? 'Bude za ' . $dateDiff . ' sekund (' . DateTime::formatTimeAgo($currentTimestamp - $dateDiff) . ')'
-				: 'Bylo před ' . $dateDiff . ' sekundami (' . DateTime::formatTimeAgo($int) . ').'
+				: 'Bylo před ' . $dateDiff . ' sekundami (' . DateTime::formatTimeAgo((int) $int) . ').'
 			)
 			. ((int) date('Y', $int) >= 2038
 				? '<br><br>Pozor: Po roce 2038 nemusí tento timestamp fungovat na 32-bitových počítačích, protože překračuje maximální hodnotu, kterou je možné uložit do 32-bitového integeru.'
@@ -360,7 +360,7 @@ class NumberController extends BaseController
 					$outputFactor .= ' * ';
 				}
 				$items += $e;
-				if (preg_match('/^(.+)E[+-]?(.+)$/', $b, $bParser)) {
+				if (preg_match('/^(.+)E[+-]?(.+)$/', (string) $b, $bParser)) {
 					$outputFactor .= '\left({' . $bParser[1] . '}^{' . $bParser[2] . '}\right)';
 				} else {
 					$outputFactor .= $b . ($e > 1 ? '^{' . $e . '}' : '');

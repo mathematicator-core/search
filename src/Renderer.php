@@ -165,19 +165,19 @@ final class Renderer
 				}
 			}
 		} elseif (preg_match('/^0*(?<left>.+?)\.(?<right>.+?)0*$/', $number, $parser)) {
-			$return = preg_replace('/\.0*$/', '',
+			$return = (string) preg_replace('/\.0*$/', '',
 				$this->numberFormat($parser['left'])
 				. '.' . $this->numberFormat($parser['right'], false)
 			);
 		} else {
-			$formattedNumber = preg_replace('/\.0+$/', '', number_format($number, 64, '.', ' '));
+			$formattedNumber = (string) preg_replace('/\.0+$/', '', number_format((float) $number, 64, '.', ' '));
 
 			$return = $formattedNumber === 'inf'
-				? preg_replace('/(\d{3})/', '$1 ', $number)
+				? (string) preg_replace('/(\d{3})/', '$1 ', $number)
 				: $formattedNumber;
 		}
 
-		return $return === null ? $number : preg_replace('/(^\\\\\s*)|(\\\\\s*$)/', '', $return);
+		return $return === null ? $number : (string) preg_replace('/(^\\\\\s*)|(\\\\\s*$)/', '', $return);
 	}
 
 	/**

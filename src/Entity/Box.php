@@ -170,12 +170,12 @@ class Box
 	}
 
 	/**
-	 * @param string $text
+	 * @param mixed $text
 	 * @return Box
 	 */
-	public function setText(string $text): self
+	public function setText($text): self
 	{
-		$this->text = $text;
+		$this->text = (string) $text;
 
 		return $this;
 	}

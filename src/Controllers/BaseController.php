@@ -6,11 +6,12 @@ namespace Mathematicator\SearchController;
 
 
 use Mathematicator\Engine\InvalidBoxException;
-use Mathematicator\Engine\InvalidDataException;
 use Mathematicator\Engine\Source;
 use Mathematicator\Engine\TerminateException;
 use Mathematicator\Search\Box;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
+use Tracy\Debugger;
 
 class BaseController implements IController
 {
@@ -99,16 +100,11 @@ class BaseController implements IController
 	 * @param string $type
 	 * @param null $text
 	 * @return Box
-	 * @throws InvalidBoxException
 	 */
 	public function setInterpret(string $type, $text = null): Box
 	{
-		$interpret = new Box($type, 'Interpretace zadání dotazu', $text);
-		$interpret->setIcon('&#xE8E2;');
-
-		$this->interpret = $interpret;
-
-		return $interpret;
+		return $this->interpret = (new Box($type, 'Interpretace zadání dotazu', $text))
+			->setIcon('&#xE8E2;');
 	}
 
 	/**
@@ -121,7 +117,6 @@ class BaseController implements IController
 
 	/**
 	 * @param string $query
-	 * @throws InvalidDataException
 	 */
 	public function setQuery(string $query): void
 	{
@@ -142,9 +137,15 @@ class BaseController implements IController
 	 */
 	public function linkToSearch(string $query): string
 	{
-		return $this->linkGenerator->link('Front:Search:default', [
-			'q' => $query,
-		]);
+		try {
+			return $this->linkGenerator->link('Front:Search:default', [
+				'q' => $query,
+			]);
+		} catch (InvalidLinkException $e) {
+			Debugger::log($e);
+
+			return '#invalid-link';
+		}
 	}
 
 	/**
