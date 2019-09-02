@@ -32,7 +32,7 @@ class Box
 	/**
 	 * @var string
 	 */
-	private $icon = '&#xE155';
+	private $icon = 'fas fa-hashtag';
 
 	/**
 	 * @var string
@@ -128,7 +128,11 @@ class Box
 	 */
 	public function getIcon(): string
 	{
-		return $this->icon;
+		if ($this->icon !== null) {
+			return '<i class="' . $this->icon . '"></i>';
+		}
+
+		return '';
 	}
 
 	/**
@@ -137,7 +141,13 @@ class Box
 	 */
 	public function setIcon(string $icon): self
 	{
-		$this->icon = $icon;
+		if (preg_match('/^(fas?)\s+(fa-[a-z0-9\-]+)$/', Strings::normalize($icon), $parser)) {
+			$this->icon = $parser[1] . ' ' . $parser[2];
+		} else {
+			trigger_error(
+				'Icon "' . $icon . '" is not valid FontAwesome icon. Use format "fas fa-xxx".'
+			);
+		}
 
 		return $this;
 	}

@@ -41,7 +41,7 @@ class OtherController extends BaseController
 				. '</div>'
 				. '</div>'
 			)
-			->setIcon('&#xE002;');
+			->setIcon('fas fa-exclamation-triangle');
 	}
 
 }

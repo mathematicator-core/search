@@ -9,32 +9,26 @@ use Mathematicator\Engine\InvalidBoxException;
 use Mathematicator\Engine\Source;
 use Mathematicator\Engine\TerminateException;
 use Mathematicator\Search\Box;
+use Mathematicator\Search\Context;
+use Mathematicator\Search\Query;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\SmartObject;
 use Tracy\Debugger;
 
+/**
+ * @property-read string $query
+ * @property-read Query $queryEntity
+ */
 class BaseController implements IController
 {
 
-	/**
-	 * @var string
-	 */
-	private $query;
+	use SmartObject;
 
 	/**
-	 * @var Box[]
+	 * @var Context
 	 */
-	private $boxes;
-
-	/**
-	 * @var Source[]
-	 */
-	private $sources = [];
-
-	/**
-	 * @var Box
-	 */
-	private $interpret;
+	private $context;
 
 	/**
 	 * @var LinkGenerator
@@ -50,50 +44,21 @@ class BaseController implements IController
 	}
 
 	/**
+	 * @return Context
+	 */
+	public function getContext(): Context
+	{
+		return $this->context;
+	}
+
+	/**
 	 * @param string $type
 	 * @return Box
 	 * @throws TerminateException|InvalidBoxException
 	 */
 	public function addBox(string $type): Box
 	{
-		if (\count($this->boxes) >= 100) { // TODO: Implement Configurator
-			throw new TerminateException(__METHOD__);
-		}
-
-		$box = new Box($type);
-
-		$this->boxes[] = $box;
-
-		return $box;
-	}
-
-	/**
-	 * @return Box[]
-	 */
-	public function getBoxes(): array
-	{
-		return $this->boxes ?? [];
-	}
-
-	/**
-	 * @return Source[]
-	 */
-	public function getSources(): array
-	{
-		return $this->sources;
-	}
-
-	public function resetBoxes(): void
-	{
-		$this->boxes = [];
-	}
-
-	/**
-	 * @return Box|null
-	 */
-	public function getInterpret(): ?Box
-	{
-		return $this->interpret;
+		return $this->context->addBox($type);
 	}
 
 	/**
@@ -103,8 +68,7 @@ class BaseController implements IController
 	 */
 	public function setInterpret(string $type, $text = null): Box
 	{
-		return $this->interpret = (new Box($type, 'Interpretace zadání dotazu', $text))
-			->setIcon('&#xE8E2;');
+		return $this->context->setInterpret($type, $text);
 	}
 
 	/**
@@ -112,15 +76,29 @@ class BaseController implements IController
 	 */
 	public function getQuery(): string
 	{
-		return $this->query;
+		return $this->context->getQuery();
 	}
 
 	/**
-	 * @param string $query
+	 * @internal
+	 * @param Query $query
+	 * @return Context
 	 */
-	public function setQuery(string $query): void
+	public function createContext(Query $query): Context
 	{
-		$this->query = $query;
+		if ($this->context === null) {
+			$this->context = new Context($query);
+		}
+
+		return $this->context;
+	}
+
+	/**
+	 * @return Query
+	 */
+	public function getQueryEntity(): Query
+	{
+		return $this->context->getQueryEntity();
 	}
 
 	/**
@@ -128,7 +106,7 @@ class BaseController implements IController
 	 */
 	public function actionDefault(): void
 	{
-		throw new \InvalidArgumentException(__METHOD__ . ': Method actionDefault does not found in result Entity.');
+		throw new \InvalidArgumentException(__METHOD__ . ': Method actionDefault() does not found in result Entity.');
 	}
 
 	/**
@@ -153,7 +131,7 @@ class BaseController implements IController
 	 */
 	public function addSource(Source $source): void
 	{
-		$this->sources[] = $source;
+		$this->context->addSource($source);
 	}
 
 }

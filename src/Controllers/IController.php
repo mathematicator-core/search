@@ -6,9 +6,9 @@ namespace Mathematicator\SearchController;
 
 
 use Mathematicator\Engine\InvalidDataException;
-use Mathematicator\Engine\Source;
 use Mathematicator\Engine\TerminateException;
-use Mathematicator\Search\Box;
+use Mathematicator\Search\Context;
+use Mathematicator\Search\Query;
 
 interface IController
 {
@@ -19,26 +19,15 @@ interface IController
 	public function actionDefault(): void;
 
 	/**
-	 * @param string $query
+	 * @param Query $query
+	 * @return Context
 	 * @throws InvalidDataException
 	 */
-	public function setQuery(string $query);
+	public function createContext(Query $query): Context;
 
 	/**
-	 * @return Box|null
+	 * @return Context
 	 */
-	public function getInterpret(): ?Box;
-
-	/**
-	 * @return Box[]
-	 */
-	public function getBoxes(): array;
-
-	/**
-	 * @return Source[]
-	 */
-	public function getSources(): array;
-
-	public function resetBoxes();
+	public function getContext(): Context;
 
 }

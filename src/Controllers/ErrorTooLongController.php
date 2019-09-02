@@ -20,7 +20,7 @@ class ErrorTooLongController extends BaseController
 			Toto omezení nasazujeme z výkonnostních důvodů.
 			
 			Pokud potřebujete vykonávat náročnější výpočty, kontaktujte nás.')
-			->setIcon('&#xE869;');
+			->setIcon('fas fa-exclamation-triangle');
 	}
 
 }
