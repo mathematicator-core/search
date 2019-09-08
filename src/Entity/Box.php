@@ -21,6 +21,8 @@ class Box
 	public const TYPE_TEXT = 'type_text';
 	public const TYPE_LATEX = 'type_latex';
 	public const TYPE_HTML = 'type_html';
+	public const TYPE_KEYWORD = 'type_keyword';
+	public const TYPE_IMAGE = 'type_image';
 	public const TYPE_GRAPH = 'type_graph';
 	public const TYPE_TABLE = 'type_table';
 
@@ -30,17 +32,17 @@ class Box
 	private $type;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
-	private $icon = 'fas fa-hashtag';
+	private $icon;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	private $title;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	private $text;
 
@@ -128,11 +130,17 @@ class Box
 	 */
 	public function getIcon(): string
 	{
-		if ($this->icon !== null) {
-			return '<i class="' . $this->icon . '"></i>';
+		if ($this->icon === null) {
+			$icon = 'fas fa-hashtag';
+
+			if ($this->type === self::TYPE_IMAGE) {
+				$icon = 'fas fa-image';
+			}
+		} else {
+			$icon = $this->icon;
 		}
 
-		return '';
+		return '<i class="' . $icon . '"></i>';
 	}
 
 	/**
@@ -157,7 +165,7 @@ class Box
 	 */
 	public function getTitle(): string
 	{
-		return $this->title;
+		return $this->title ?? '';
 	}
 
 	/**
@@ -176,7 +184,7 @@ class Box
 	 */
 	public function getText(): string
 	{
-		return $this->text;
+		return $this->text ?? '';
 	}
 
 	/**
@@ -191,7 +199,7 @@ class Box
 	}
 
 	/**
-	 * @return null|string
+	 * @return string|null
 	 */
 	public function getUrl(): ?string
 	{
