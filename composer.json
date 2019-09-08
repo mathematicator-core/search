@@ -16,7 +16,8 @@
 		"mathematicator-core/calculator": "~1.0",
 		"mathematicator-core/tokenizer": "~1.0",
 		"mathematicator-core/statistic": "~1.0",
-		"mathematicator-core/numbers": "~1.0"
+		"mathematicator-core/numbers": "~1.0",
+		"mathematicator-core/mandelbrot-set": "~1.0"
 	},
 	"autoload": {
 		"classmap": [
