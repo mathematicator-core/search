@@ -20,7 +20,7 @@ class TextRenderer
 	 */
 	public static function process(string $haystack): string
 	{
-		return $haystack;
+		return htmlspecialchars($haystack);
 	}
 
 }
