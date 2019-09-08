@@ -24,6 +24,8 @@ final class Renderer
 			Box::TYPE_TEXT => 'renderText',
 			Box::TYPE_LATEX => 'renderLatex',
 			Box::TYPE_HTML => 'renderHtml',
+			Box::TYPE_KEYWORD => 'renderKeyword',
+			Box::TYPE_IMAGE => 'renderImage',
 			Box::TYPE_TABLE => 'renderTable',
 		];
 
@@ -51,12 +53,11 @@ final class Renderer
 					$return .= '<td>'
 						. preg_replace_callback(
 							'/^(?<left>[=])?(?<content>.+?)(?<right>[=])?$/',
-							function (array $row): string {
+							static function (array $row): string {
 								if ($row['left'] === $row['right']) {
 									if ($row['left'] === '=') {
 										return '<div style="text-align:center">' . $row['content'] . '</div>';
 									}
-
 
 									return (string) $row['content'];
 								}
@@ -126,6 +127,38 @@ final class Renderer
 		}
 
 		return $return;
+	}
+
+	/**
+	 * @internal
+	 * @param string $data
+	 * @return string
+	 */
+	public function renderKeyword(string $data): string
+	{
+		$return = '';
+
+		foreach (explode(';', $data) as $item) {
+			$return .= '<span style="margin:.25em;border:1px solid #E6CF67;background:#FFF2BF;padding:.25em .5em;color:#735E00;display:inline-block">'
+				. htmlspecialchars(trim($item))
+				. '</span>';
+		}
+
+		return $return;
+	}
+
+	/**
+	 * @internal
+	 * @param string $data
+	 * @return string
+	 */
+	public function renderImage(string $data): string
+	{
+		if (strncmp($data, 'data:', 5) === 0) {
+			return '<img src="' . $data . '">';
+		}
+
+		return $this->renderText($data);
 	}
 
 	/**
