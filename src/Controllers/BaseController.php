@@ -10,6 +10,7 @@ use Mathematicator\Engine\Source;
 use Mathematicator\Engine\TerminateException;
 use Mathematicator\Search\Box;
 use Mathematicator\Search\Context;
+use Mathematicator\Search\DynamicConfiguration;
 use Mathematicator\Search\Query;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
@@ -62,13 +63,60 @@ class BaseController implements IController
 	}
 
 	/**
-	 * @param string $type
-	 * @param null $text
+	 * @param string $key
+	 * @throws InvalidBoxException
+	 * @throws TerminateException
+	 */
+	public function addBoxDynamicConfiguration(string $key): void
+	{
+		$configuration = $this->getDynamicConfiguration($key);
+
+		$content = '';
+		$form = '';
+
+		foreach ($configuration->getValues() as $valueKey => $value) {
+			$content .= '<tr>';
+			$content .= '<th>' . htmlspecialchars($configuration->getLabel($valueKey)) . '</th>';
+			$content .= '<td><input type="text" '
+				. 'name="' . htmlspecialchars($key . '_' . $valueKey) . '" '
+				. 'value="' . htmlspecialchars((string) $value) . '" '
+				. 'class="form-control"></td>';
+			$content .= '</tr>';
+			unset($_GET[$key . '_' . $valueKey]);
+		}
+
+		foreach ($_GET as $getKey => $getValue) {
+			$form .= '<input type="hidden" '
+				. 'name="' . htmlspecialchars((string) $getKey) . '" '
+				. 'value="' . htmlspecialchars((string) $getValue) . '">';
+		}
+
+		if (isset($_SERVER['REQUEST_URI'], $_SERVER['HTTP_HOST'])) {
+			$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
+				. '://' . preg_replace('/\?.*$/', '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+		} else {
+			$currentUrl = '#';
+		}
+
+		$this->addBox(Box::TYPE_HTML)
+			->setTitle($configuration->getTitle() ?? '')
+			->setText(
+				'<form action="' . $currentUrl . '" method="get">' . $form . '<table>'
+				. $content
+				. '</table>'
+				. '<input type="submit" value="Použít" class="btn btn-primary mt-2">'
+				. '</form>'
+			);
+	}
+
+	/**
+	 * @param string $boxType
+	 * @param string|null $content
 	 * @return Box
 	 */
-	public function setInterpret(string $type, $text = null): Box
+	public function setInterpret(string $boxType, ?string $content = null): Box
 	{
-		return $this->context->setInterpret($type, $text);
+		return $this->context->setInterpret($boxType, $content);
 	}
 
 	/**
@@ -88,6 +136,13 @@ class BaseController implements IController
 	{
 		if ($this->context === null) {
 			$this->context = new Context($query);
+
+			// Set dynamic configuration from user
+			foreach ($_GET ?? [] as $getKey => $getValue) {
+				if (preg_match('/^([a-z0-9-]+)_(.+)$/', $getKey, $parseKey)) {
+					$this->context->getDynamicConfiguration($parseKey[1])->setValue($parseKey[2], $getValue);
+				}
+			}
 		}
 
 		return $this->context;
@@ -124,6 +179,15 @@ class BaseController implements IController
 
 			return '#invalid-link';
 		}
+	}
+
+	/**
+	 * @param string $key
+	 * @return DynamicConfiguration
+	 */
+	public function getDynamicConfiguration(string $key): DynamicConfiguration
+	{
+		return $this->context->getDynamicConfiguration($key);
 	}
 
 	/**

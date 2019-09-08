@@ -35,6 +35,11 @@ class Context
 	private $sources = [];
 
 	/**
+	 * @var DynamicConfiguration[]
+	 */
+	private $dynamicConfigurations = [];
+
+	/**
 	 * @var Box|null
 	 */
 	private $interpret;
@@ -115,13 +120,13 @@ class Context
 	}
 
 	/**
-	 * @param string $type
-	 * @param null $text
+	 * @param string $boxType
+	 * @param string|null $content
 	 * @return Box
 	 */
-	public function setInterpret(string $type, $text = null): Box
+	public function setInterpret(string $boxType, ?string $content = null): Box
 	{
-		return $this->interpret = (new Box($type, 'Interpretace zadání dotazu', $text))
+		return $this->interpret = (new Box($boxType, 'Interpretace zadání dotazu', $content))
 			->setIcon('fas fa-project-diagram');
 	}
 
@@ -131,6 +136,27 @@ class Context
 	public function addSource(Source $source): void
 	{
 		$this->sources[] = $source;
+	}
+
+	/**
+	 * @param string $key
+	 * @return DynamicConfiguration
+	 */
+	public function getDynamicConfiguration(string $key): DynamicConfiguration
+	{
+		if (isset($this->dynamicConfigurations[$key]) === false) {
+			$this->dynamicConfigurations[$key] = new DynamicConfiguration($key);
+		}
+
+		return $this->dynamicConfigurations[$key];
+	}
+
+	/**
+	 * @return DynamicConfiguration[]
+	 */
+	public function getDynamicConfigurations(): array
+	{
+		return $this->dynamicConfigurations;
 	}
 
 }
