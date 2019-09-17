@@ -41,7 +41,8 @@ class OtherController extends BaseController
 				. '</div>'
 				. '</div>'
 			)
-			->setIcon('fas fa-exclamation-triangle');
+			->setIcon('fas fa-exclamation-triangle')
+			->setTag('no-results');
 	}
 
 }
