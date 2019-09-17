@@ -57,6 +57,13 @@ class Box
 	private $rank;
 
 	/**
+	 * Internal technical identifier.
+	 *
+	 * @var string|null
+	 */
+	private $tag;
+
+	/**
 	 * @var Step[]
 	 */
 	private $steps;
@@ -232,6 +239,27 @@ class Box
 	}
 
 	/**
+	 * @internal
+	 * @return string|null
+	 */
+	public function getTag(): ?string
+	{
+		return $this->tag;
+	}
+
+	/**
+	 * @internal
+	 * @param string|null $tag
+	 * @return Box
+	 */
+	public function setTag(?string $tag): self
+	{
+		$this->tag = $tag;
+
+		return $this;
+	}
+
+	/**
 	 * @return Step[]
 	 */
 	public function getSteps(): array
@@ -241,9 +269,10 @@ class Box
 
 	/**
 	 * @param Step[] $steps
+	 * @return Box
 	 * @throws \InvalidArgumentException
 	 */
-	public function setSteps(array $steps): void
+	public function setSteps(array $steps): self
 	{
 		foreach ($steps as $step) {
 			if (!($step instanceof Step)) {
@@ -252,14 +281,19 @@ class Box
 		}
 
 		$this->steps = $steps;
+
+		return $this;
 	}
 
 	/**
 	 * @param Step $step
+	 * @return Box
 	 */
-	public function addStep(Step $step): void
+	public function addStep(Step $step): self
 	{
 		$this->steps[] = $step;
+
+		return $this;
 	}
 
 	/**
