@@ -29,6 +29,11 @@ class Query
 	private $locale = 'cs';
 
 	/**
+	 * @var int
+	 */
+	private $decimals = 8;
+
+	/**
 	 * @var float
 	 */
 	private $latitude = 50.0755381;
@@ -50,7 +55,7 @@ class Query
 	public function __construct(string $original, string $query)
 	{
 		$this->original = $original;
-		$this->query = $query;
+		$this->query = $this->process($query);
 		$this->dateTime = DateTime::from('now');
 	}
 
@@ -87,6 +92,22 @@ class Query
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getDecimals(): int
+	{
+		return $this->decimals;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isDefaultDecimals(): bool
+	{
+		return $this->decimals === 8;
+	}
+
+	/**
 	 * @return float
 	 */
 	public function getLatitude(): float
@@ -108,6 +129,24 @@ class Query
 	public function getDateTime(): \DateTime
 	{
 		return $this->dateTime;
+	}
+
+	/**
+	 * @param string $query
+	 * @return string
+	 */
+	private function process(string $query): string
+	{
+		$query = (string) preg_replace_callback(
+			'/\s+na\s+(\d+)\s+(?:míst[oay]?)|\s+to\s+(\d+)\s+digits?/u',
+			function (array $match): string {
+				$this->decimals = (int) ($match[1] ? : $match[2]);
+
+				return '';
+			}, $query
+		);
+
+		return $query;
 	}
 
 }
