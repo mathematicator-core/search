@@ -91,6 +91,12 @@ class NumberController extends BaseController
 				->setSteps($this->romanToIntSteps->getRomanToIntSteps($this->getQuery()));
 		}
 
+		if (\in_array(strtolower(Strings::toAscii($number)), ['pi', 'ludolfovo cislo'], true) === true) {
+			$this->aboutPi();
+
+			return;
+		}
+
 		try {
 			$this->number = $this->numberFactory->create($number);
 			$this->actionNumericalField($this->number);
@@ -112,12 +118,11 @@ class NumberController extends BaseController
 			$this->setInterpret(
 				Box::TYPE_LATEX,
 				'\frac{' . $fraction[0] . '}{' . $fraction[1]
-				. '} ≈ ' . Strings::substring((string) $this->number->getFloat(),
-					0, 50
-				)
+				. '} ≈ '
+				. number_format($this->number->getFloat(), $this->queryEntity->getDecimals(), '.', ' ')
 			);
 
-			$this->actionFloat($this->number->getFloat());
+			$this->actionFloat();
 		}
 	}
 
@@ -178,15 +183,8 @@ class NumberController extends BaseController
 			->setSteps([$step]);
 	}
 
-	/**
-	 * @param float $float
-	 */
-	private function actionFloat(float $float): void
+	private function actionFloat(): void
 	{
-		if (abs($float - M_PI) < 0.1) {
-			$this->aboutPi();
-		}
-
 		if ($this->number->getFraction()[1] !== 1) {
 			$this->convertToFraction();
 		}
@@ -239,7 +237,7 @@ class NumberController extends BaseController
 				$stepDescription[] = 'Je větší než nula.';
 			}
 		} else {
-			$text = 'Iracionální reálné číslo';
+			$text = 'Reálné číslo';
 			$stepDescription[] = 'Není celé číslo.';
 
 			if ($number->getFloat() === round($number->getFloat(), 3)) {
@@ -432,9 +430,11 @@ class NumberController extends BaseController
 
 	private function aboutPi(): void
 	{
+		$this->setInterpret(Box::TYPE_LATEX, '\pi');
+
 		$this->addBox(Box::TYPE_TEXT)
-			->setTitle('Přibližná hodnota π | Ludolfovo číslo | Přesnost: 100')
-			->setText('π ≈ ' . str_replace(' ', '<wbr> ', $this->numberHelper->getPi(100)) . ' …');
+			->setTitle('Přibližná hodnota π | Ludolfovo číslo | Přesnost: ' . $this->queryEntity->getDecimals())
+			->setText('π ≈ ' . $this->numberHelper->getPi($this->queryEntity->getDecimals()) . ' …');
 	}
 
 	private function convertToFraction(): void
@@ -443,7 +443,10 @@ class NumberController extends BaseController
 
 		$this->addBox(Box::TYPE_LATEX)
 			->setTitle('Zlomkový zápis | Nejlepší odhad')
-			->setText('\frac{' . $factor[0] . '}{' . $factor[1] . '} ≈ ' . ($factor[0] / $factor[1]));
+			->setText(
+				'\frac{' . $factor[0] . '}{' . $factor[1] . '} ≈ '
+				. number_format($factor[0] / $factor[1], $this->queryEntity->getDecimals(), '.', ' ')
+			);
 
 		if ($factor[0] > $factor[1] && Validators::isNumericInt($factor[0]) && Validators::isNumericInt($factor[1])) {
 			$int = (int) floor($factor[0] / $factor[1]);
