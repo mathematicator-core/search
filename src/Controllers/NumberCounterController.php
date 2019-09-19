@@ -229,7 +229,7 @@ class NumberCounterController extends BaseController
 			$buffer .= '</div>';
 		}
 
-		$this->addBox(Box::TYPE_TEXT)
+		$this->addBox(Box::TYPE_HTML)
 			->setTitle('Grafická reprezentace příkladu')
 			->setText('<div style="overflow:auto">' . $buffer . '</div>');
 
