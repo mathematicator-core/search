@@ -325,18 +325,19 @@ class NumberController extends BaseController
 		$currentTimestamp = \time();
 		$dateDiff = abs($currentTimestamp - $int);
 
-		$timestamp = '<b>' . DateTime::getDateTimeIso((int) $int) . '</b>'
-			. '<br><br>'
+		$timestamp = '<p><b>' . DateTime::getDateTimeIso((int) $int) . '</b></p>'
+			. '<p>'
 			. ($currentTimestamp < $int
 				? 'Bude za ' . $dateDiff . ' sekund (' . DateTime::formatTimeAgo($currentTimestamp - $dateDiff) . ')'
 				: 'Bylo před ' . $dateDiff . ' sekundami (' . DateTime::formatTimeAgo((int) $int) . ').'
 			)
-			. ((int) date('Y', $int) >= 2038
-				? '<br><br>Pozor: Po roce 2038 nemusí tento timestamp fungovat na 32-bitových počítačích, protože překračuje maximální hodnotu, kterou je možné uložit do 32-bitového integeru.'
+			. '</p>'
+			. ((int) date('Y', (int) $int) >= 2038
+				? '<p class="text-secondary">Pozor: Po roce 2038 nemusí tento timestamp fungovat na 32-bitových počítačích, protože překračuje maximální hodnotu, kterou je možné uložit do 32-bitového integeru.</p>'
 				: '');
 
-		$this->addBox(Box::TYPE_TEXT)
-			->setTitle('Unix Timestamp')
+		$this->addBox(Box::TYPE_HTML)
+			->setTitle('Unix Timestamp | Čas serveru: ' . date('d. m. Y H:i:s'))
 			->setText($timestamp);
 	}
 
