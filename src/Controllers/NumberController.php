@@ -91,7 +91,7 @@ class NumberController extends BaseController
 				->setSteps($this->romanToIntSteps->getRomanToIntSteps($this->getQuery()));
 		}
 
-		if (\in_array(strtolower(Strings::toAscii($number)), ['pi', 'ludolfovo cislo'], true) === true) {
+		if (\in_array(strtolower(Strings::toAscii((string) $number)), ['pi', 'ludolfovo cislo'], true) === true) {
 			$this->aboutPi();
 
 			return;
@@ -101,7 +101,7 @@ class NumberController extends BaseController
 			$this->number = $this->numberFactory->create($number);
 			$this->actionNumericalField($this->number);
 		} catch (DivisionByZero $e) {
-			$this->actionDivisionByZero($number);
+			$this->actionDivisionByZero((string) $number);
 		}
 
 		if ($this->number->isInteger()) {
