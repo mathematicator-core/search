@@ -355,7 +355,7 @@ class NumberController extends BaseController
 
 			foreach (array_count_values($factors) as $b => $e) {
 				if ($outputFactor) {
-					$outputFactor .= ' * ';
+					$outputFactor .= ' \cdot ';
 				}
 				$items += $e;
 				if (preg_match('/^(.+)E[+-]?(.+)$/', (string) $b, $bParser)) {
@@ -376,24 +376,32 @@ class NumberController extends BaseController
 		$int = $this->number->getInteger();
 		$divisors = $this->sort($this->numberHelper->getDivisors($int));
 
-		$divisor = ['!Dělitel'];
-		$share = ['!Podíl'];
+		if (\count($divisors) < 5) {
+			$divisor = ['!Dělitel'];
+			$share = ['!Podíl'];
 
-		for ($i = 0; isset($divisors[$i]); $i++) {
-			$divisor[] = '=' . $divisors[$i] . '=';
-			$share[] = '=' . ($int / $divisors[$i]) . '=';
+			for ($i = 0; isset($divisors[$i]); $i++) {
+				$divisor[] = '=' . $divisors[$i] . '=';
+				$share[] = '=' . ($int / $divisors[$i]) . '=';
+			}
+
+			$this->addBox(Box::TYPE_TABLE)
+				->setTitle(
+					'Dělitelé čísla ' . $int
+					. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
+					. ' | Součet: ' . array_sum($divisors)
+				)->setTable([
+					$divisor,
+					$share,
+				]);
+		} else {
+			$this->addBox(Box::TYPE_HTML)
+				->setTitle(
+					'Dělitelé čísla ' . $int
+					. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
+					. ' | Součet: ' . array_sum($divisors)
+				)->setText(implode(', ', $divisors));
 		}
-
-		$this->addBox(Box::TYPE_TABLE)
-			->setTitle(
-				'Dělitelé čísla ' . $int
-				. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
-				. ' | Součet: ' . array_sum($divisors)
-			)
-			->setTable([
-				$divisor,
-				$share,
-			]);
 
 		// TODO: 'hiddenContent' => 'Vlastnosti dělitelnosti'
 	}
