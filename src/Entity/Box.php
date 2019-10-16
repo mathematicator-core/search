@@ -102,10 +102,13 @@ class Box
 
 	/**
 	 * @param int[]|string[] $table
+	 * @return Box
 	 */
-	public function setTable(array $table): void
+	public function setTable(array $table): self
 	{
 		$this->text = Json::encode($table);
+
+		return $this;
 	}
 
 	/**
