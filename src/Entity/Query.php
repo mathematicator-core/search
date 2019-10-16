@@ -7,6 +7,7 @@ namespace Mathematicator\Search;
 
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
+use Nette\Utils\Strings;
 
 class Query
 {
@@ -32,6 +33,11 @@ class Query
 	 * @var int
 	 */
 	private $decimals = 8;
+
+	/**
+	 * @var string[]
+	 */
+	private $filteredTags = [];
 
 	/**
 	 * @var float
@@ -132,6 +138,14 @@ class Query
 	}
 
 	/**
+	 * @return string[]
+	 */
+	public function getFilteredTags(): array
+	{
+		return $this->filteredTags;
+	}
+
+	/**
 	 * @param string $query
 	 * @return string
 	 */
@@ -145,6 +159,31 @@ class Query
 				return '';
 			}, $query
 		);
+
+		$filters = $this->processFilterTags(strtolower(Strings::toAscii($query)));
+
+		return $this->filteredTags === [] ? $query : $filters;
+	}
+
+	/**
+	 * @param string $query
+	 * @return string
+	 */
+	private function processFilterTags(string $query): string
+	{
+		static $patterns = [
+			'^delitele?\s*(cisla\s*)?\s*(?<query>\d+)$' => ['divisors'],
+			'^(prvociselny\s+)?rozklad?\s*(cisla\s*)?\s*(?<query>\d+)$' => ['prime-factorization'],
+		];
+
+		foreach ($patterns as $pattern => $tags) {
+			if (preg_match('/' . $pattern . '/', $query, $parser)) {
+				$query = $parser['query'] ?? $query;
+				foreach ($tags as $tag) {
+					$this->filteredTags[$tag] = true;
+				}
+			}
+		}
 
 		return $query;
 	}
