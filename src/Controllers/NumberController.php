@@ -349,16 +349,19 @@ class NumberController extends BaseController
 		if (\count($factors) === 1) {
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Prvočíselný rozklad')
-				->setText('Číslo ' . $int . ' je prvočíslo, proto nelze dále rozložit.');
+				->setText('Číslo ' . $int . ' je prvočíslo, proto nelze dále rozložit.')
+				->setTag('prime-factorizationx');
 		} else {
 			$outputFactor = '';
 			$items = 0;
+			$primaries = 0;
 
 			foreach (array_count_values($factors) as $b => $e) {
 				if ($outputFactor) {
 					$outputFactor .= ' \cdot ';
 				}
 				$items += $e;
+				$primaries++;
 				if (preg_match('/^(.+)E[+-]?(.+)$/', (string) $b, $bParser)) {
 					$outputFactor .= '\left({' . $bParser[1] . '}^{' . $bParser[2] . '}\right)';
 				} else {
@@ -367,8 +370,13 @@ class NumberController extends BaseController
 			}
 
 			$this->addBox(Box::TYPE_LATEX)
-				->setTitle('Prvočíselný rozklad | ' . Czech::inflection($items, ['člen', 'členy', 'členů']))
-				->setText($outputFactor);
+				->setTitle(
+					'Prvočíselný rozklad'
+					. ' | ' . Czech::inflection($items, ['člen', 'členy', 'členů'])
+					. ' | ' . Czech::inflection($primaries, ['prvočíslo', 'prvočísla', 'prvočísel'])
+				)
+				->setText($outputFactor)
+				->setTag('prime-factorization');
 		}
 	}
 
@@ -376,6 +384,9 @@ class NumberController extends BaseController
 	{
 		$int = $this->number->getInteger();
 		$divisors = $this->sort($this->numberHelper->getDivisors($int));
+		$title = 'Dělitelé čísla ' . $int
+			. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
+			. ' | Součet: ' . array_sum($divisors);
 
 		if (\count($divisors) < 5) {
 			$divisor = ['!Dělitel'];
@@ -386,23 +397,12 @@ class NumberController extends BaseController
 				$share[] = '=' . ($int / $divisors[$i]) . '=';
 			}
 
-			$this->addBox(Box::TYPE_TABLE)
-				->setTitle(
-					'Dělitelé čísla ' . $int
-					. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
-					. ' | Součet: ' . array_sum($divisors)
-				)->setTable([
-					$divisor,
-					$share,
-				]);
+			$box = $this->addBox(Box::TYPE_TABLE)->setTable([$divisor, $share]);
 		} else {
-			$this->addBox(Box::TYPE_HTML)
-				->setTitle(
-					'Dělitelé čísla ' . $int
-					. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
-					. ' | Součet: ' . array_sum($divisors)
-				)->setText(implode(', ', $divisors));
+			$box = $this->addBox(Box::TYPE_HTML)->setText(implode(', ', $divisors));
 		}
+
+		$box->setTitle($title)->setTag('divisors');
 
 		// TODO: 'hiddenContent' => 'Vlastnosti dělitelnosti'
 	}
@@ -501,14 +501,7 @@ class NumberController extends BaseController
 		for ($i = 0; $i < $x; $i++) {
 			for ($j = 0; $j < $y; $j++) {
 				$char = $data[$iterator];
-
-				if (isset($colorCache[$char])) {
-					$color = $colorCache[$char];
-				} else {
-					$color = $colorCache[$char] = $colors[\count($colorCache)];
-				}
-
-				$return .= '<span style="color:' . $color . '">' . $char . '</span>';
+				$return .= '<span style="color:' . ($colorCache[$char] ?? $colors[\count($colorCache)]) . '">' . $char . '</span>';
 				$iterator++;
 			}
 			$return .= '<br>';
