@@ -434,11 +434,7 @@ class NumberCounterController extends BaseController
 				if ($numberLength > 8) {
 					$this->addBox(Box::TYPE_TEXT)
 						->setTitle('Délka čísla')
-						->setText(Czech::inflection($numberLength, [
-							'desetinná cifra',
-							'desetinné cifry',
-							'desetinných cifer',
-						]));
+						->setText(Czech::inflection($numberLength, ['cifra', 'cifry', 'cifer']));
 
 					if (preg_match('/^(\d)((\d{1,7}).*?)$/', $int, $intParser)) {
 						$this->addBox(Box::TYPE_LATEX)
@@ -448,9 +444,21 @@ class NumberCounterController extends BaseController
 
 					if (Strings::endsWith($int, '0')) {
 						$zeros = preg_replace('/^\d+?(0+)$/', '$1', $int);
-						$this->addBox(Box::TYPE_LATEX)
+						$trailingZerosBox = $this->addBox(Box::TYPE_LATEX)
 							->setTitle('Počet nul na konci')
 							->setText((string) \strlen($zeros));
+
+						if (preg_match('/^(\d+)\s*\!$/', $this->query, $factorialParser)) {
+							$trailingZerosBox->setSteps($this->getStepsFactorialTrailingZeros((int) $factorialParser[1]));
+						} else {
+							$trailingZerosBox->setSteps([
+								new Step(
+									'Manuální výpočet',
+									null,
+									'Pro tuto úlohu neznáme elegantní způsob, jak zjistit počet nul na konci, proto je potřeba celkový počet spočítat ručně přímo z výsledku.'
+								),
+							]);
+						}
 					}
 				}
 			}
@@ -529,6 +537,45 @@ class NumberCounterController extends BaseController
 		}
 
 		return '<div style="max-width:70px">' . $render . '</div>';
+	}
+
+	/**
+	 * @param int $factorial
+	 * @return Step[]
+	 */
+	private function getStepsFactorialTrailingZeros(int $factorial): array
+	{
+		$return = [];
+
+		$return[] = new Step(
+			'Výpočet počtu nul na konci pro faktoriál ' . $factorial . '!',
+			'\begin{aligned} f(n) &= \sum_{i=1}^k \left\lfloor{\frac{n}{5^i}}\right\rfloor = \left\lfloor{\frac{n}{5}}\right\rfloor+\left\lfloor{\frac{n}{5^2}}\right\rfloor+\left\lfloor{\frac{n}{5^3}}\right\rfloor+\dots+\left\lfloor{\frac{n}{5^k}}\right\rfloor \end{aligned}',
+			'Počet nul, kterými končí faktoriál libovolného celého čísla \(n\) lze vypočítat součtem řady zlomků. Řadu je potřeba sčítat až do hodnoty \(k=\left\lfloor \log_5{n} \right\rfloor\).'
+		);
+
+		$fractions = '';
+		$fractionValues = '';
+		$count = 0;
+
+		for ($i = 5; $factorial / $i >= 1; $i *= 5) {
+			$count += $factorial / $i;
+			$fractions .= ($fractions ? ' + ' : '') . '\left\lfloor{\frac{' . $factorial . '}{' . $i . '}}\right\rfloor';
+			$fractionValues .= ($fractionValues ? ' + ' : '') . ((int) ($factorial / $i));
+		}
+
+		$return[] = new Step(
+			'Sestavíme řadu zlomků',
+			'\begin{aligned} f(n) &= \sum_{i=1}^k \left\lfloor{\frac{n}{5^i}}\right\rfloor = ' . $fractions . ' \end{aligned}',
+			'Řešíme úlohu pro \(n = ' . $factorial . '\). U zlomků si všimněte závorky, která značí zaokrouhlení směrem dolů.'
+		);
+
+		$return[] = new Step(
+			'Vypočítáme hodnotu zlomků a sečteme',
+			$fractionValues . ' = ' . ((int) $count),
+			null
+		);
+
+		return $return;
 	}
 
 }
