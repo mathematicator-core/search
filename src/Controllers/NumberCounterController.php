@@ -6,9 +6,11 @@ namespace Mathematicator\SearchController;
 
 
 use Mathematicator\Calculator\Calculator;
+use Mathematicator\Calculator\CalculatorResult;
 use Mathematicator\Calculator\Step;
 use Mathematicator\Engine\DivisionByZero;
 use Mathematicator\Engine\Helper\Czech;
+use Mathematicator\Engine\MathematicatorException;
 use Mathematicator\Engine\MathErrorException;
 use Mathematicator\Engine\Translator;
 use Mathematicator\Engine\UndefinedOperationException;
@@ -105,7 +107,7 @@ class NumberCounterController extends BaseController
 		$steps = [];
 
 		try {
-			$calculatorResult = $this->calculator->calculate($objects);
+			$calculatorResult = $this->calculate($objects);
 			$calculator = $calculatorResult->getResultTokens();
 			$steps = $calculatorResult->getSteps();
 		} catch (DivisionByZero $e) {
@@ -113,7 +115,7 @@ class NumberCounterController extends BaseController
 
 			$step = $this->stepFactory->create();
 			$step->setTitle('Dělení nulou');
-			$step->setDescription($this->translator->getTranslate('divisionByZero', [
+			$step->setDescription($this->translator->translate('divisionByZero', [
 				'count' => $fraction[0],
 			]));
 
@@ -147,7 +149,7 @@ class NumberCounterController extends BaseController
 					. $supportedFunctions);
 
 			$this->haveResult = true;
-		} catch (MathErrorException $e) {
+		} catch (MathErrorException|MathematicatorException $e) {
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Řešení')
 				->setText(
@@ -189,6 +191,19 @@ class NumberCounterController extends BaseController
 		if ($this->haveResult === false) {
 			$this->actionError($steps);
 		}
+	}
+
+	/**
+	 * Bridge for define types of possible exceptions.
+	 *
+	 * @param IToken[] $tokens
+	 * @param int $basicTtl
+	 * @return CalculatorResult
+	 * @throws MathematicatorException|DivisionByZero|UndefinedOperationException|FunctionDoesNotExistsException|MathErrorException
+	 */
+	private function calculate(array $tokens, int $basicTtl = 3): CalculatorResult
+	{
+		return $this->calculator->calculate($tokens, $basicTtl);
 	}
 
 	private function actionError(array $steps): void
