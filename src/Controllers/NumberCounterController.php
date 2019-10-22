@@ -17,6 +17,7 @@ use Mathematicator\Engine\UndefinedOperationException;
 use Mathematicator\MathFunction\FunctionDoesNotExistsException;
 use Mathematicator\NumberHelper;
 use Mathematicator\Search\Box;
+use Mathematicator\Search\Query;
 use Mathematicator\Step\StepFactory;
 use Mathematicator\Tokenizer\Token\ComparatorToken;
 use Mathematicator\Tokenizer\Token\EquationToken;
@@ -203,7 +204,7 @@ class NumberCounterController extends BaseController
 	 */
 	private function calculate(array $tokens, int $basicTtl = 3): CalculatorResult
 	{
-		return $this->calculator->calculate($tokens, $basicTtl);
+		return $this->calculator->calculate($tokens, $this->getQueryEntity(), $basicTtl);
 	}
 
 	private function actionError(array $steps): void
@@ -391,7 +392,7 @@ class NumberCounterController extends BaseController
 		}
 
 		$calculatorResult = $this->calculator->calculateString(
-			$numberA . '-' . $numberB
+			new Query($numberA . '-' . $numberB, $numberA . '-' . $numberB)
 		);
 		$calculator = $calculatorResult->getResultTokens();
 		$steps = $calculatorResult->getSteps();
@@ -402,7 +403,7 @@ class NumberCounterController extends BaseController
 			->setSteps($steps);
 
 		$calculatorShareResult = $this->calculator->calculateString(
-			$numberA . '/' . $numberB
+			new Query($numberA . '-' . $numberB, $numberA . '-' . $numberB)
 		);
 		$calculatorShare = $calculatorShareResult->getResultTokens();
 		$stepsShare = $calculatorShareResult->getSteps();
@@ -429,16 +430,17 @@ class NumberCounterController extends BaseController
 	{
 		if ($token instanceof NumberToken) {
 			if ($token->getNumber()->isInteger()) {
-				$result = $token->getNumber()->getInteger();
+				$result = '\(' . $token->getNumber()->getInteger() . '\)';
 			} else {
 				$fraction = $token->getNumber()->getFraction();
-				$result = ($fraction[0] < 0 ? '-' : '')
+				$result = '\(' . ($fraction[0] < 0 ? '-' : '')
 					. '\frac{' . abs($fraction[0]) . '}'
 					. '{' . $fraction[1] . '} ≈ '
-					. preg_replace('/^(.+)[eE](.+)$/', '$1\ \cdot\ {10}^{$2}', $token->getNumber()->getFloat());
+					. preg_replace('/^(.+)[eE](.+)$/', '$1\ \cdot\ {10}^{$2}', $token->getNumber()->getFloat()) . '\)'
+					. '<br><br><span class="text-secondary">Upozornění: Řešení může být zobrazeno jen přibližně.</span>';
 			}
 
-			$this->addBox(Box::TYPE_LATEX)
+			$this->addBox(Box::TYPE_HTML)
 				->setTitle('Řešení')
 				->setText($result)
 				->setSteps($steps);
