@@ -26,6 +26,7 @@ use Mathematicator\Tokenizer\Token\IToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Token\OperatorToken;
 use Mathematicator\Tokenizer\Tokenizer;
+use Mathematicator\Vizualizator\MathFunctionRenderer;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
@@ -35,28 +36,39 @@ class NumberCounterController extends BaseController
 
 	/**
 	 * @var Translator
+	 * @inject
 	 */
-	private $translator;
+	public $translator;
 
 	/**
 	 * @var Tokenizer
+	 * @inject
 	 */
-	private $tokenizer;
+	public $tokenizer;
 
 	/**
 	 * @var StepFactory
+	 * @inject
 	 */
-	private $stepFactory;
+	public $stepFactory;
 
 	/**
 	 * @var Calculator
+	 * @inject
 	 */
-	private $calculator;
+	public $calculator;
 
 	/**
-	 * @var Number
+	 * @var NumberHelper
+	 * @inject
 	 */
-	private $number;
+	public $number;
+
+	/**
+	 * @var MathFunctionRenderer
+	 * @inject
+	 */
+	public $mathFunctionRenderer;
 
 	/**
 	 * @var string[]
@@ -69,31 +81,13 @@ class NumberCounterController extends BaseController
 	private $haveResult = false;
 
 	/**
-	 * @param \string[] $functions
+	 * @param string[] $functions
 	 * @param LinkGenerator $linkGenerator
-	 * @param Translator $translator
-	 * @param Tokenizer $tokenizer
-	 * @param StepFactory $stepFactory
-	 * @param Calculator $calculator
-	 * @param NumberHelper $number
 	 */
-	public function __construct(
-		array $functions,
-		LinkGenerator $linkGenerator,
-		Translator $translator,
-		Tokenizer $tokenizer,
-		StepFactory $stepFactory,
-		Calculator $calculator,
-		NumberHelper $number
-	)
+	public function __construct(array $functions, LinkGenerator $linkGenerator)
 	{
 		parent::__construct($linkGenerator);
 		$this->functions = $functions;
-		$this->translator = $translator;
-		$this->tokenizer = $tokenizer;
-		$this->stepFactory = $stepFactory;
-		$this->calculator = $calculator;
-		$this->number = $number;
 	}
 
 	public function actionDefault(): void
@@ -185,6 +179,8 @@ class NumberCounterController extends BaseController
 				->setTitle('Upravený zápis')
 				->setText($this->tokenizer->tokensToLatex($calculator))
 				->setSteps($steps);
+
+			// TODO: $this->plotFunction($calculator);
 
 			$this->haveResult = true;
 		}
@@ -593,6 +589,18 @@ class NumberCounterController extends BaseController
 		);
 
 		return $return;
+	}
+
+	/**
+	 * @param IToken[] $tokens
+	 */
+	private function plotFunction(array $tokens): void
+	{
+		$image = $this->mathFunctionRenderer->plot($tokens);
+
+		$this->addBox(Box::TYPE_IMAGE)
+			->setTitle('Graf funkce')
+			->setText($image);
 	}
 
 }
