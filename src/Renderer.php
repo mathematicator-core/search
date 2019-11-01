@@ -13,6 +13,18 @@ final class Renderer
 {
 
 	/**
+	 * @var string[]
+	 */
+	private const SERVICES = [
+		Box::TYPE_TEXT => 'renderText',
+		Box::TYPE_LATEX => 'renderLatex',
+		Box::TYPE_HTML => 'renderHtml',
+		Box::TYPE_KEYWORD => 'renderKeyword',
+		Box::TYPE_IMAGE => 'renderImage',
+		Box::TYPE_TABLE => 'renderTable',
+	];
+
+	/**
 	 * @param mixed $data
 	 * @param string $type
 	 * @return string
@@ -20,17 +32,8 @@ final class Renderer
 	 */
 	public function render($data, string $type): string
 	{
-		static $services = [
-			Box::TYPE_TEXT => 'renderText',
-			Box::TYPE_LATEX => 'renderLatex',
-			Box::TYPE_HTML => 'renderHtml',
-			Box::TYPE_KEYWORD => 'renderKeyword',
-			Box::TYPE_IMAGE => 'renderImage',
-			Box::TYPE_TABLE => 'renderTable',
-		];
-
-		if (isset($services[$type])) {
-			return $this->{$services[$type]}($data);
+		if (isset(self::SERVICES[$type])) {
+			return $this->{self::SERVICES[$type]}($data);
 		}
 
 		throw new MathematicatorException('Unknown box type "' . $type . '"');
@@ -79,19 +82,12 @@ final class Renderer
 	 */
 	public function renderTitle(string $title): string
 	{
-		$title = $title ?? 'Box bez názvu';
 		$return = '';
-		$iterator = 0;
 
-		foreach (explode('|', $title) as $item) {
-			$item = trim($item);
-			if ($iterator > 0 && preg_match('/.+\:\s+.+/', $item, $itemParser)) {
-				$return .= '<span class="search-box-header-hightlight">' . $item . '</span>';
-			} else {
-				$return .= '<span class="search-box-header-text">' . $item . '</span>';
-			}
-
-			$iterator++;
+		foreach (explode('|', $title ? : 'Box bez názvu') as $item) {
+			$return .= $return !== '' && preg_match('/.+\:\s+.+/', $item = trim($item), $itemParser)
+				? '<span class="search-box-header-hightlight">' . $item . '</span>'
+				: '<span class="search-box-header-text">' . $item . '</span>';
 		}
 
 		return $return;
@@ -117,13 +113,11 @@ final class Renderer
 		$return = '';
 
 		foreach (explode("\n", $data) as $line) {
-			if (Validators::isNumeric($line)) {
-				$return .= '<div>' . str_replace('\ ', '&nbsp;', $this->numberFormat($line)) . '</div>';
-			} else {
-				$return .= '<div>\(' . preg_replace_callback('/(-?\d*[.]?\d+)/', function ($number) {
-						return $this->numberFormat($number[1]);
-					}, $line) . '\)</div>';
-			}
+			$return .= Validators::isNumeric($line)
+				? '<div>' . str_replace('\ ', '&nbsp;', $this->numberFormat($line)) . '</div>'
+				: '<div>\(' . preg_replace_callback('/(-?\d*[.]?\d+)/', function (array $number) {
+					return $this->numberFormat($number[1]);
+				}, $line) . '\)</div>';
 		}
 
 		return $return;
@@ -156,6 +150,10 @@ final class Renderer
 	{
 		if (strncmp($data, 'data:', 5) === 0) {
 			return '<img src="' . $data . '">';
+		}
+
+		if (strncmp($data, '<div class="vizualizator"', 25) === 0) {
+			return $data . '<style>.vizualizator{border:1px solid #aaa}</style>';
 		}
 
 		return $this->renderText($data);
@@ -203,9 +201,7 @@ final class Renderer
 				. '.' . $this->numberFormat($parser['right'], false)
 			);
 		} else {
-			$formattedNumber = (string) preg_replace('/\.0+$/', '', number_format((float) $number, 64, '.', ' '));
-
-			$return = $formattedNumber === 'inf'
+			$return = ($formattedNumber = (string) preg_replace('/\.0+$/', '', number_format((float) $number, 64, '.', ' '))) === 'inf'
 				? (string) preg_replace('/(\d{3})/', '$1 ', $number)
 				: $formattedNumber;
 		}
