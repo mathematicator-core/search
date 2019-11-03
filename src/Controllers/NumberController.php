@@ -15,7 +15,6 @@ use Mathematicator\Numbers\SmartNumber;
 use Mathematicator\Search\Box;
 use Mathematicator\Step\RomanIntSteps;
 use Mathematicator\Step\StepFactory;
-use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 
@@ -24,58 +23,38 @@ class NumberController extends BaseController
 
 	/**
 	 * @var Translator
+	 * @inject
 	 */
-	private $translator;
+	public $translator;
 
 	/**
 	 * @var NumberHelper
+	 * @inject
 	 */
-	private $numberHelper;
+	public $numberHelper;
+
+	/**
+	 * @var NumberFactory
+	 * @inject
+	 */
+	public $numberFactory;
+
+	/**
+	 * @var RomanIntSteps
+	 * @inject
+	 */
+	public $romanToIntSteps;
+
+	/**
+	 * @var StepFactory
+	 * @inject
+	 */
+	public $stepFactory;
 
 	/**
 	 * @var SmartNumber
 	 */
 	private $number;
-
-	/**
-	 * @var NumberFactory
-	 */
-	private $numberFactory;
-
-	/**
-	 * @var RomanIntSteps
-	 */
-	private $romanToIntSteps;
-
-	/**
-	 * @var StepFactory
-	 */
-	private $stepFactory;
-
-	/**
-	 * @param LinkGenerator $linkGenerator
-	 * @param NumberHelper $number
-	 * @param NumberFactory $numberFactory
-	 * @param RomanIntSteps $romanToIntSteps
-	 * @param StepFactory $stepFactory
-	 * @param Translator $translator
-	 */
-	public function __construct(
-		LinkGenerator $linkGenerator,
-		NumberHelper $number,
-		NumberFactory $numberFactory,
-		RomanIntSteps $romanToIntSteps,
-		StepFactory $stepFactory,
-		Translator $translator
-	)
-	{
-		parent::__construct($linkGenerator);
-		$this->numberHelper = $number;
-		$this->numberFactory = $numberFactory;
-		$this->romanToIntSteps = $romanToIntSteps;
-		$this->stepFactory = $stepFactory;
-		$this->translator = $translator;
-	}
 
 	public function actionDefault(): void
 	{
@@ -102,6 +81,8 @@ class NumberController extends BaseController
 			$this->actionNumericalField($this->number);
 		} catch (DivisionByZero $e) {
 			$this->actionDivisionByZero((string) $number);
+
+			return;
 		}
 
 		if ($this->number->isInteger()) {
@@ -173,7 +154,7 @@ class NumberController extends BaseController
 
 		$step = $this->stepFactory->create();
 		$step->setTitle('Dělení nulou');
-		$step->setDescription($this->translator->getTranslate('divisionByZero', [
+		$step->setDescription($this->translator->translate('divisionByZero', [
 			'count' => (int) $match['top'],
 		]));
 
