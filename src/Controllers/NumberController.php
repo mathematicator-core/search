@@ -76,6 +76,14 @@ class NumberController extends BaseController
 			return;
 		}
 
+		if ($number > 10e10) {
+			$this->addBox(Box::TYPE_TEXT)
+				->setTitle('Informace')
+				->setText('Podporu pro vysoká čísla připravujeme.');
+
+			return;
+		}
+
 		try {
 			$this->number = $this->numberFactory->create($number);
 			$this->actionNumericalField($this->number);
