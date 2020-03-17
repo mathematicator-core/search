@@ -140,13 +140,15 @@ class NumberController extends BaseController
 			$this->bigNumber($int);
 		}
 
-		$this->primeFactorization();
+		if ($int > 0) {
+			$this->primeFactorization();
+		}
 
-		if ($int <= 1000000) {
+		if ($int > 0 && $int <= 1000000) {
 			$this->divisors();
 		}
 
-		if ($int <= 50 && $int > 0) {
+		if ($int > 0 && $int <= 50) {
 			$this->graphicInt();
 		}
 	}
@@ -224,6 +226,10 @@ class NumberController extends BaseController
 			if ($number->getInteger() > 0) {
 				$text = 'Přirozené celé reálné číslo';
 				$stepDescription[] = 'Je větší než nula.';
+			} elseif ($number->getInteger() < 0) {
+				$stepDescription[] = 'Je záporné číslo.';
+			} else {
+				$stepDescription[] = 'Je nula.';
 			}
 		} else {
 			$text = 'Reálné číslo';
@@ -245,7 +251,7 @@ class NumberController extends BaseController
 
 		$this->addBox(Box::TYPE_TEXT)
 			->setTitle('Číselný obor')
-			->setText($text)
+			->setText($text . ($number->getInteger() < 0 ? ' (záporné číslo)' : ''))
 			->setSteps($steps);
 	}
 
@@ -288,6 +294,10 @@ class NumberController extends BaseController
 	 */
 	private function numberSystem(string $int): void
 	{
+		if ($int < 0) {
+			return;
+		}
+
 		$bin[] = Strings::upper(decbin($int)) . '_{2}';
 		$bin[] = Strings::upper(decoct($int)) . '_{8}';
 		$bin[] = Strings::upper($int) . '_{10}';
