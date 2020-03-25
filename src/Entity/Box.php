@@ -13,48 +13,46 @@ use Nette\Utils\Strings;
 
 class Box
 {
-
 	use SmartObject;
 
 	public const TYPE_UNDEFINED = 'type_undefined';
+
 	public const TYPE_INTERPRET = 'type_interpret';
+
 	public const TYPE_TEXT = 'type_text';
+
 	public const TYPE_LATEX = 'type_latex';
+
 	public const TYPE_HTML = 'type_html';
+
 	public const TYPE_KEYWORD = 'type_keyword';
+
 	public const TYPE_IMAGE = 'type_image';
+
 	public const TYPE_GRAPH = 'type_graph';
+
 	public const TYPE_TABLE = 'type_table';
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $type;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	private $icon;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	private $title;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	private $text;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	private $url;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	private $rank;
+
+	/** @var Step[] */
+	private $steps;
 
 	/**
 	 * Internal technical identifier.
@@ -63,10 +61,6 @@ class Box
 	 */
 	private $tag;
 
-	/**
-	 * @var Step[]
-	 */
-	private $steps;
 
 	/**
 	 * @param string $type
@@ -75,13 +69,7 @@ class Box
 	 * @param string|null $url
 	 * @param int $rank
 	 */
-	public function __construct(
-		string $type = self::TYPE_UNDEFINED,
-		?string $title = null,
-		?string $text = null,
-		?string $url = null,
-		int $rank = 32
-	)
+	public function __construct(string $type = self::TYPE_UNDEFINED, ?string $title = null, ?string $text = null, ?string $url = null, int $rank = 32)
 	{
 		$this->type = $type;
 		$this->title = $title;
@@ -89,6 +77,7 @@ class Box
 		$this->url = $url === '' ? null : $url;
 		$this->setRank($rank);
 	}
+
 
 	/**
 	 * @return string
@@ -100,6 +89,7 @@ class Box
 			: '';
 	}
 
+
 	/**
 	 * @param int[]|string[] $table
 	 * @return Box
@@ -110,6 +100,7 @@ class Box
 
 		return $this;
 	}
+
 
 	/**
 	 * @param string[]|int[] $table
@@ -135,6 +126,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -153,6 +145,7 @@ class Box
 		return '<i class="' . $icon . '"></i>';
 	}
 
+
 	/**
 	 * @param string $icon
 	 * @return Box
@@ -170,6 +163,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -177,6 +171,7 @@ class Box
 	{
 		return $this->title ?? '';
 	}
+
 
 	/**
 	 * @param string $title
@@ -189,6 +184,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -196,6 +192,7 @@ class Box
 	{
 		return $this->text ?? '';
 	}
+
 
 	/**
 	 * @param mixed $text
@@ -208,6 +205,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @return string|null
 	 */
@@ -216,6 +214,7 @@ class Box
 		return $this->url;
 	}
 
+
 	/**
 	 * @return int
 	 */
@@ -223,6 +222,7 @@ class Box
 	{
 		return $this->rank;
 	}
+
 
 	/**
 	 * @param int $rank
@@ -241,6 +241,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @internal
 	 * @return string|null
@@ -249,6 +250,7 @@ class Box
 	{
 		return $this->tag;
 	}
+
 
 	/**
 	 * @internal
@@ -262,6 +264,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @return Step[]
 	 */
@@ -269,6 +272,7 @@ class Box
 	{
 		return $this->steps ?? [];
 	}
+
 
 	/**
 	 * @param Step[] $steps
@@ -288,6 +292,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @param Step $step
 	 * @return Box
@@ -299,6 +304,7 @@ class Box
 		return $this;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -306,5 +312,4 @@ class Box
 	{
 		return $this->type;
 	}
-
 }

@@ -11,48 +11,32 @@ use Nette\Utils\Strings;
 
 class Query
 {
-
 	use SmartObject;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $original;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $query;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $locale = 'cs';
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	private $decimals = 8;
 
-	/**
-	 * @var string[]
-	 */
+	/** @var string[] */
 	private $filteredTags = [];
 
-	/**
-	 * @var float
-	 */
+	/** @var float */
 	private $latitude = 50.0755381;
 
-	/**
-	 * @var float
-	 */
+	/** @var float */
 	private $longitude = 14.4378005;
 
-	/**
-	 * @var \DateTime
-	 */
+	/** @var \DateTime */
 	private $dateTime;
+
 
 	/**
 	 * @param string $original
@@ -65,6 +49,7 @@ class Query
 		$this->dateTime = DateTime::from('now');
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -72,6 +57,7 @@ class Query
 	{
 		return $this->query;
 	}
+
 
 	/**
 	 * @return string
@@ -81,6 +67,7 @@ class Query
 		return $this->original;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -88,6 +75,7 @@ class Query
 	{
 		return $this->query;
 	}
+
 
 	/**
 	 * @return string
@@ -97,6 +85,7 @@ class Query
 		return $this->locale;
 	}
 
+
 	/**
 	 * @return int
 	 */
@@ -104,6 +93,7 @@ class Query
 	{
 		return $this->decimals;
 	}
+
 
 	/**
 	 * @return bool
@@ -113,6 +103,7 @@ class Query
 		return $this->decimals === 8;
 	}
 
+
 	/**
 	 * @return float
 	 */
@@ -120,6 +111,7 @@ class Query
 	{
 		return $this->latitude;
 	}
+
 
 	/**
 	 * @return float
@@ -129,6 +121,7 @@ class Query
 		return $this->longitude;
 	}
 
+
 	/**
 	 * @return \DateTime
 	 */
@@ -137,6 +130,7 @@ class Query
 		return $this->dateTime;
 	}
 
+
 	/**
 	 * @return string[]
 	 */
@@ -144,6 +138,7 @@ class Query
 	{
 		return $this->filteredTags;
 	}
+
 
 	/**
 	 * @param string $query
@@ -154,7 +149,7 @@ class Query
 		$query = (string) preg_replace_callback(
 			'/\s+na\s+(\d+)\s+(?:míst[oay]?)|\s+to\s+(\d+)\s+digits?/u',
 			function (array $match): string {
-				$this->decimals = (int) ($match[1] ? : $match[2]);
+				$this->decimals = (int) ($match[1] ?: $match[2]);
 
 				return '';
 			}, $query
@@ -164,6 +159,7 @@ class Query
 
 		return $this->filteredTags === [] ? $query : $filters;
 	}
+
 
 	/**
 	 * @param string $query
@@ -187,5 +183,4 @@ class Query
 
 		return $query;
 	}
-
 }

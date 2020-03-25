@@ -80,6 +80,7 @@ class NumberCounterController extends BaseController
 	 */
 	private $haveResult = false;
 
+
 	/**
 	 * @param string[] $functions
 	 * @param LinkGenerator $linkGenerator
@@ -89,6 +90,7 @@ class NumberCounterController extends BaseController
 		parent::__construct($linkGenerator);
 		$this->functions = $functions;
 	}
+
 
 	public function actionDefault(): void
 	{
@@ -190,6 +192,7 @@ class NumberCounterController extends BaseController
 		}
 	}
 
+
 	/**
 	 * Bridge for define types of possible exceptions.
 	 *
@@ -203,6 +206,7 @@ class NumberCounterController extends BaseController
 		return $this->calculator->calculate($tokens, $this->getQueryEntity(), $basicTtl);
 	}
 
+
 	private function actionError(array $steps): void
 	{
 		$this->addBox(Box::TYPE_TEXT)
@@ -210,6 +214,7 @@ class NumberCounterController extends BaseController
 			->setText('Tento vstup bohužel neumíme upravit.')
 			->setSteps($steps);
 	}
+
 
 	/**
 	 * @param IToken[] $tokens
@@ -248,6 +253,7 @@ class NumberCounterController extends BaseController
 		$this->haveResult = true;
 	}
 
+
 	/**
 	 * @param IToken[]|NumberToken[] $tokens
 	 */
@@ -265,6 +271,7 @@ class NumberCounterController extends BaseController
 
 		$this->haveResult = true;
 	}
+
 
 	private function actionUndefinedSolution(): void
 	{
@@ -297,6 +304,7 @@ class NumberCounterController extends BaseController
 				'\lim\limits_{x\to{0}^{+}} {0}^{x}\ =\ 0',
 			]));
 	}
+
 
 	/**
 	 * @param IToken $tokenA
@@ -418,6 +426,7 @@ class NumberCounterController extends BaseController
 		return true;
 	}
 
+
 	/**
 	 * @param IToken $token
 	 * @param Step[] $steps
@@ -493,6 +502,7 @@ class NumberCounterController extends BaseController
 		}
 	}
 
+
 	/**
 	 * @param IToken[] $tokens
 	 * @return bool
@@ -525,6 +535,7 @@ class NumberCounterController extends BaseController
 		return true;
 	}
 
+
 	/**
 	 * @param IToken[] $tokens
 	 * @return bool
@@ -537,6 +548,7 @@ class NumberCounterController extends BaseController
 			&& $tokens[1]->getToken() === '+'
 			&& $tokens[2] instanceof NumberToken;
 	}
+
 
 	/**
 	 * @param string $int
@@ -551,6 +563,7 @@ class NumberCounterController extends BaseController
 
 		return '<div style="max-width:70px">' . $render . '</div>';
 	}
+
 
 	/**
 	 * @param int $factorial
@@ -590,6 +603,7 @@ class NumberCounterController extends BaseController
 
 		return $return;
 	}
+
 
 	/**
 	 * @param IToken[] $tokens

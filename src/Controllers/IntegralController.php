@@ -28,6 +28,7 @@ class IntegralController extends BaseController
 	 */
 	public $tokenizer;
 
+
 	/**
 	 * @throws InvalidBoxException|MathematicatorException|TerminateException|Exception
 	 */

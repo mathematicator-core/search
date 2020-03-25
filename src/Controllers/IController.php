@@ -18,12 +18,14 @@ interface IController
 	 */
 	public function actionDefault(): void;
 
+
 	/**
 	 * @param Query $query
 	 * @return Context
 	 * @throws InvalidDataException
 	 */
 	public function createContext(Query $query): Context;
+
 
 	/**
 	 * @return Context

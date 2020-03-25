@@ -17,6 +17,7 @@ class TreeController extends BaseController
 	 */
 	public $tokenizer;
 
+
 	public function actionDefault(): void
 	{
 		preg_match('/^(?:strom|tree)\s+(.+)$/', $this->getQuery(), $parser);

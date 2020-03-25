@@ -18,43 +18,29 @@ use Nette\SmartObject;
  */
 class Result
 {
-
 	use SmartObject;
 
-	/**
-	 * @var float
-	 */
+	/** @var float */
 	private $time;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $query;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	private $length = 0;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	private $userRequests = 0;
 
-	/**
-	 * @var Box
-	 */
+	/** @var Box */
 	private $interpret;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $matchedRoute;
 
-	/**
-	 * @var Box[]
-	 */
+	/** @var Box[] */
 	private $boxes;
+
 
 	/**
 	 * @return string
@@ -64,6 +50,7 @@ class Result
 		return $this->query;
 	}
 
+
 	/**
 	 * @param string $query
 	 */
@@ -71,6 +58,7 @@ class Result
 	{
 		$this->query = $query;
 	}
+
 
 	/**
 	 * @return int
@@ -80,6 +68,7 @@ class Result
 		return $this->length;
 	}
 
+
 	/**
 	 * @param int $length
 	 */
@@ -87,6 +76,7 @@ class Result
 	{
 		$this->length = $length;
 	}
+
 
 	/**
 	 * @return int
@@ -96,6 +86,7 @@ class Result
 		return $this->userRequests;
 	}
 
+
 	/**
 	 * @param int $userRequests
 	 */
@@ -103,6 +94,7 @@ class Result
 	{
 		$this->userRequests = $userRequests;
 	}
+
 
 	/**
 	 * @return null|Box
@@ -112,6 +104,7 @@ class Result
 		return $this->interpret;
 	}
 
+
 	/**
 	 * @param Box $interpret
 	 */
@@ -119,6 +112,7 @@ class Result
 	{
 		$this->interpret = $interpret;
 	}
+
 
 	/**
 	 * @return string
@@ -128,6 +122,7 @@ class Result
 		return $this->matchedRoute;
 	}
 
+
 	/**
 	 * @param string $matchedRoute
 	 */
@@ -135,6 +130,7 @@ class Result
 	{
 		$this->matchedRoute = $matchedRoute;
 	}
+
 
 	/**
 	 * @return Box[]
@@ -144,6 +140,7 @@ class Result
 		return $this->boxes;
 	}
 
+
 	/**
 	 * @param Box[] $boxes
 	 */
@@ -151,6 +148,7 @@ class Result
 	{
 		$this->boxes = $boxes;
 	}
+
 
 	/**
 	 * @return float
@@ -160,6 +158,7 @@ class Result
 		return $this->time;
 	}
 
+
 	/**
 	 * @param float $time
 	 */
@@ -167,5 +166,4 @@ class Result
 	{
 		$this->time = $time;
 	}
-
 }

@@ -31,6 +31,7 @@ class OEISController extends BaseController
 	 */
 	private $statisticManager;
 
+
 	/**
 	 * @param LinkGenerator $linkGenerator
 	 * @param StatisticsManager $statisticManager
@@ -43,6 +44,7 @@ class OEISController extends BaseController
 		parent::__construct($linkGenerator);
 		$this->statisticManager = $statisticManager;
 	}
+
 
 	public function actionDefault(): void
 	{
@@ -111,6 +113,7 @@ class OEISController extends BaseController
 		}
 	}
 
+
 	/**
 	 * @param string $data
 	 * @return string
@@ -133,6 +136,7 @@ class OEISController extends BaseController
 		return $return;
 	}
 
+
 	/**
 	 * @param string $data
 	 * @return string
@@ -143,6 +147,7 @@ class OEISController extends BaseController
 			. str_replace("\n", '<hr>', $this->formatLinks(htmlspecialchars($data)))
 			. '</div>';
 	}
+
 
 	/**
 	 * @param string $data

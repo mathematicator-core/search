@@ -21,6 +21,7 @@ class MandelbrotSetController extends BaseController
 	 */
 	public $mandelbrotSet;
 
+
 	/**
 	 * @throws InvalidBoxException|TerminateException
 	 */

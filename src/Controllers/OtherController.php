@@ -17,6 +17,7 @@ class OtherController extends BaseController
 	 */
 	private $basePath;
 
+
 	/**
 	 * @param LinkGenerator $linkGenerator
 	 * @param Request $httpRequest
@@ -27,6 +28,7 @@ class OtherController extends BaseController
 		$baseUri = $httpRequest ? rtrim($httpRequest->getUrl()->getBaseUrl(), '/') : null;
 		$this->basePath = preg_replace('#https?://[^/]+#A', '', $baseUri);
 	}
+
 
 	public function actionDefault(): void
 	{

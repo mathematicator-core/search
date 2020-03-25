@@ -11,38 +11,26 @@ use Nette\SmartObject;
 
 class Context
 {
-
 	use SmartObject;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $query;
 
-	/**
-	 * @var Query
-	 */
+	/** @var Query */
 	private $queryEntity;
 
-	/**
-	 * @var Box[]
-	 */
+	/** @var Box[] */
 	private $boxes = [];
 
-	/**
-	 * @var Source[]
-	 */
+	/** @var Source[] */
 	private $sources = [];
 
-	/**
-	 * @var DynamicConfiguration[]
-	 */
+	/** @var DynamicConfiguration[] */
 	private $dynamicConfigurations = [];
 
-	/**
-	 * @var Box|null
-	 */
+	/** @var Box|null */
 	private $interpret;
+
 
 	/**
 	 * @param Query $query
@@ -53,6 +41,7 @@ class Context
 		$this->queryEntity = $query;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -61,6 +50,7 @@ class Context
 		return $this->query;
 	}
 
+
 	/**
 	 * @return Query
 	 */
@@ -68,6 +58,7 @@ class Context
 	{
 		return $this->queryEntity;
 	}
+
 
 	/**
 	 * @param string $type
@@ -87,6 +78,7 @@ class Context
 		return $box;
 	}
 
+
 	/**
 	 * @return Box[]
 	 */
@@ -94,6 +86,7 @@ class Context
 	{
 		return $this->boxes ?? [];
 	}
+
 
 	/**
 	 * @return Source[]
@@ -103,6 +96,7 @@ class Context
 		return $this->sources;
 	}
 
+
 	/**
 	 * @internal
 	 */
@@ -111,6 +105,7 @@ class Context
 		$this->boxes = [];
 	}
 
+
 	/**
 	 * @return Box|null
 	 */
@@ -118,6 +113,7 @@ class Context
 	{
 		return $this->interpret;
 	}
+
 
 	/**
 	 * @param string $boxType
@@ -130,6 +126,7 @@ class Context
 			->setIcon('fas fa-project-diagram');
 	}
 
+
 	/**
 	 * @param Source $source
 	 */
@@ -137,6 +134,7 @@ class Context
 	{
 		$this->sources[] = $source;
 	}
+
 
 	/**
 	 * @param string $key
@@ -151,6 +149,7 @@ class Context
 		return $this->dynamicConfigurations[$key];
 	}
 
+
 	/**
 	 * @return DynamicConfiguration[]
 	 */
@@ -158,5 +157,4 @@ class Context
 	{
 		return $this->dynamicConfigurations;
 	}
-
 }

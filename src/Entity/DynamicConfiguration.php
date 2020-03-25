@@ -9,33 +9,23 @@ use Nette\SmartObject;
 
 class DynamicConfiguration
 {
-
 	use SmartObject;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $key;
 
-	/**
-	 * @var string|null
-	 */
+	/** @var string|null */
 	private $title;
 
-	/**
-	 * @var string[]|null[]
-	 */
+	/** @var string[]|null[] */
 	private $data = [];
 
-	/**
-	 * @var string[]
-	 */
+	/** @var string[] */
 	private $defaults = [];
 
-	/**
-	 * @var string[]
-	 */
+	/** @var string[] */
 	private $labels = [];
+
 
 	/**
 	 * @param string $key
@@ -45,6 +35,7 @@ class DynamicConfiguration
 		$this->key = $key;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -53,6 +44,7 @@ class DynamicConfiguration
 		return $this->key;
 	}
 
+
 	/**
 	 * @return string|null
 	 */
@@ -60,6 +52,7 @@ class DynamicConfiguration
 	{
 		return $this->title;
 	}
+
 
 	/**
 	 * @param string|null $title
@@ -71,6 +64,7 @@ class DynamicConfiguration
 
 		return $this;
 	}
+
 
 	/**
 	 * @return string
@@ -88,6 +82,7 @@ class DynamicConfiguration
 		return $return;
 	}
 
+
 	/**
 	 * @param string $key
 	 * @param string|null $default
@@ -99,6 +94,7 @@ class DynamicConfiguration
 
 		return $this->data[$key] ?? $default;
 	}
+
 
 	/**
 	 * @return string[]|null[]
@@ -116,6 +112,7 @@ class DynamicConfiguration
 		return $return;
 	}
 
+
 	/**
 	 * @return string[]
 	 */
@@ -123,6 +120,7 @@ class DynamicConfiguration
 	{
 		return $this->labels;
 	}
+
 
 	/**
 	 * @param string $key
@@ -132,6 +130,7 @@ class DynamicConfiguration
 	{
 		return $this->labels[$key] ?? $key;
 	}
+
 
 	/**
 	 * @param string $key
@@ -151,6 +150,7 @@ class DynamicConfiguration
 		return $this;
 	}
 
+
 	/**
 	 * @param array $haystack
 	 * @return DynamicConfiguration
@@ -159,12 +159,13 @@ class DynamicConfiguration
 	{
 		foreach ($haystack as $key => $value) {
 			if (isset($this->data[$key]) === false) {
-				$this->data[$key] = ((string) $value) ? : null;
+				$this->data[$key] = ((string) $value) ?: null;
 			}
 		}
 
 		return $this;
 	}
+
 
 	/**
 	 * @param string $key
@@ -177,5 +178,4 @@ class DynamicConfiguration
 
 		return $this;
 	}
-
 }

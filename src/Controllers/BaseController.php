@@ -36,6 +36,7 @@ class BaseController implements IController
 	 */
 	private $linkGenerator;
 
+
 	/**
 	 * @param LinkGenerator $linkGenerator
 	 */
@@ -44,6 +45,7 @@ class BaseController implements IController
 		$this->linkGenerator = $linkGenerator;
 	}
 
+
 	/**
 	 * @return Context
 	 */
@@ -51,6 +53,7 @@ class BaseController implements IController
 	{
 		return $this->context;
 	}
+
 
 	/**
 	 * @param string $type
@@ -61,6 +64,7 @@ class BaseController implements IController
 	{
 		return $this->context->addBox($type);
 	}
+
 
 	/**
 	 * @param string $key
@@ -109,6 +113,7 @@ class BaseController implements IController
 			);
 	}
 
+
 	/**
 	 * @param string $boxType
 	 * @param string|null $content
@@ -119,6 +124,7 @@ class BaseController implements IController
 		return $this->context->setInterpret($boxType, $content);
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -126,6 +132,7 @@ class BaseController implements IController
 	{
 		return $this->context->getQuery();
 	}
+
 
 	/**
 	 * @internal
@@ -148,6 +155,7 @@ class BaseController implements IController
 		return $this->context;
 	}
 
+
 	/**
 	 * @return Query
 	 */
@@ -156,6 +164,7 @@ class BaseController implements IController
 		return $this->context->getQueryEntity();
 	}
 
+
 	/**
 	 * @throws \InvalidArgumentException
 	 */
@@ -163,6 +172,7 @@ class BaseController implements IController
 	{
 		throw new \InvalidArgumentException(__METHOD__ . ': Method actionDefault() does not found in result Entity.');
 	}
+
 
 	/**
 	 * @param string $query
@@ -181,6 +191,7 @@ class BaseController implements IController
 		}
 	}
 
+
 	/**
 	 * @param string $key
 	 * @return DynamicConfiguration
@@ -189,6 +200,7 @@ class BaseController implements IController
 	{
 		return $this->context->getDynamicConfiguration($key);
 	}
+
 
 	/**
 	 * @param Source $source

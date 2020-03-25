@@ -24,6 +24,7 @@ class DateController extends BaseController
 
 	private static $days = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
 
+
 	public function actionDefault(): void
 	{
 		$date = DateTime::from($this->getQuery());
@@ -47,6 +48,7 @@ class DateController extends BaseController
 			$this->moon($date);
 		}
 	}
+
 
 	/**
 	 * @param DateTime $date
@@ -86,6 +88,7 @@ class DateController extends BaseController
 			)->setText($buffer);
 	}
 
+
 	/**
 	 * @param int $year
 	 * @return int[][][]
@@ -106,6 +109,7 @@ class DateController extends BaseController
 
 		return $dates;
 	}
+
 
 	private function sun(DateTime $date): void
 	{
@@ -129,6 +133,7 @@ class DateController extends BaseController
 
 		$this->addSource($source);
 	}
+
 
 	private function moon(DateTime $date): void
 	{

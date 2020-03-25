@@ -40,6 +40,7 @@ class SequenceController extends BaseController
 	 */
 	private $addNumbers;
 
+
 	/**
 	 * @param LinkGenerator $linkGenerator
 	 * @param StatisticsManager $statisticManager
@@ -61,6 +62,7 @@ class SequenceController extends BaseController
 		$this->stepFactory = $stepFactory;
 		$this->addNumbers = $addNumbers;
 	}
+
 
 	public function actionDefault(): void
 	{
@@ -107,6 +109,7 @@ class SequenceController extends BaseController
 			->setText($this->statisticManager->getMedian($entities));
 		*/
 	}
+
 
 	/**
 	 * @param IToken[] $numberTokens
@@ -160,6 +163,7 @@ class SequenceController extends BaseController
 				->setSteps($sumSteps);
 		}
 	}
+
 
 	private function integers(array $integers): void
 	{
@@ -224,6 +228,7 @@ class SequenceController extends BaseController
 		}
 	}
 
+
 	/**
 	 * @param Sequence $sequence
 	 * @param string $data
@@ -257,6 +262,7 @@ class SequenceController extends BaseController
 
 		return $return;
 	}
+
 
 	/**
 	 * @param string $data

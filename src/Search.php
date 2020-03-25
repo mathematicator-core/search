@@ -15,10 +15,9 @@ use Tracy\Debugger;
 class Search
 {
 
-	/**
-	 * @var Engine
-	 */
+	/** @var Engine */
 	private $engine;
+
 
 	/**
 	 * @param Engine $engine
@@ -27,6 +26,7 @@ class Search
 	{
 		$this->engine = $engine;
 	}
+
 
 	/**
 	 * @param string $query
@@ -47,6 +47,7 @@ class Search
 		return $engineResult;
 	}
 
+
 	/**
 	 * @param string $query
 	 * @return AutoCompleteResult
@@ -59,5 +60,4 @@ class Search
 		return (new AutoCompleteResult)
 			->setResult(\is_array($searchResult) ? $searchResult['left'] : $searchResult);
 	}
-
 }

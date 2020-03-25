@@ -56,6 +56,7 @@ class NumberController extends BaseController
 	 */
 	private $number;
 
+
 	public function actionDefault(): void
 	{
 		$number = $this->getQuery();
@@ -115,6 +116,7 @@ class NumberController extends BaseController
 		}
 	}
 
+
 	private function actionInteger(): void
 	{
 		$int = $this->number->getInteger();
@@ -153,6 +155,7 @@ class NumberController extends BaseController
 		}
 	}
 
+
 	private function actionDivisionByZero(string $number): void
 	{
 		preg_match('/^(?<top>.+?)\/(?<bottom>.+)$/', $number, $match);
@@ -174,12 +177,14 @@ class NumberController extends BaseController
 			->setSteps([$step]);
 	}
 
+
 	private function actionFloat(): void
 	{
 		if ($this->number->getFraction()[1] !== 1) {
 			$this->convertToFraction();
 		}
 	}
+
 
 	/**
 	 * @param SmartNumber $number
@@ -255,6 +260,7 @@ class NumberController extends BaseController
 			->setSteps($steps);
 	}
 
+
 	/**
 	 * @param int $currentYear
 	 * @param int $year
@@ -289,6 +295,7 @@ class NumberController extends BaseController
 			->setSteps([$step]);
 	}
 
+
 	/**
 	 * @param string $int
 	 */
@@ -308,6 +315,7 @@ class NumberController extends BaseController
 			->setText(implode("\n", $bin));
 	}
 
+
 	private function alternativeRewrite(): void
 	{
 		$this->addBox(Box::TYPE_LATEX)
@@ -315,6 +323,7 @@ class NumberController extends BaseController
 			->setText(NumberHelper::intToRoman($this->number->getInteger()))
 			->setSteps($this->romanToIntSteps->getIntToRomanSteps($this->number->getInteger()));
 	}
+
 
 	/**
 	 * @param string $int
@@ -339,6 +348,7 @@ class NumberController extends BaseController
 			->setTitle('Unix Timestamp | Čas serveru: ' . date('d. m. Y H:i:s'))
 			->setText($timestamp);
 	}
+
 
 	private function primeFactorization(): void
 	{
@@ -379,6 +389,7 @@ class NumberController extends BaseController
 		}
 	}
 
+
 	private function divisors(): void
 	{
 		$int = $this->number->getInteger();
@@ -406,6 +417,7 @@ class NumberController extends BaseController
 		// TODO: 'hiddenContent' => 'Vlastnosti dělitelnosti'
 	}
 
+
 	/**
 	 * @param int[]|string[] $array
 	 * @return int[]|string[]
@@ -423,6 +435,7 @@ class NumberController extends BaseController
 		return $toStr;
 	}
 
+
 	private function graphicInt(): void
 	{
 		$int = $this->number->getInteger();
@@ -436,6 +449,7 @@ class NumberController extends BaseController
 			->setText('<div style="overflow: auto;">' . $render . '</div>');
 	}
 
+
 	private function aboutPi(): void
 	{
 		$this->setInterpret(Box::TYPE_LATEX, '\pi');
@@ -444,6 +458,7 @@ class NumberController extends BaseController
 			->setTitle('Přibližná hodnota π | Ludolfovo číslo | Přesnost: ' . $this->queryEntity->getDecimals())
 			->setText('π ≈ ' . $this->numberHelper->getPi($this->queryEntity->getDecimals()) . ' …');
 	}
+
 
 	private function convertToFraction(): void
 	{
@@ -466,6 +481,7 @@ class NumberController extends BaseController
 		}
 	}
 
+
 	private function bigNumber(string $int): void
 	{
 		$countNumbers = \strlen($int);
@@ -483,6 +499,7 @@ class NumberController extends BaseController
 			}
 		}
 	}
+
 
 	/**
 	 * @param string $data

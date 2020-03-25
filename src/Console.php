@@ -17,10 +17,9 @@ use Tracy\Dumper;
 class Console extends Command
 {
 
-	/**
-	 * @var Search
-	 */
+	/** @var Search */
 	private $search;
+
 
 	/**
 	 * @param Search $search
@@ -31,11 +30,13 @@ class Console extends Command
 		$this->search = $search;
 	}
 
+
 	protected function configure(): void
 	{
 		$this->setName('app:search')
 			->setDescription('Search by computational knowledge engine.');
 	}
+
 
 	/**
 	 * @param InputInterface $input
@@ -80,6 +81,7 @@ class Console extends Command
 		}
 	}
 
+
 	/**
 	 * @param EngineSingleResult $result
 	 */
@@ -96,5 +98,4 @@ class Console extends Command
 			echo $box->getText();
 		}
 	}
-
 }

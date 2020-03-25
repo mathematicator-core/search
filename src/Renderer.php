@@ -12,9 +12,7 @@ use Nette\Utils\Validators;
 final class Renderer
 {
 
-	/**
-	 * @var string[]
-	 */
+	/** @var string[] */
 	private const SERVICES = [
 		Box::TYPE_TEXT => 'renderText',
 		Box::TYPE_LATEX => 'renderLatex',
@@ -23,6 +21,7 @@ final class Renderer
 		Box::TYPE_IMAGE => 'renderImage',
 		Box::TYPE_TABLE => 'renderTable',
 	];
+
 
 	/**
 	 * @param mixed $data
@@ -38,6 +37,7 @@ final class Renderer
 
 		throw new MathematicatorException('Unknown box type "' . $type . '"');
 	}
+
 
 	/**
 	 * @param string $data
@@ -76,6 +76,7 @@ final class Renderer
 		return '<table>' . $return . '</table>';
 	}
 
+
 	/**
 	 * @param string $title
 	 * @return string
@@ -84,7 +85,7 @@ final class Renderer
 	{
 		$return = '';
 
-		foreach (explode('|', $title ? : 'Box bez názvu') as $item) {
+		foreach (explode('|', $title ?: 'Box bez názvu') as $item) {
 			$return .= $return !== '' && preg_match('/.+\:\s+.+/', $item = trim($item), $itemParser)
 				? '<span class="search-box-header-hightlight">' . $item . '</span>'
 				: '<span class="search-box-header-text">' . $item . '</span>';
@@ -92,6 +93,7 @@ final class Renderer
 
 		return $return;
 	}
+
 
 	/**
 	 * @internal
@@ -102,6 +104,7 @@ final class Renderer
 	{
 		return TextRenderer::process($data);
 	}
+
 
 	/**
 	 * @internal
@@ -123,6 +126,7 @@ final class Renderer
 		return $return;
 	}
 
+
 	/**
 	 * @internal
 	 * @param string $data
@@ -141,6 +145,7 @@ final class Renderer
 		return $return;
 	}
 
+
 	/**
 	 * @internal
 	 * @param string $data
@@ -158,6 +163,7 @@ final class Renderer
 
 		return $this->renderText($data);
 	}
+
 
 	/**
 	 * @internal
@@ -209,6 +215,7 @@ final class Renderer
 		return $return === null ? $number : (string) preg_replace('/(^\\\\\s*)|(\\\\\s*$)/', '', $return);
 	}
 
+
 	/**
 	 * @internal
 	 * @param string $data
@@ -219,5 +226,4 @@ final class Renderer
 		// TODO: Implement automatic escaping and tag-whitelist!
 		return $data;
 	}
-
 }
