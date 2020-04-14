@@ -7,17 +7,18 @@ namespace Mathematicator\SearchController;
 
 use Mathematicator\Calculator\Calculator;
 use Mathematicator\Calculator\CalculatorResult;
-use Mathematicator\Calculator\Step;
+use Mathematicator\Engine\Box;
+use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\DivisionByZero;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\MathematicatorException;
 use Mathematicator\Engine\MathErrorException;
+use Mathematicator\Engine\Query;
+use Mathematicator\Engine\Step;
 use Mathematicator\Engine\Translator;
 use Mathematicator\Engine\UndefinedOperationException;
 use Mathematicator\MathFunction\FunctionDoesNotExistsException;
 use Mathematicator\NumberHelper;
-use Mathematicator\Search\Box;
-use Mathematicator\Search\Query;
 use Mathematicator\Step\StepFactory;
 use Mathematicator\Tokenizer\Token\ComparatorToken;
 use Mathematicator\Tokenizer\Token\EquationToken;
@@ -31,7 +32,7 @@ use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 
-class NumberCounterController extends BaseController
+final class NumberCounterController extends BaseController
 {
 
 	/**
@@ -70,14 +71,10 @@ class NumberCounterController extends BaseController
 	 */
 	public $mathFunctionRenderer;
 
-	/**
-	 * @var string[]
-	 */
+	/** @var string[] */
 	private $functions;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	private $haveResult = false;
 
 
@@ -207,6 +204,9 @@ class NumberCounterController extends BaseController
 	}
 
 
+	/**
+	 * @param Step[] $steps
+	 */
 	private function actionError(array $steps): void
 	{
 		$this->addBox(Box::TYPE_TEXT)
@@ -259,12 +259,15 @@ class NumberCounterController extends BaseController
 	 */
 	private function actionAddNumbers(array $tokens): void
 	{
+		/** @var NumberToken $numberToken */
+		$numberToken = $tokens[0];
+
 		$this->addBox(Box::TYPE_HTML)
 			->setTitle('Sčítání pod sebou')
 			->setText(
 				$this->number->getAddStepAsHtml(
-					$tokens[0]->getNumber()->getInput(),
-					$tokens[2]->getNumber()->getInput(),
+					$numberToken->getNumber()->getInput(),
+					$numberToken->getNumber()->getInput(),
 					true
 				)
 			);
@@ -328,10 +331,10 @@ class NumberCounterController extends BaseController
 
 			switch ($comparator->getToken()) {
 				case '<<':
-					return $numberA << $numberB;
+					return (float) $numberA < (float) $numberB;
 
 				case '>>':
-					return $numberA >> $numberB;
+					return (float) $numberA > (float) $numberB;
 
 				case '<=>':
 				case '<>':
@@ -340,16 +343,16 @@ class NumberCounterController extends BaseController
 					return $numberA !== $numberB;
 
 				case '<=':
-					return $numberA <= $numberB;
+					return (float) $numberA <= (float) $numberB;
 
 				case '>=':
-					return $numberA >= $numberB;
+					return (float) $numberA >= (float) $numberB;
 
 				case '<':
-					return $numberA < $numberB;
+					return (float) $numberA < (float) $numberB;
 
 				case '>':
-					return $numberA > $numberB;
+					return (float) $numberA > (float) $numberB;
 			}
 
 			return false;
@@ -441,7 +444,7 @@ class NumberCounterController extends BaseController
 				$result = '\(' . ($fraction[0] < 0 ? '-' : '')
 					. '\frac{' . abs($fraction[0]) . '}'
 					. '{' . $fraction[1] . '} ≈ '
-					. preg_replace('/^(.+)[eE](.+)$/', '$1\ \cdot\ {10}^{$2}', $token->getNumber()->getFloat()) . '\)'
+					. preg_replace('/^(.+)[eE](.+)$/', '$1\ \cdot\ {10}^{$2}', $token->getNumber()->getFloatString()) . '\)'
 					. '<br><br><span class="text-secondary">Upozornění: Řešení může být zobrazeno jen přibližně.</span>';
 			}
 
@@ -616,5 +619,4 @@ class NumberCounterController extends BaseController
 			->setTitle('Graf funkce')
 			->setText($image);
 	}
-
 }

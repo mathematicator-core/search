@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mathematicator\SearchController;
 
 
+use Mathematicator\Engine\Box;
+use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\DivisionByZero;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Helper\DateTime;
@@ -12,13 +14,12 @@ use Mathematicator\Engine\Translator;
 use Mathematicator\NumberHelper;
 use Mathematicator\Numbers\NumberFactory;
 use Mathematicator\Numbers\SmartNumber;
-use Mathematicator\Search\Box;
 use Mathematicator\Step\RomanIntSteps;
 use Mathematicator\Step\StepFactory;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 
-class NumberController extends BaseController
+final class NumberController extends BaseController
 {
 
 	/**
@@ -51,9 +52,7 @@ class NumberController extends BaseController
 	 */
 	public $stepFactory;
 
-	/**
-	 * @var SmartNumber
-	 */
+	/** @var SmartNumber */
 	private $number;
 
 
@@ -247,11 +246,7 @@ class NumberController extends BaseController
 		}
 
 		$step->setTitle('Splněné předpoklady');
-		$step->setDescription($stepDescription === []
-			? ''
-			: '<ul><li>' . implode('</li><li>', $stepDescription) . '</li></ul>',
-			true
-		);
+		$step->setDescription('<ul><li>' . implode('</li><li>', $stepDescription) . '</li></ul>', true);
 		$steps[] = $step;
 
 		$this->addBox(Box::TYPE_TEXT)
@@ -305,10 +300,10 @@ class NumberController extends BaseController
 			return;
 		}
 
-		$bin[] = Strings::upper(decbin($int)) . '_{2}';
-		$bin[] = Strings::upper(decoct($int)) . '_{8}';
+		$bin[] = Strings::upper(decbin((int) $int)) . '_{2}';
+		$bin[] = Strings::upper(decoct((int) $int)) . '_{8}';
 		$bin[] = Strings::upper($int) . '_{10}';
-		$bin[] = '\\text{' . Strings::upper(dechex($int)) . '}_{16}';
+		$bin[] = '\\text{' . Strings::upper(dechex((int) $int)) . '}_{16}';
 
 		$this->addBox(Box::TYPE_LATEX)
 			->setTitle('Převod číselných soustav')
@@ -331,7 +326,7 @@ class NumberController extends BaseController
 	private function timestamp(string $int): void
 	{
 		$currentTimestamp = \time();
-		$dateDiff = abs($currentTimestamp - $int);
+		$dateDiff = abs($currentTimestamp - (int) $int);
 
 		$timestamp = '<p><b>' . DateTime::getDateTimeIso((int) $int) . '</b></p>'
 			. '<p>'

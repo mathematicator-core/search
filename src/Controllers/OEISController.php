@@ -8,27 +8,24 @@ namespace Mathematicator\SearchController;
 use Baraja\Doctrine\EntityManagerException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Mathematicator\Engine\Box;
+use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\Source;
-use Mathematicator\Search\Box;
 use Mathematicator\Statistics\StatisticsManager;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 
-class OEISController extends BaseController
+final class OEISController extends BaseController
 {
 
-	/**
-	 * @var string[]
-	 */
+	/** @var string[] */
 	private static $types = [
 		'O' => 'Offset',
 		'K' => 'Klíčová slova',
 		'A' => 'Autor',
 	];
 
-	/**
-	 * @var StatisticsManager
-	 */
+	/** @var StatisticsManager */
 	private $statisticManager;
 
 
@@ -36,10 +33,7 @@ class OEISController extends BaseController
 	 * @param LinkGenerator $linkGenerator
 	 * @param StatisticsManager $statisticManager
 	 */
-	public function __construct(
-		LinkGenerator $linkGenerator,
-		StatisticsManager $statisticManager
-	)
+	public function __construct(LinkGenerator $linkGenerator, StatisticsManager $statisticManager)
 	{
 		parent::__construct($linkGenerator);
 		$this->statisticManager = $statisticManager;
@@ -159,5 +153,4 @@ class OEISController extends BaseController
 			return ' <a href="' . $this->linkToSearch($row[1]) . '">' . $row[1] . '</a> ';
 		}, $data);
 	}
-
 }

@@ -61,7 +61,9 @@ class Console extends Command
 
 					if (\is_array($result)) {
 						foreach ($result as $resultItem) {
-							$this->render($resultItem);
+							if ($resultItem instanceof EngineSingleResult) {
+								$this->render($resultItem);
+							}
 							echo "\n\n\n---------------------\n\n\n";
 						}
 					} elseif ($result instanceof EngineSingleResult) {
@@ -69,9 +71,7 @@ class Console extends Command
 					}
 				}
 			}
-
-			return 0;
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$output->writeLn('<error>' . $e->getMessage() . '</error>');
 			echo "\n\n";
 			Terminal::code($e->getFile(), $e->getLine());

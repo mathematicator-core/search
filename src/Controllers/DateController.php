@@ -6,22 +6,25 @@ namespace Mathematicator\SearchController;
 
 
 use Martindilling\Sunny\Sunny;
+use Mathematicator\Engine\Box;
+use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Source;
-use Mathematicator\Search\Box;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use Solaris\MoonPhase;
 
-class DateController extends BaseController
+final class DateController extends BaseController
 {
 
+	/** @var string[] */
 	private static $months = [
 		1 => 'leden', 'únor', 'březen', 'duben', 'květen',
 		'červen', 'červenec', 'srpen', 'září', 'říjen',
 		'listopad', 'prosinec',
 	];
 
+	/** @var string[] */
 	private static $days = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
 
 
@@ -113,7 +116,7 @@ class DateController extends BaseController
 
 	private function sun(DateTime $date): void
 	{
-		$day = new Sunny($date, 'Europe/Prague');
+		$day = new Sunny($date->format('Y-m-d H:i:s.u'), 'Europe/Prague');
 		$day->setLocation(50.0755381, 14.4378005); // Prague
 
 		$this->addBox(Box::TYPE_HTML)
@@ -182,5 +185,4 @@ class DateController extends BaseController
 
 		$this->addSource($source);
 	}
-
 }

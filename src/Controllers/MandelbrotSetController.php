@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Mathematicator\SearchController;
 
 
-use Mathematicator\Engine\InvalidBoxException;
+use Mathematicator\Engine\Box;
+use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\Source;
-use Mathematicator\Engine\TerminateException;
 use Mathematicator\MandelbrotSet\MandelbrotSet;
 use Mathematicator\MandelbrotSet\MandelbrotSetRequest;
-use Mathematicator\Search\Box;
 
-class MandelbrotSetController extends BaseController
+final class MandelbrotSetController extends BaseController
 {
 
 	/**
@@ -22,9 +21,6 @@ class MandelbrotSetController extends BaseController
 	public $mandelbrotSet;
 
 
-	/**
-	 * @throws InvalidBoxException|TerminateException
-	 */
 	public function actionDefault(): void
 	{
 		$this->setInterpret(Box::TYPE_KEYWORD, 'Mandelbrotova množina komplexních čísel');
@@ -51,8 +47,8 @@ class MandelbrotSetController extends BaseController
 			->addLabel('deltaA', 'Delta A')
 			->addLabel('deltaB', 'Delta B')
 			->setValues([
-				'deltaA' => 3,
-				'deltaB' => 4,
+				'deltaA' => '3',
+				'deltaB' => '4',
 			]);
 
 		$this->addBoxDynamicConfiguration('mandelbrot-set');
@@ -84,5 +80,4 @@ class MandelbrotSetController extends BaseController
 			'https://cs.wikipedia.org/wiki/Mandelbrotova_mno%C5%BEina'
 		));
 	}
-
 }

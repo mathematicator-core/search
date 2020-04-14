@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
+use Mathematicator\Engine\Box;
 use Nette\SmartObject;
 
 /**
@@ -16,7 +17,7 @@ use Nette\SmartObject;
  * @property string $matchedRoute
  * @property Box[] $boxes
  */
-class Result
+final class Result
 {
 	use SmartObject;
 
@@ -53,10 +54,13 @@ class Result
 
 	/**
 	 * @param string $query
+	 * @return Result
 	 */
-	public function setQuery(string $query): void
+	public function setQuery(string $query): self
 	{
 		$this->query = $query;
+
+		return $this;
 	}
 
 
@@ -71,10 +75,13 @@ class Result
 
 	/**
 	 * @param int $length
+	 * @return Result
 	 */
-	public function setLength(int $length): void
+	public function setLength(int $length): self
 	{
 		$this->length = $length;
+
+		return $this;
 	}
 
 
@@ -89,10 +96,13 @@ class Result
 
 	/**
 	 * @param int $userRequests
+	 * @return Result
 	 */
-	public function setUserRequests(int $userRequests): void
+	public function setUserRequests(int $userRequests): self
 	{
 		$this->userRequests = $userRequests;
+
+		return $this;
 	}
 
 
@@ -107,10 +117,13 @@ class Result
 
 	/**
 	 * @param Box $interpret
+	 * @return Result
 	 */
-	public function setInterpret(Box $interpret): void
+	public function setInterpret(Box $interpret): self
 	{
 		$this->interpret = $interpret;
+
+		return $this;
 	}
 
 
@@ -125,10 +138,13 @@ class Result
 
 	/**
 	 * @param string $matchedRoute
+	 * @return Result
 	 */
-	public function setMatchedRoute(string $matchedRoute): void
+	public function setMatchedRoute(string $matchedRoute): self
 	{
 		$this->matchedRoute = $matchedRoute;
+
+		return $this;
 	}
 
 
@@ -143,10 +159,13 @@ class Result
 
 	/**
 	 * @param Box[] $boxes
+	 * @return Result
 	 */
-	public function setBoxes(array $boxes): void
+	public function setBoxes(array $boxes): self
 	{
 		$this->boxes = $boxes;
+
+		return $this;
 	}
 
 
@@ -161,9 +180,12 @@ class Result
 
 	/**
 	 * @param float $time
+	 * @return Result
 	 */
-	public function setTime(float $time): void
+	public function setTime(float $time): self
 	{
 		$this->time = $time;
+
+		return $this;
 	}
 }

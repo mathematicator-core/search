@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
+use Mathematicator\Engine\Box;
 use Mathematicator\Engine\MathematicatorException;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
@@ -212,7 +213,7 @@ final class Renderer
 				: $formattedNumber;
 		}
 
-		return $return === null ? $number : (string) preg_replace('/(^\\\\\s*)|(\\\\\s*$)/', '', $return);
+		return (string) preg_replace('/(^\\\\\s*)|(\\\\\s*$)/', '', $return);
 	}
 
 
