@@ -520,5 +520,4 @@ final class NumberController extends BaseController
 
 		return $return;
 	}
-
 }

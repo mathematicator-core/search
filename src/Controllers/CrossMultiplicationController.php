@@ -10,12 +10,10 @@ use Mathematicator\Engine\Controller\BaseController;
 
 final class CrossMultiplicationController extends BaseController
 {
-
 	public function actionDefault(): void
 	{
 		$this->setInterpret(Box::TYPE_HTML)
 			->setText('Trojčlenka');
-
 
 		$this->addBox(Box::TYPE_HTML)
 			->setTitle('Definice')
@@ -70,5 +68,4 @@ final class CrossMultiplicationController extends BaseController
 				'
 			);
 	}
-
 }

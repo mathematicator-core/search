@@ -7,9 +7,7 @@ namespace Mathematicator\SearchController;
 
 use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
-use Mathematicator\Engine\InvalidBoxException;
 use Mathematicator\Engine\MathematicatorException;
-use Mathematicator\Engine\TerminateException;
 use Mathematicator\Integral\IntegralSolver;
 use Mathematicator\Tokenizer\Tokenizer;
 use Nette\Tokenizer\Exception;
@@ -31,7 +29,8 @@ final class IntegralController extends BaseController
 
 
 	/**
-	 * @throws InvalidBoxException|MathematicatorException|TerminateException|Exception
+	 * @throws Exception
+	 * @throws MathematicatorException
 	 */
 	public function actionDefault(): void
 	{
@@ -48,5 +47,4 @@ final class IntegralController extends BaseController
 			->setText($this->tokenizer->tokensToLatex($resultObjects))
 			->setSteps($process->getSteps());
 	}
-
 }

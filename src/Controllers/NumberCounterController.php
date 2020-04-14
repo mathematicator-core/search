@@ -143,7 +143,7 @@ final class NumberCounterController extends BaseController
 					. $supportedFunctions);
 
 			$this->haveResult = true;
-		} catch (MathErrorException|MathematicatorException $e) {
+		} catch (MathErrorException | MathematicatorException $e) {
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Řešení')
 				->setText(
@@ -519,18 +519,16 @@ final class NumberCounterController extends BaseController
 		}
 
 		foreach ($tokens as $token) {
-			if (!
-			(
+			if (!(
 				(
 					$token instanceof OperatorToken
-					&& \in_array($token->getToken(), ['+', '-'])
+					&& \in_array($token->getToken(), ['+', '-'], true)
 				) || (
 					$token instanceof NumberToken
 					&& $token->getNumber()->isInteger()
 					&& $token->getNumber()->getInteger() <= 20
 				)
-			)
-			) {
+			)) {
 				return false;
 			}
 		}

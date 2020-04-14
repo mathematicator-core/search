@@ -11,7 +11,6 @@ final class TextRenderer
 {
 	use StaticClass;
 
-
 	/**
 	 * Reserved for future use.
 	 *

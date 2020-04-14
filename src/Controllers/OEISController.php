@@ -52,7 +52,7 @@ final class OEISController extends BaseController
 
 		try {
 			$sequence = $this->statisticManager->getSequence($this->getQuery());
-		} catch (NoResultException|NonUniqueResultException|EntityManagerException $e) {
+		} catch (NoResultException | NonUniqueResultException | EntityManagerException $e) {
 			return;
 		}
 
