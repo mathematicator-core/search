@@ -3,7 +3,7 @@ Mathematicator search
 
 [![Integrity check](https://github.com/mathematicator-core/search/workflows/Integrity%20check/badge.svg)](https://github.com/mathematicator-core/search/actions?query=workflow%3A%22Integrity+check%22)
 [![codecov](https://codecov.io/gh/mathematicator-core/search/branch/master/graph/badge.svg)](https://codecov.io/gh/mathematicator-core/search)
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](./LICENSE)
 
 This is official version of Mathematicator/VikiTron math search engine for computing your math problems.
 
