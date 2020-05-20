@@ -9,7 +9,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1",
+		"php": ">=7.2",
 		"nette/utils": "^3.0",
 		"janbarasek/php-moon-phase": "^2.0",
 		"martindilling/sunny": "^0.5.3",
