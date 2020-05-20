@@ -468,7 +468,8 @@ final class NumberController extends BaseController
 
 		if ($factor[0] > $factor[1] && Validators::isNumericInt($factor[0]) && Validators::isNumericInt($factor[1])) {
 			$int = (int) floor($factor[0] / $factor[1]);
-			$fraction = $factor[0] - $int * $factor[1];
+
+			$fraction =  (int) $factor[0] - $int * (int) $factor[1];
 
 			$this->addBox(Box::TYPE_LATEX)
 				->setTitle('Složený zlomek')

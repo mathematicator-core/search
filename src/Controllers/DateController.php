@@ -123,8 +123,8 @@ final class DateController extends BaseController
 			->setTitle('Slunce | Vypočítáno pro: Praha [50.0755381, 14.4378005]')
 			->setKeyValue([
 				'Poloha' => $day->latitude . ', ' . $day->longitude . ' (zenit: ' . $day->zenith . ')',
-				'Východ slunce' => $day->getSunrise(),
-				'Západ slunce' => $day->getSunset(),
+				'Východ slunce' => (string) $day->getSunrise(),
+				'Západ slunce' => (string) $day->getSunset(),
 			]);
 
 		$source = new Source(
