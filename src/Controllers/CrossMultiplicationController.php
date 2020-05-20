@@ -64,7 +64,7 @@ final class CrossMultiplicationController extends BaseController
 
 				<p>x / 465 = 28 / 30</p>
 				<p>30x = 465</p>
-				
+
 				'
 			);
 	}

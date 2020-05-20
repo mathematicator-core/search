@@ -156,7 +156,7 @@ class SequenceController extends BaseController
 		foreach ($this->statisticManager->getSequences($integers) as $sequence) {
 			$formula = $sequence->getFormula();
 			$example = $sequence->getDataType('e');
-			$sequenceAuthors[] = $sequence->getDataType('A');
+			$sequenceAuthors[] = (string) $sequence->getDataType('A');
 
 			if ($sequencesBuffer) {
 				$sequencesBuffer .= '<hr>';

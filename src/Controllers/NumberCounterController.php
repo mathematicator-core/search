@@ -471,7 +471,7 @@ final class NumberCounterController extends BaseController
 						$zeros = preg_replace('/^\d+?(0+)$/', '$1', $int);
 						$trailingZerosBox = $this->addBox(Box::TYPE_LATEX)
 							->setTitle('Počet nul na konci')
-							->setText((string) \strlen($zeros));
+							->setText((string) ($zeros ? \strlen($zeros) : 0));
 
 						if (preg_match('/^(\d+)\s*\!$/', $this->query, $factorialParser)) {
 							$trailingZerosBox->setSteps($this->getStepsFactorialTrailingZeros((int) $factorialParser[1]));
