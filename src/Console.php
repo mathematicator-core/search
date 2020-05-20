@@ -76,7 +76,7 @@ class Console extends Command
 			echo "\n\n";
 			Terminal::code($e->getFile(), $e->getLine());
 
-			if(class_exists(Dumper::class) && class_exists(Debugger::class)) {
+			if (class_exists(Dumper::class) && class_exists(Debugger::class)) {
 				echo Dumper::toTerminal(Debugger::log($e));
 			}
 
