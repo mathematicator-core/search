@@ -23,9 +23,11 @@
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^0.12.18",
-		"tracy/tracy": "^2.7",
 		"phpstan/phpstan-nette": "^0.12.6",
 		"nette/tester": "^2.3"
+	},
+	"suggest": {
+		"tracy/tracy": "to advance debugging"
 	},
 	"autoload": {
 		"classmap": [

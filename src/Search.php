@@ -62,7 +62,9 @@ class Search
 	 */
 	public function search(string $query)
 	{
-		Debugger::timer('search_request');
+		if(class_exists(Debugger::class)) {
+			Debugger::timer('search_request');
+		}
 
 		if (($engineResult = $this->engine->compute($query)) instanceof EngineMultiResult) {
 			return [
