@@ -75,7 +75,10 @@ class Console extends Command
 			$output->writeLn('<error>' . $e->getMessage() . '</error>');
 			echo "\n\n";
 			Terminal::code($e->getFile(), $e->getLine());
-			echo Dumper::toTerminal(Debugger::log($e));
+
+			if (class_exists('Tracy\Dumper') && class_exists('Tracy\Debugger')) {
+				echo Dumper::toTerminal(Debugger::log($e));
+			}
 
 			return 1;
 		}
