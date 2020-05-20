@@ -62,7 +62,7 @@ class Search
 	 */
 	public function search(string $query)
 	{
-		if (class_exists(Debugger::class)) {
+		if (class_exists('Tracy\Debugger')) {
 			Debugger::timer('search_request');
 		}
 
