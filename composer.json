@@ -38,8 +38,23 @@
 		]
 	},
 	"scripts": {
+		"codecheck:install": [
+			"composer create-project nette/code-checker temp/code-checker ^3 --no-progress",
+			"composer create-project nette/coding-standard temp/coding-standard ^2 --no-progress"
+		],
+		"codecheck:fix": [
+			"php temp/code-checker/code-checker --short-arrays --strict-types --fix --no-progress",
+			"php temp/coding-standard/ecs check src --config temp/coding-standard/coding-standard-php71.yml"
+		],
 		"phpstan": [
 			"vendor/bin/phpstan analyse src -c phpstan.neon --level 8 --no-progress"
+		],
+		"check": [
+			"composer run codecheck:fix",
+			"composer run phpstan"
+		],
+		"test": [
+			"vendor/bin/tester -s -c tests/php.ini -p php tests --coverage coverage.xml --coverage-src src"
 		]
 	},
 	"minimum-stability": "stable"
