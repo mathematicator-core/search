@@ -1,0 +1,4 @@
+services:
+	- Mathematicator\Search\Translation\TranslatorHelper
+	- Symfony\Component\Translation\Translator
+

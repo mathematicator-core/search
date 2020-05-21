@@ -20,7 +20,9 @@
 		"mathematicator-core/mandelbrot-set": "^2.0",
 		"mathematicator-core/statistic": "^2.0",
 		"mathematicator-core/integral-solver": "^2.0",
-		"mathematicator-core/vizualizator": "^2.0"
+		"mathematicator-core/vizualizator": "^2.0",
+		"symfony/translation": "^4.0",
+		"symfony/yaml": "^5.0"
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^0.12.18",

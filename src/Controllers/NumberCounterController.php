@@ -15,7 +15,6 @@ use Mathematicator\Engine\MathematicatorException;
 use Mathematicator\Engine\MathErrorException;
 use Mathematicator\Engine\Query;
 use Mathematicator\Engine\Step;
-use Mathematicator\Engine\Translator;
 use Mathematicator\Engine\UndefinedOperationException;
 use Mathematicator\MathFunction\FunctionDoesNotExistsException;
 use Mathematicator\NumberHelper;
@@ -33,12 +32,6 @@ use Nette\Utils\Validators;
 
 final class NumberCounterController extends BaseController
 {
-
-	/**
-	 * @var Translator
-	 * @inject
-	 */
-	public $translator;
 
 	/**
 	 * @var Tokenizer
@@ -105,18 +98,18 @@ final class NumberCounterController extends BaseController
 			$fraction = $e->getFraction();
 
 			$step = $this->stepFactory->create();
-			$step->setTitle('Dělení nulou');
-			$step->setDescription($this->translator->translate('divisionByZero', [
-				'count' => $fraction[0],
+			$step->setTitle($this->translator->trans('divisionByZero'));
+			$step->setDescription($this->translator->trans('divisionByZeroDesc', [
+				'number' => $fraction[0],
 			]));
 
 			$this->addBox(Box::TYPE_TEXT)
-				->setTitle('Řešení')
+				->setTitle($this->translator->trans('solution'))
 				->setText('Tento příklad nelze v reálných číslech vyřešit z důvodu dělení nulou.')
 				->setSteps([$step]);
 
 			$this->addBox(Box::TYPE_LATEX)
-				->setTitle('Řešení')
+				->setTitle($this->translator->trans('solution'))
 				->setText('\frac{' . $fraction[0] . '}{' . $fraction[1] . '} = \frac{1}{0} \simeq \infty');
 
 			$this->haveResult = true;
@@ -142,7 +135,7 @@ final class NumberCounterController extends BaseController
 			$this->haveResult = true;
 		} catch (MathErrorException | MathematicatorException $e) {
 			$this->addBox(Box::TYPE_TEXT)
-				->setTitle('Řešení')
+				->setTitle($this->translator->trans('solution'))
 				->setText(
 					'Tato úloha nemá řešení, protože provádíte nepovolenou matematickou operaci.'
 					. "\n\n" . 'Detaily: ' . $e->getMessage()
@@ -276,7 +269,7 @@ final class NumberCounterController extends BaseController
 	private function actionUndefinedSolution(): void
 	{
 		$this->addBox(Box::TYPE_TEXT)
-			->setTitle('Řešení')
+			->setTitle($this->translator->trans('solution'))
 			->setText('Nemá žádné řešení, jde o neurčitý výraz. Není definováno.');
 
 		$undefinedForms = [
@@ -364,7 +357,7 @@ final class NumberCounterController extends BaseController
 
 		if ($numberA === $numberB) {
 			$this->addBox(Box::TYPE_LATEX)
-				->setTitle('Řešení')
+				->setTitle($this->translator->trans('solution'))
 				->setText($numberA);
 
 			return true;
@@ -446,7 +439,7 @@ final class NumberCounterController extends BaseController
 			}
 
 			$this->addBox(Box::TYPE_HTML)
-				->setTitle('Řešení')
+				->setTitle($this->translator->trans('solution'))
 				->setText($result)
 				->setSteps($steps);
 
@@ -490,7 +483,7 @@ final class NumberCounterController extends BaseController
 
 		if ($token instanceof InfinityToken) {
 			$this->addBox(Box::TYPE_LATEX)
-				->setTitle('Řešení')
+				->setTitle($this->translator->trans('solution'))
 				->setText('\infty')
 				->setSteps($steps);
 

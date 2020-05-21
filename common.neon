@@ -29,3 +29,7 @@ services:
 	- Mathematicator\SearchController\CrossMultiplicationController
 	- Mathematicator\SearchController\MandelbrotSetController
 	- Mathematicator\SearchController\TreeController
+
+	# other
+	- Mathematicator\Search\Translation\TranslatorHelper
+	- Symfony\Component\Translation\Translator

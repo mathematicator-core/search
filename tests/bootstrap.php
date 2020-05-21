@@ -25,18 +25,12 @@ class Bootstrap
 
 		$configurator->createRobotLoader()
 			->addDirectory(__DIR__ . '/../src')
-			->addDirectory(__DIR__ . '/Mocks')
 			->register();
 
 		$configurator
-			/**
-			 * TODO: common.neon fails: Nette\DI\InvalidConfigurationException: Found section 'orm.annotations'
-			 * in configuration, but corresponding extension is missing.
-			 */
-			->addConfig(__DIR__ . '/../common.neon');
+			//->addConfig(__DIR__ . '/../common.neon')
+			->addConfig(__DIR__ . '/config.neon');
 
-		$container = $configurator->createContainer();
-
-		return $container;
+		return $configurator->createContainer();
 	}
 }
