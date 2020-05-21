@@ -15,7 +15,6 @@ use Mathematicator\Step\StepFactory;
 use Mathematicator\Tokenizer\Token\IToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Tokenizer;
-use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 
 class SequenceController extends BaseController
@@ -35,15 +34,13 @@ class SequenceController extends BaseController
 
 
 	/**
-	 * @param LinkGenerator $linkGenerator
 	 * @param StatisticsManager $statisticManager
 	 * @param Tokenizer $tokenizer
 	 * @param StepFactory $stepFactory
 	 * @param AddNumbers $addNumbers
 	 */
-	public function __construct(LinkGenerator $linkGenerator, StatisticsManager $statisticManager, Tokenizer $tokenizer, StepFactory $stepFactory, AddNumbers $addNumbers)
+	public function __construct(StatisticsManager $statisticManager, Tokenizer $tokenizer, StepFactory $stepFactory, AddNumbers $addNumbers)
 	{
-		parent::__construct($linkGenerator);
 		$this->statisticManager = $statisticManager;
 		$this->tokenizer = $tokenizer;
 		$this->stepFactory = $stepFactory;

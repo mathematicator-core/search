@@ -28,7 +28,6 @@ use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Token\OperatorToken;
 use Mathematicator\Tokenizer\Tokenizer;
 use Mathematicator\Vizualizator\MathFunctionRenderer;
-use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 
@@ -80,11 +79,9 @@ final class NumberCounterController extends BaseController
 
 	/**
 	 * @param string[] $functions
-	 * @param LinkGenerator $linkGenerator
 	 */
-	public function __construct(array $functions, LinkGenerator $linkGenerator)
+	public function __construct(array $functions)
 	{
-		parent::__construct($linkGenerator);
 		$this->functions = $functions;
 	}
 

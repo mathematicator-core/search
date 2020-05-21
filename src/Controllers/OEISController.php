@@ -12,7 +12,6 @@ use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\Source;
 use Mathematicator\Statistics\StatisticsManager;
-use Nette\Application\LinkGenerator;
 use Nette\Utils\Strings;
 
 final class OEISController extends BaseController
@@ -30,12 +29,10 @@ final class OEISController extends BaseController
 
 
 	/**
-	 * @param LinkGenerator $linkGenerator
 	 * @param StatisticsManager $statisticManager
 	 */
-	public function __construct(LinkGenerator $linkGenerator, StatisticsManager $statisticManager)
+	public function __construct(StatisticsManager $statisticManager)
 	{
-		parent::__construct($linkGenerator);
 		$this->statisticManager = $statisticManager;
 	}
 
