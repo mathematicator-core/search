@@ -13,6 +13,7 @@ use Mathematicator\Engine\InvalidDataException;
 use Mathematicator\Engine\NoResultsException;
 use Mathematicator\Router\DynamicRoute;
 use Mathematicator\Router\Router;
+use Mathematicator\Search\Translation\TranslatorHelper;
 use Mathematicator\SearchController\CrossMultiplicationController;
 use Mathematicator\SearchController\DateController;
 use Mathematicator\SearchController\IntegralController;
@@ -22,6 +23,7 @@ use Mathematicator\SearchController\NumberCounterController;
 use Mathematicator\SearchController\OEISController;
 use Mathematicator\SearchController\SequenceController;
 use Mathematicator\SearchController\TreeController;
+use Symfony\Component\Translation\Translator;
 use Tracy\Debugger;
 
 class Search
@@ -31,13 +33,27 @@ class Search
 	private $engine;
 
 
+	/** @var Translator */
+	private $translator;
+
+
 	/**
 	 * @param Engine $engine
 	 * @param Router $router
+	 * @param TranslatorHelper $translatorHelper
+	 * @param Translator $translator
 	 */
-	public function __construct(Engine $engine, Router $router)
+	public function __construct(
+		Engine $engine,
+		Router $router,
+		TranslatorHelper $translatorHelper,
+		Translator $translator
+	)
 	{
 		$this->engine = $engine;
+		$this->translator = $translator;
+
+		$translatorHelper->init();
 
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_REGEX, '(?:strom|tree)\s+.+', TreeController::class));
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_REGEX, 'integr(?:a|á)l\s+.+', IntegralController::class));
@@ -52,6 +68,17 @@ class Search
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_REGEX, '(\-?[0-9]*[.]?[0-9]+([^0-9\.\-]+)?){3,}', SequenceController::class));
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_STATIC, ['mandelbrotova mnozina', 'mandelbrot set'], MandelbrotSetController::class));
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_STATIC, ['trojclenka'], CrossMultiplicationController::class));
+	}
+
+
+	/**
+	 * Set language for translator
+	 *
+	 * @param string $lang
+	 */
+	public function setLocale($lang): void
+	{
+		$this->translator->setLocale($lang);
 	}
 
 

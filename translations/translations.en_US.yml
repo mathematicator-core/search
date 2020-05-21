@@ -1,0 +1,3 @@
+divisionByZero: Division by zero
+divisionByZeroDesc: '"%number%" cannot be divided by zero.'
+solution: Solution

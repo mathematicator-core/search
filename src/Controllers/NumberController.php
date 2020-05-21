@@ -10,7 +10,6 @@ use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\DivisionByZero;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Helper\DateTime;
-use Mathematicator\Engine\Translator;
 use Mathematicator\NumberHelper;
 use Mathematicator\Numbers\NumberFactory;
 use Mathematicator\Numbers\SmartNumber;
@@ -21,12 +20,6 @@ use Nette\Utils\Validators;
 
 final class NumberController extends BaseController
 {
-
-	/**
-	 * @var Translator
-	 * @inject
-	 */
-	public $translator;
 
 	/**
 	 * @var NumberHelper
@@ -165,13 +158,13 @@ final class NumberController extends BaseController
 		);
 
 		$step = $this->stepFactory->create();
-		$step->setTitle('Dělení nulou');
-		$step->setDescription($this->translator->translate('divisionByZero', [
-			'count' => (int) $match['top'],
+		$step->setTitle($this->translator->trans('divisionByZero'));
+		$step->setDescription($this->translator->trans('divisionByZeroDesc', [
+			'%number%' => (int) $match['top'],
 		]));
 
 		$this->addBox(Box::TYPE_TEXT)
-			->setTitle('Řešení')
+			->setTitle($this->translator->trans('solution'))
 			->setText('Tento příklad nelze v reálných číslech vyřešit z důvodu dělení nulou.')
 			->setSteps([$step]);
 	}
@@ -280,7 +273,7 @@ final class NumberController extends BaseController
 			$stepDescription = 'Od aktuálního roku odečteme požadovaný rok.';
 		}
 
-		$step->setTitle('Řešení');
+		$step->setTitle($this->translator->trans('solution'));
 		$step->setDescription($stepDescription);
 		$step->setLatex($stepText);
 
