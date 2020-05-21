@@ -34,8 +34,14 @@ class TranslationTest extends TestCase
 
 	public function testTranslate(): void
 	{
+		// Check simple translation
 		Assert::same('Řešení', $this->translator->trans('solution', [], null, 'cs_CZ'));
+
+		// Check translation with parameter
 		Assert::same('"5" cannot be divided by zero.', $this->translator->trans('divisionByZeroDesc', ['%number%' => 5], null, 'en_US'));
+
+		// Check default language
+		Assert::same('Řešení', $this->translator->trans('solution'));
 	}
 
 }

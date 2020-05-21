@@ -25,7 +25,7 @@ class TranslatorHelper
 
 
 	/**
-	 * Available translations
+	 * Available translations ordered by priority
 	 *
 	 * @var string[]
 	 */
@@ -71,6 +71,7 @@ class TranslatorHelper
 		}
 
 		$this->translator->setFallbackLocales($this->fallbackLanguages);
+		$this->translator->setLocale($this->languages[0]);
 	}
 
 }

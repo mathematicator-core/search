@@ -160,7 +160,7 @@ final class NumberController extends BaseController
 		$step = $this->stepFactory->create();
 		$step->setTitle($this->translator->trans('divisionByZero'));
 		$step->setDescription($this->translator->trans('divisionByZeroDesc', [
-			'number' => (int) $match['top'],
+			'%number%' => (int) $match['top'],
 		]));
 
 		$this->addBox(Box::TYPE_TEXT)

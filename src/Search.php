@@ -76,6 +76,8 @@ class Search
 
 
 	/**
+	 * Set language for translator
+	 *
 	 * @param string $lang
 	 */
 	public function setLocale($lang)

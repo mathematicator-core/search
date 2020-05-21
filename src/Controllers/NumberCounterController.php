@@ -100,7 +100,7 @@ final class NumberCounterController extends BaseController
 			$step = $this->stepFactory->create();
 			$step->setTitle($this->translator->trans('divisionByZero'));
 			$step->setDescription($this->translator->trans('divisionByZeroDesc', [
-				'number' => $fraction[0],
+				'%number%' => $fraction[0],
 			]));
 
 			$this->addBox(Box::TYPE_TEXT)
