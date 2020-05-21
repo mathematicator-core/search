@@ -29,15 +29,11 @@ use Tracy\Debugger;
 class Search
 {
 
-	/**
-	 * @var Engine
-	 */
+	/** @var Engine */
 	private $engine;
 
 
-	/**
-	 * @var Translator
-	 */
+	/** @var Translator */
 	private $translator;
 
 
@@ -80,7 +76,7 @@ class Search
 	 *
 	 * @param string $lang
 	 */
-	public function setLocale($lang)
+	public function setLocale($lang): void
 	{
 		$this->translator->setLocale($lang);
 	}

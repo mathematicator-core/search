@@ -7,20 +7,15 @@ namespace Mathematicator\Search\Translation;
 
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorHelper
 {
 
-	/**
-	 * @var TranslatorInterface
-	 */
+	/** @var Translator */
 	private $translator;
 
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	private $isInitialized = false;
 
 
@@ -41,18 +36,15 @@ class TranslatorHelper
 
 
 	/**
-	 * TranslatorHelper constructor.
 	 * @param Translator $translator
 	 */
-	public function __construct(
-		Translator $translator
-	)
+	public function __construct(Translator $translator)
 	{
 		$this->translator = $translator;
 	}
 
 
-	public function init()
+	public function init(): void
 	{
 		if ($this->isInitialized) {
 			return;
