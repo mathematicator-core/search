@@ -65,5 +65,4 @@ class TranslatorHelper
 		$this->translator->setFallbackLocales($this->fallbackLanguages);
 		$this->translator->setLocale($this->languages[0]);
 	}
-
 }

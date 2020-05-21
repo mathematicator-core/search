@@ -48,8 +48,7 @@ class Search
 		Router $router,
 		TranslatorHelper $translatorHelper,
 		Translator $translator
-	)
-	{
+	) {
 		$this->engine = $engine;
 		$this->translator = $translator;
 
