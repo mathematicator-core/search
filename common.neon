@@ -31,5 +31,5 @@ services:
 	- Mathematicator\SearchController\TreeController
 
 	# other
-	- Mathematicator\Search\Translation\TranslatorHelper
-	- Symfony\Component\Translation\Translator
+	- Mathematicator\Engine\Translator
+	- Mathematicator\Engine\Translation\TranslatorHelper

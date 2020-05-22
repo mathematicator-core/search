@@ -28,7 +28,7 @@ jobs:
       # Check code checker and coding standards
       - name: Check coding standards
         run: |
-          composer run codecheck:fix
+          composer run codecheck:check
 
       - name: Check PHPStan rules
         run: composer run phpstan

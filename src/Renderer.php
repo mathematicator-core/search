@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
+use function json_decode;
 use Mathematicator\Engine\Box;
 use Mathematicator\Engine\MathematicatorException;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
+use function strlen;
 
 final class Renderer
 {
@@ -48,7 +50,7 @@ final class Renderer
 	{
 		$return = '';
 
-		foreach (\json_decode($data) as $row) {
+		foreach (json_decode($data) as $row) {
 			$return .= '<tr>';
 			foreach ($row as $column) {
 				if (Strings::startsWith($column, '!')) {
@@ -97,9 +99,9 @@ final class Renderer
 
 
 	/**
-	 * @internal
 	 * @param string $data
 	 * @return string
+	 * @internal
 	 */
 	public function renderText(string $data): string
 	{
@@ -108,9 +110,9 @@ final class Renderer
 
 
 	/**
-	 * @internal
 	 * @param string $data
 	 * @return string
+	 * @internal
 	 */
 	public function renderLatex(string $data): string
 	{
@@ -129,9 +131,9 @@ final class Renderer
 
 
 	/**
-	 * @internal
 	 * @param string $data
 	 * @return string
+	 * @internal
 	 */
 	public function renderKeyword(string $data): string
 	{
@@ -148,9 +150,9 @@ final class Renderer
 
 
 	/**
-	 * @internal
 	 * @param string $data
 	 * @return string
+	 * @internal
 	 */
 	public function renderImage(string $data): string
 	{
@@ -167,16 +169,16 @@ final class Renderer
 
 
 	/**
-	 * @internal
 	 * @param string $number
 	 * @param bool $isLookLeft
 	 * @return string
+	 * @internal
 	 */
 	public function numberFormat(string $number, bool $isLookLeft = true): string
 	{
 		$return = null;
 
-		if (\strlen($number) <= 3) {
+		if (strlen($number) <= 3) {
 			$return = $number;
 		} elseif (preg_match('/^-?\d+\z/', $number)) {
 			$return = '';
@@ -218,9 +220,9 @@ final class Renderer
 
 
 	/**
-	 * @internal
 	 * @param string $data
 	 * @return string
+	 * @internal
 	 */
 	public function renderHtml(string $data): string
 	{

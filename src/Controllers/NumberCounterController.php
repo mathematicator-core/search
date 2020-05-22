@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mathematicator\SearchController;
 
 
+use function count;
+use function in_array;
 use Mathematicator\Calculator\Calculator;
 use Mathematicator\Calculator\CalculatorResult;
 use Mathematicator\Engine\Box;
@@ -29,6 +31,7 @@ use Mathematicator\Tokenizer\Tokenizer;
 use Mathematicator\Vizualizator\MathFunctionRenderer;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
+use function strlen;
 
 final class NumberCounterController extends BaseController
 {
@@ -144,7 +147,7 @@ final class NumberCounterController extends BaseController
 			$this->haveResult = true;
 		}
 
-		if (\count($calculator) === 1) {
+		if (count($calculator) === 1) {
 			$this->renderResultToken($calculator[0], $steps);
 
 			if ($this->isSimpleProblem($objects)) {
@@ -379,11 +382,11 @@ final class NumberCounterController extends BaseController
 			->setTitle('Porovnání řešení')
 			->setText($numberA . "\n" . $numberB);
 
-		if (\strlen($overlap) > 2) {
+		if (strlen($overlap) > 2) {
 			$this->addBox(Box::TYPE_LATEX)
 				->setTitle(
 					'Překryv řešení | Přesnost: '
-					. Czech::inflection(\strlen($overlap), ['místo', 'místa', 'míst'])
+					. Czech::inflection(strlen($overlap), ['místo', 'místa', 'míst'])
 				)
 				->setText($overlap);
 		}
@@ -445,7 +448,7 @@ final class NumberCounterController extends BaseController
 
 			if ($token->getNumber()->isInteger()) {
 				$int = $token->getNumber()->getInteger();
-				$numberLength = \strlen($int);
+				$numberLength = strlen($int);
 				if ($numberLength > 8) {
 					$this->addBox(Box::TYPE_TEXT)
 						->setTitle('Délka čísla')
@@ -454,14 +457,14 @@ final class NumberCounterController extends BaseController
 					if (preg_match('/^(\d)((\d{1,7}).*?)$/', $int, $intParser)) {
 						$this->addBox(Box::TYPE_LATEX)
 							->setTitle('Desetinná aproximace')
-							->setText($intParser[1] . '.' . $intParser[3] . '\ \cdot\ {10}^{' . \strlen($intParser[2]) . '}');
+							->setText($intParser[1] . '.' . $intParser[3] . '\ \cdot\ {10}^{' . strlen($intParser[2]) . '}');
 					}
 
 					if (Strings::endsWith($int, '0')) {
 						$zeros = preg_replace('/^\d+?(0+)$/', '$1', $int);
 						$trailingZerosBox = $this->addBox(Box::TYPE_LATEX)
 							->setTitle('Počet nul na konci')
-							->setText((string) ($zeros ? \strlen($zeros) : 0));
+							->setText((string) ($zeros ? strlen($zeros) : 0));
 
 						if (preg_match('/^(\d+)\s*\!$/', $this->query, $factorialParser)) {
 							$trailingZerosBox->setSteps($this->getStepsFactorialTrailingZeros((int) $factorialParser[1]));
@@ -502,7 +505,7 @@ final class NumberCounterController extends BaseController
 	 */
 	private function isSimpleProblem(array $tokens): bool
 	{
-		$tokensCount = \count($tokens);
+		$tokensCount = count($tokens);
 
 		if ($tokensCount < 3 || $tokensCount > 12) {
 			return false;
@@ -512,7 +515,7 @@ final class NumberCounterController extends BaseController
 			if (!(
 				(
 					$token instanceof OperatorToken
-					&& \in_array($token->getToken(), ['+', '-'], true)
+					&& in_array($token->getToken(), ['+', '-'], true)
 				) || (
 					$token instanceof NumberToken
 					&& $token->getNumber()->isInteger()
@@ -533,7 +536,7 @@ final class NumberCounterController extends BaseController
 	 */
 	private function isAddNumbers(array $tokens): bool
 	{
-		return \count($tokens) === 3
+		return count($tokens) === 3
 			&& $tokens[0] instanceof NumberToken
 			&& $tokens[1] instanceof OperatorToken
 			&& $tokens[1]->getToken() === '+'
