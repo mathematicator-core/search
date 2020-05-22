@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\Engine\Tests;
+namespace Mathematicator\Search\Tests;
 
 
-use Mathematicator\Engine\Helpers;
 use Mathematicator\Search\Translation\TranslatorHelper;
 use Nette\DI\Container;
 use Symfony\Component\Translation\Translator;
@@ -17,20 +16,18 @@ require __DIR__ . '/../../bootstrap.php';
 
 class TranslationTest extends TestCase
 {
-	/**
-	 * @var TranslatorInterface
-	 */
+
+	/** @var TranslatorInterface */
 	private $translator;
 
 
-	public function __construct(
-		Container $container
-	)
+	public function __construct(Container $container)
 	{
 		$this->translator = $container->getByType(Translator::class);
 		$translatorHelper = $container->getByType(TranslatorHelper::class);
 		$translatorHelper->init();
 	}
+
 
 	public function testTranslate(): void
 	{
