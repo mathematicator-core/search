@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\Engine\Tests;
+namespace Mathematicator\Search\Tests;
 
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use FrontModule\LinkGeneratorMock;
 use Mathematicator\Engine\Translation\TranslatorHelper;
 use Nette\Configurator;
 use Nette\DI\Container;

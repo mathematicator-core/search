@@ -15,6 +15,7 @@ use Mathematicator\Engine\DivisionByZero;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\MathematicatorException;
 use Mathematicator\Engine\MathErrorException;
+use Mathematicator\Engine\MathFunction\FunctionManager;
 use Mathematicator\Engine\Query;
 use Mathematicator\Engine\Step;
 use Mathematicator\Engine\UndefinedOperationException;
@@ -43,12 +44,6 @@ final class NumberCounterController extends BaseController
 	public $tokenizer;
 
 	/**
-	 * @var StepFactory
-	 * @inject
-	 */
-	public $stepFactory;
-
-	/**
 	 * @var Calculator
 	 * @inject
 	 */
@@ -66,20 +61,8 @@ final class NumberCounterController extends BaseController
 	 */
 	public $mathFunctionRenderer;
 
-	/** @var string[] */
-	private $functions;
-
 	/** @var bool */
 	private $haveResult = false;
-
-
-	/**
-	 * @param string[] $functions
-	 */
-	public function __construct(array $functions)
-	{
-		$this->functions = $functions;
-	}
 
 
 	public function actionDefault(): void
@@ -100,19 +83,19 @@ final class NumberCounterController extends BaseController
 		} catch (DivisionByZero $e) {
 			$fraction = $e->getFraction();
 
-			$step = $this->stepFactory->create();
-			$step->setTitle($this->translator->trans('divisionByZero'));
-			$step->setDescription($this->translator->trans('divisionByZeroDesc', [
+			$step = StepFactory::addStep();
+			$step->setTitle($this->translator->translate('divisionByZero'));
+			$step->setDescription($this->translator->translate('divisionByZeroDesc', [
 				'%number%' => $fraction[0],
 			]));
 
 			$this->addBox(Box::TYPE_TEXT)
-				->setTitle($this->translator->trans('solution'))
+				->setTitle($this->translator->translate('solution'))
 				->setText('Tento příklad nelze v reálných číslech vyřešit z důvodu dělení nulou.')
 				->setSteps([$step]);
 
 			$this->addBox(Box::TYPE_LATEX)
-				->setTitle($this->translator->trans('solution'))
+				->setTitle($this->translator->translate('solution'))
 				->setText('\frac{' . $fraction[0] . '}{' . $fraction[1] . '} = \frac{1}{0} \simeq \infty');
 
 			$this->haveResult = true;
@@ -122,7 +105,7 @@ final class NumberCounterController extends BaseController
 		} catch (FunctionDoesNotExistsException $e) {
 			$supportedFunctions = '';
 
-			foreach ($this->functions as $function) {
+			foreach (FunctionManager::getFunctionNames() as $function) {
 				if (preg_match('/^\w+$/', $function)) {
 					$supportedFunctions .= ($supportedFunctions ? ', ' : '')
 						. '<code>' . $function . '()</code>';
@@ -138,7 +121,7 @@ final class NumberCounterController extends BaseController
 			$this->haveResult = true;
 		} catch (MathErrorException | MathematicatorException $e) {
 			$this->addBox(Box::TYPE_TEXT)
-				->setTitle($this->translator->trans('solution'))
+				->setTitle($this->translator->translate('solution'))
 				->setText(
 					'Tato úloha nemá řešení, protože provádíte nepovolenou matematickou operaci.'
 					. "\n\n" . 'Detaily: ' . $e->getMessage()
@@ -272,7 +255,7 @@ final class NumberCounterController extends BaseController
 	private function actionUndefinedSolution(): void
 	{
 		$this->addBox(Box::TYPE_TEXT)
-			->setTitle($this->translator->trans('solution'))
+			->setTitle($this->translator->translate('solution'))
 			->setText('Nemá žádné řešení, jde o neurčitý výraz. Není definováno.');
 
 		$undefinedForms = [
@@ -360,7 +343,7 @@ final class NumberCounterController extends BaseController
 
 		if ($numberA === $numberB) {
 			$this->addBox(Box::TYPE_LATEX)
-				->setTitle($this->translator->trans('solution'))
+				->setTitle($this->translator->translate('solution'))
 				->setText($numberA);
 
 			return true;
@@ -442,7 +425,7 @@ final class NumberCounterController extends BaseController
 			}
 
 			$this->addBox(Box::TYPE_HTML)
-				->setTitle($this->translator->trans('solution'))
+				->setTitle($this->translator->translate('solution'))
 				->setText($result)
 				->setSteps($steps);
 
@@ -486,7 +469,7 @@ final class NumberCounterController extends BaseController
 
 		if ($token instanceof InfinityToken) {
 			$this->addBox(Box::TYPE_LATEX)
-				->setTitle($this->translator->trans('solution'))
+				->setTitle($this->translator->translate('solution'))
 				->setText('\infty')
 				->setSteps($steps);
 

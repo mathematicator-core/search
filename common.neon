@@ -1,20 +1,9 @@
 parameters:
 	search:
 		controllerNamespace: 'Mathematicator\SearchController\{{name}}Controller'
-	math:
-		functions:
-			- sin
-			- cos
-			- tan
-			- cotan
-			- log
-			- log\d*
-			- ln
-			- sqrt
 
 services:
 	- Mathematicator\Search\Search
-	- Mathematicator\Router\Router(%math.functions%)
 	search: Mathematicator\Search\SearchAccessor
 	searchConsole: Mathematicator\Search\Console
 	boxRenderer: Mathematicator\Search\Renderer
@@ -22,7 +11,7 @@ services:
 	# controlers
 	- Mathematicator\SearchController\NumberController
 	- Mathematicator\SearchController\DateController
-	- Mathematicator\SearchController\NumberCounterController(%math.functions%)
+	- Mathematicator\SearchController\NumberCounterController
 	- Mathematicator\SearchController\IntegralController
 	- Mathematicator\SearchController\SequenceController
 	- Mathematicator\SearchController\OEISController

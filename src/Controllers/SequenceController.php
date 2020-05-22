@@ -17,7 +17,7 @@ use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Tokenizer;
 use Nette\Utils\Strings;
 
-class SequenceController extends BaseController
+final class SequenceController extends BaseController
 {
 
 	/** @var StatisticsManager */
@@ -26,9 +26,6 @@ class SequenceController extends BaseController
 	/** @var Tokenizer */
 	private $tokenizer;
 
-	/** @var StepFactory */
-	private $stepFactory;
-
 	/** @var AddNumbers */
 	private $addNumbers;
 
@@ -36,14 +33,12 @@ class SequenceController extends BaseController
 	/**
 	 * @param StatisticsManager $statisticManager
 	 * @param Tokenizer $tokenizer
-	 * @param StepFactory $stepFactory
 	 * @param AddNumbers $addNumbers
 	 */
-	public function __construct(StatisticsManager $statisticManager, Tokenizer $tokenizer, StepFactory $stepFactory, AddNumbers $addNumbers)
+	public function __construct(StatisticsManager $statisticManager, Tokenizer $tokenizer, AddNumbers $addNumbers)
 	{
 		$this->statisticManager = $statisticManager;
 		$this->tokenizer = $tokenizer;
-		$this->stepFactory = $stepFactory;
 		$this->addNumbers = $addNumbers;
 	}
 
@@ -106,7 +101,7 @@ class SequenceController extends BaseController
 			} else {
 				$calculate = $this->addNumbers->process($sum, $numberToken, $this->getQueryEntity());
 
-				$step = $this->stepFactory->create();
+				$step = StepFactory::addStep();
 				$step->setLatex((string) $sum);
 				$step->setTitle($calculate->getTitle());
 				$step->setDescription($calculate->getDescription());
@@ -117,7 +112,7 @@ class SequenceController extends BaseController
 		}
 
 		if ($sum !== null) {
-			$step = $this->stepFactory->create();
+			$step = StepFactory::addStep();
 			$step->setLatex((string) $sum->getNumber());
 			$step->setTitle('Součet řady');
 

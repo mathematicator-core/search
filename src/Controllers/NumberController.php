@@ -43,12 +43,6 @@ final class NumberController extends BaseController
 	 */
 	public $romanToIntSteps;
 
-	/**
-	 * @var StepFactory
-	 * @inject
-	 */
-	public $stepFactory;
-
 	/** @var SmartNumber */
 	private $number;
 
@@ -161,7 +155,7 @@ final class NumberController extends BaseController
 			'\frac{' . $match['top'] . '}{' . $match['bottom'] . '}\ \simeq\ ???'
 		);
 
-		$step = $this->stepFactory->create();
+		$step = StepFactory::addStep();
 		$step->setTitle($this->translator->translate('search.divisionByZero'));
 		$step->setDescription($this->translator->translate('search.divisionByZeroDesc', [
 			'number' => (int) $match['top'],
@@ -188,12 +182,12 @@ final class NumberController extends BaseController
 	private function actionNumericalField(SmartNumber $number): void
 	{
 		$steps = [];
-		$step = $this->stepFactory->create();
+		$step = StepFactory::addStep();
 		$step->setTitle('Číselné obory');
 		$step->setDescription('Určíme číselný obor podle tabulky.');
 		$steps[] = $step;
 
-		$step = $this->stepFactory->create();
+		$step = StepFactory::addStep();
 		$step->setTitle('Přehled číselných oborů');
 
 		$numberTypesHtml = '';
@@ -217,7 +211,7 @@ final class NumberController extends BaseController
 
 		$steps[] = $step;
 
-		$step = $this->stepFactory->create();
+		$step = StepFactory::addStep();
 		$stepDescription = [];
 
 		if ($number->isInteger()) {
@@ -260,7 +254,7 @@ final class NumberController extends BaseController
 	private function actionYear(int $currentYear, int $year): void
 	{
 		$diff = abs($currentYear - $year);
-		$step = $this->stepFactory->create();
+		$step = StepFactory::addStep();
 		$stepDescription = null;
 
 		if ($diff === 0) {
