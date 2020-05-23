@@ -24,5 +24,11 @@ Before you send a PR, please, check that all tests pass.
 
 This package uses [Nette Tester](https://tester.nette.org/). You can run tests via command:
 ```bash
-vendor/bin/tester -c tests/php.ini tests
+composer test
+````
+
+Before PR, please run complete code check via command:
+```bash
+composer codecheck:install # only first time
+composer check
 ````

@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
+use function is_array;
 use Mathematicator\Engine\Engine;
 use Mathematicator\Engine\EngineMultiResult;
 use Mathematicator\Engine\EngineResult;
 use Mathematicator\Engine\EngineSingleResult;
 use Mathematicator\Engine\InvalidDataException;
 use Mathematicator\Engine\NoResultsException;
+use Mathematicator\Engine\Translation\TranslatorHelper;
 use Mathematicator\Router\DynamicRoute;
 use Mathematicator\Router\Router;
-use Mathematicator\Search\Translation\TranslatorHelper;
 use Mathematicator\SearchController\CrossMultiplicationController;
 use Mathematicator\SearchController\DateController;
 use Mathematicator\SearchController\IntegralController;
@@ -48,12 +49,11 @@ class Search
 		Router $router,
 		TranslatorHelper $translatorHelper,
 		Translator $translator
-	)
-	{
+	) {
 		$this->engine = $engine;
 		$this->translator = $translator;
 
-		$translatorHelper->init();
+		$translatorHelper->addResource(__DIR__ . '/../translations', 'search');
 
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_REGEX, '(?:strom|tree)\s+.+', TreeController::class));
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_REGEX, 'integr(?:a|á)l\s+.+', IntegralController::class));
@@ -113,7 +113,7 @@ class Search
 	{
 		$searchResult = $this->search($query);
 		/** @var EngineSingleResult $resultEntity */
-		$resultEntity = \is_array($searchResult) ? $searchResult['left'] : $searchResult;
+		$resultEntity = is_array($searchResult) ? $searchResult['left'] : $searchResult;
 
 		return (new AutoCompleteResult)
 			->setResult((new Result)->setBoxes($resultEntity->getBoxes()));

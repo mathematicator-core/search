@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mathematicator\SearchController;
 
 
+use function count;
+use function in_array;
 use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\DivisionByZero;
@@ -17,6 +19,8 @@ use Mathematicator\Step\RomanIntSteps;
 use Mathematicator\Step\StepFactory;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
+use function strlen;
+use function time;
 
 final class NumberController extends BaseController
 {
@@ -57,7 +61,7 @@ final class NumberController extends BaseController
 				->setSteps($this->romanToIntSteps->getRomanToIntSteps($this->getQuery()));
 		}
 
-		if (\in_array(strtolower(Strings::toAscii((string) $number)), ['pi', 'ludolfovo cislo'], true) === true) {
+		if (in_array(strtolower(Strings::toAscii((string) $number)), ['pi', 'ludolfovo cislo'], true) === true) {
 			$this->aboutPi();
 
 			return;
@@ -152,13 +156,13 @@ final class NumberController extends BaseController
 		);
 
 		$step = StepFactory::addStep();
-		$step->setTitle($this->translator->translate('divisionByZero'));
-		$step->setDescription($this->translator->translate('divisionByZeroDesc', [
-			'%number%' => (int) $match['top'],
+		$step->setTitle($this->translator->translate('search.divisionByZero'));
+		$step->setDescription($this->translator->translate('search.divisionByZeroDesc', [
+			'number' => (int) $match['top'],
 		]));
 
 		$this->addBox(Box::TYPE_TEXT)
-			->setTitle($this->translator->translate('solution'))
+			->setTitle($this->translator->translate('search.solution'))
 			->setText('Tento příklad nelze v reálných číslech vyřešit z důvodu dělení nulou.')
 			->setSteps([$step]);
 	}
@@ -267,7 +271,7 @@ final class NumberController extends BaseController
 			$stepDescription = 'Od aktuálního roku odečteme požadovaný rok.';
 		}
 
-		$step->setTitle($this->translator->translate('solution'));
+		$step->setTitle($this->translator->translate('search.solution'));
 		$step->setDescription($stepDescription);
 		$step->setLatex($stepText);
 
@@ -312,7 +316,7 @@ final class NumberController extends BaseController
 	 */
 	private function timestamp(string $int): void
 	{
-		$currentTimestamp = \time();
+		$currentTimestamp = time();
 		$dateDiff = abs($currentTimestamp - (int) $int);
 
 		$timestamp = '<p><b>' . DateTime::getDateTimeIso((int) $int) . '</b></p>'
@@ -337,7 +341,7 @@ final class NumberController extends BaseController
 		$int = $this->number->getInteger();
 		$factors = $this->numberHelper->pfactor($int);
 
-		if (\count($factors) === 1) {
+		if (count($factors) === 1) {
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Prvočíselný rozklad')
 				->setText('Číslo ' . $int . ' je prvočíslo, proto nelze dále rozložit.')
@@ -377,10 +381,10 @@ final class NumberController extends BaseController
 		$int = $this->number->getInteger();
 		$divisors = $this->sort($this->numberHelper->getDivisors($int));
 		$title = 'Dělitelé čísla ' . $int
-			. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
+			. ' | ' . Czech::inflection(count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
 			. ' | Součet: ' . array_sum($divisors);
 
-		if (\count($divisors) < 5) {
+		if (count($divisors) < 5) {
 			$divisor = ['!Dělitel'];
 			$share = ['!Podíl'];
 
@@ -467,8 +471,8 @@ final class NumberController extends BaseController
 
 	private function bigNumber(string $int): void
 	{
-		$countNumbers = \strlen($int);
-		$uniqueNumbers = \count(array_unique(str_split($int)));
+		$countNumbers = strlen($int);
+		$uniqueNumbers = count(array_unique(str_split($int)));
 
 		if ($uniqueNumbers <= 4 && $uniqueNumbers >= 2) {
 			for ($i = $countNumbers - 1; $i >= 4; $i--) {
@@ -500,7 +504,7 @@ final class NumberController extends BaseController
 		for ($i = 0; $i < $x; $i++) {
 			for ($j = 0; $j < $y; $j++) {
 				$char = $data[$iterator];
-				$return .= '<span style="color:' . ($colorCache[$char] ?? $colors[\count($colorCache)]) . '">' . $char . '</span>';
+				$return .= '<span style="color:' . ($colorCache[$char] ?? $colors[count($colorCache)]) . '">' . $char . '</span>';
 				$iterator++;
 			}
 			$return .= '<br>';

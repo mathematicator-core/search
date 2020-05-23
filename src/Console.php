@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
+use function is_array;
 use Mathematicator\Engine\EngineSingleResult;
 use Mathematicator\Engine\Helper\Terminal;
 use Nette\Utils\Strings;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 use Tracy\Debugger;
 use Tracy\Dumper;
 
@@ -59,7 +61,7 @@ class Console extends Command
 				if ($query !== null) {
 					$result = $this->search->search($query);
 
-					if (\is_array($result)) {
+					if (is_array($result)) {
 						foreach ($result as $resultItem) {
 							if ($resultItem instanceof EngineSingleResult) {
 								$this->render($resultItem);
@@ -71,7 +73,7 @@ class Console extends Command
 					}
 				}
 			}
-		} catch (\Throwable $e) {
+		} catch (Throwable $e) {
 			$output->writeLn('<error>' . $e->getMessage() . '</error>');
 			echo "\n\n";
 			Terminal::code($e->getFile(), $e->getLine());
