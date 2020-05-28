@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\SearchController;
+namespace Mathematicator\Search\Controller;
 
 
 use Mathematicator\Calculator\Operation\AddNumbers;
 use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\Source;
+use Mathematicator\Engine\Step;
 use Mathematicator\Statistics\Entity\Sequence;
 use Mathematicator\Statistics\StatisticsManager;
-use Mathematicator\Step\StepFactory;
 use Mathematicator\Tokenizer\Token\IToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Tokenizer;
@@ -101,7 +101,7 @@ final class SequenceController extends BaseController
 			} else {
 				$calculate = $this->addNumbers->process($sum, $numberToken, $this->getQueryEntity());
 
-				$step = StepFactory::addStep();
+				$step = new Step(null, null);
 				$step->setLatex((string) $sum);
 				$step->setTitle($calculate->getTitle());
 				$step->setDescription($calculate->getDescription());
@@ -112,7 +112,7 @@ final class SequenceController extends BaseController
 		}
 
 		if ($sum !== null) {
-			$step = StepFactory::addStep();
+			$step = new Step(null, null);
 			$step->setLatex((string) $sum->getNumber());
 			$step->setTitle('Součet řady');
 

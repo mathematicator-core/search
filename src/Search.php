@@ -13,18 +13,21 @@ use Mathematicator\Engine\EngineSingleResult;
 use Mathematicator\Engine\InvalidDataException;
 use Mathematicator\Engine\NoResultsException;
 use Mathematicator\Engine\Translation\TranslatorHelper;
+use Mathematicator\Engine\Translator;
 use Mathematicator\Router\DynamicRoute;
 use Mathematicator\Router\Router;
-use Mathematicator\SearchController\CrossMultiplicationController;
-use Mathematicator\SearchController\DateController;
-use Mathematicator\SearchController\IntegralController;
-use Mathematicator\SearchController\MandelbrotSetController;
-use Mathematicator\SearchController\NumberController;
-use Mathematicator\SearchController\NumberCounterController;
-use Mathematicator\SearchController\OEISController;
-use Mathematicator\SearchController\SequenceController;
-use Mathematicator\SearchController\TreeController;
-use Symfony\Component\Translation\Translator;
+use Mathematicator\Search\Controller\CrossMultiplicationController;
+use Mathematicator\Search\Controller\DateController;
+use Mathematicator\Search\Controller\IntegralController;
+use Mathematicator\Search\Controller\MandelbrotSetController;
+use Mathematicator\Search\Controller\NumberController;
+use Mathematicator\Search\Controller\NumberCounterController;
+use Mathematicator\Search\Controller\OEISController;
+use Mathematicator\Search\Controller\SequenceController;
+use Mathematicator\Search\Controller\TreeController;
+use Mathematicator\Search\Entity\AutoCompleteResult;
+use Mathematicator\Search\Entity\Result;
+use Nette\Localization\ITranslator;
 use Tracy\Debugger;
 
 class Search
@@ -33,9 +36,11 @@ class Search
 	/** @var Engine */
 	private $engine;
 
-
-	/** @var Translator */
+	/** @var ITranslator */
 	private $translator;
+
+	/** @var TranslatorHelper */
+	private $translatorHelper;
 
 
 	/**
@@ -51,6 +56,7 @@ class Search
 		Translator $translator
 	) {
 		$this->engine = $engine;
+		$this->translatorHelper = $translatorHelper;
 		$this->translator = $translator;
 
 		$translatorHelper->addResource(__DIR__ . '/../translations', 'search');
@@ -76,9 +82,9 @@ class Search
 	 *
 	 * @param string $lang
 	 */
-	public function setLocale($lang): void
+	public function setLocale(string $lang): void
 	{
-		$this->translator->setLocale($lang);
+		$this->translatorHelper->translator->setLocale($lang);
 	}
 
 
@@ -115,7 +121,7 @@ class Search
 		/** @var EngineSingleResult $resultEntity */
 		$resultEntity = is_array($searchResult) ? $searchResult['left'] : $searchResult;
 
-		return (new AutoCompleteResult)
-			->setResult((new Result)->setBoxes($resultEntity->getBoxes()));
+		return (new AutoCompleteResult())
+			->setResult((new Result())->setBoxes($resultEntity->getBoxes()));
 	}
 }

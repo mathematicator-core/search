@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\SearchController;
+namespace Mathematicator\Search\Controller;
 
 
 use function count;
@@ -12,11 +12,11 @@ use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\DivisionByZero;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Helper\DateTime;
+use Mathematicator\Engine\Step;
 use Mathematicator\NumberHelper;
 use Mathematicator\Numbers\NumberFactory;
 use Mathematicator\Numbers\SmartNumber;
 use Mathematicator\Step\RomanIntSteps;
-use Mathematicator\Step\StepFactory;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 use function strlen;
@@ -69,7 +69,7 @@ final class NumberController extends BaseController
 
 		if ($number > 10e10) {
 			$this->addBox(Box::TYPE_TEXT)
-				->setTitle('Informace')
+				->setTitle($this->translator->translate('search.information'))
 				->setText('Podporu pro vysoká čísla připravujeme.');
 
 			return;
@@ -99,7 +99,7 @@ final class NumberController extends BaseController
 				Box::TYPE_LATEX,
 				'\frac{' . $fraction[0] . '}{' . $fraction[1]
 				. '} ≈ '
-				. number_format($this->number->getFloat(), $this->queryEntity->getDecimals(), '.', ' ')
+				. number_format($this->number->getFloat(), $this->getQueryEntity()->getDecimals(), '.', ' ')
 			);
 
 			$this->actionFloat();
@@ -155,11 +155,13 @@ final class NumberController extends BaseController
 			'\frac{' . $match['top'] . '}{' . $match['bottom'] . '}\ \simeq\ ???'
 		);
 
-		$step = StepFactory::addStep();
-		$step->setTitle($this->translator->translate('search.divisionByZero'));
-		$step->setDescription($this->translator->translate('search.divisionByZeroDesc', [
-			'number' => (int) $match['top'],
-		]));
+		$step = new Step(
+			$this->translator->translate('search.divisionByZero'),
+			null,
+			$this->translator->translate('search.divisionByZeroDesc', [
+				'number' => (int) $match['top'],
+			])
+		);
 
 		$this->addBox(Box::TYPE_TEXT)
 			->setTitle($this->translator->translate('search.solution'))
@@ -182,13 +184,10 @@ final class NumberController extends BaseController
 	private function actionNumericalField(SmartNumber $number): void
 	{
 		$steps = [];
-		$step = StepFactory::addStep();
-		$step->setTitle('Číselné obory');
-		$step->setDescription('Určíme číselný obor podle tabulky.');
+		$step = new Step('Číselné obory', null, 'Určíme číselný obor podle tabulky.');
 		$steps[] = $step;
 
-		$step = StepFactory::addStep();
-		$step->setTitle('Přehled číselných oborů');
+		$step = new Step('Přehled číselných oborů', null);
 
 		$numberTypesHtml = '';
 		$numberTypes = [
@@ -211,7 +210,7 @@ final class NumberController extends BaseController
 
 		$steps[] = $step;
 
-		$step = StepFactory::addStep();
+		$step = new Step(null, null);
 		$stepDescription = [];
 
 		if ($number->isInteger()) {
@@ -254,7 +253,7 @@ final class NumberController extends BaseController
 	private function actionYear(int $currentYear, int $year): void
 	{
 		$diff = abs($currentYear - $year);
-		$step = StepFactory::addStep();
+		$step = new Step(null, null);
 		$stepDescription = null;
 
 		if ($diff === 0) {
@@ -441,8 +440,8 @@ final class NumberController extends BaseController
 		$this->setInterpret(Box::TYPE_LATEX, '\pi');
 
 		$this->addBox(Box::TYPE_TEXT)
-			->setTitle('Přibližná hodnota π | Ludolfovo číslo | Přesnost: ' . $this->queryEntity->getDecimals())
-			->setText('π ≈ ' . $this->numberHelper->getPi($this->queryEntity->getDecimals()) . ' …');
+			->setTitle('Přibližná hodnota π | Ludolfovo číslo | Přesnost: ' . $this->getQueryEntity()->getDecimals())
+			->setText('π ≈ ' . $this->numberHelper->getPi($this->getQueryEntity()->getDecimals()) . ' …');
 	}
 
 
@@ -454,7 +453,7 @@ final class NumberController extends BaseController
 			->setTitle('Zlomkový zápis | Nejlepší odhad')
 			->setText(
 				'\frac{' . $factor[0] . '}{' . $factor[1] . '} ≈ '
-				. number_format($factor[0] / $factor[1], $this->queryEntity->getDecimals(), '.', ' ')
+				. number_format($factor[0] / $factor[1], $this->getQueryEntity()->getDecimals(), '.', ' ')
 			);
 
 		if ($factor[0] > $factor[1] && Validators::isNumericInt($factor[0]) && Validators::isNumericInt($factor[1])) {

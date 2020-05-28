@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
-interface SearchAccessor
+interface ISearchAccessor
 {
 	/**
 	 * @return Search

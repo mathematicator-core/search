@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\SearchController;
+namespace Mathematicator\Search\Controller;
 
 
 use Mathematicator\Engine\Box;

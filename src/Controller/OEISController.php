@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\SearchController;
+namespace Mathematicator\Search\Controller;
 
 
 use Baraja\Doctrine\EntityManagerException;
@@ -89,7 +89,7 @@ final class OEISController extends BaseController
 				'https://oeis.org/' . $sequence->getAId(),
 				'On-line Encyklopedie celočíselných posloupností.'
 			);
-			$source->setAuthor($author);
+			$source->addAuthor($author);
 			$this->addSource($source);
 		}
 

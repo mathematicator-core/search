@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\SearchController;
+namespace Mathematicator\Search\Controller;
 
 
 use function count;
@@ -21,7 +21,6 @@ use Mathematicator\Engine\Step;
 use Mathematicator\Engine\UndefinedOperationException;
 use Mathematicator\MathFunction\FunctionDoesNotExistsException;
 use Mathematicator\NumberHelper;
-use Mathematicator\Step\StepFactory;
 use Mathematicator\Tokenizer\Token\ComparatorToken;
 use Mathematicator\Tokenizer\Token\EquationToken;
 use Mathematicator\Tokenizer\Token\InfinityToken;
@@ -83,7 +82,7 @@ final class NumberCounterController extends BaseController
 		} catch (DivisionByZero $e) {
 			$fraction = $e->getFraction();
 
-			$step = StepFactory::addStep();
+			$step = new Step(null, null);
 			$step->setTitle($this->translator->translate('divisionByZero'));
 			$step->setDescription($this->translator->translate('divisionByZeroDesc', [
 				'%number%' => $fraction[0],
@@ -449,7 +448,7 @@ final class NumberCounterController extends BaseController
 							->setTitle('Počet nul na konci')
 							->setText((string) ($zeros ? strlen($zeros) : 0));
 
-						if (preg_match('/^(\d+)\s*\!$/', $this->query, $factorialParser)) {
+						if (preg_match('/^(\d+)\s*\!$/', $this->getQuery(), $factorialParser)) {
 							$trailingZerosBox->setSteps($this->getStepsFactorialTrailingZeros((int) $factorialParser[1]));
 						} else {
 							$trailingZerosBox->setSteps([

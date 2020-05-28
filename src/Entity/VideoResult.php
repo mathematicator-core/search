@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\Search;
+namespace Mathematicator\Search\Entity;
 
 
 use Nette\SmartObject;

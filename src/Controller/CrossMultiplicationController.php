@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\SearchController;
+namespace Mathematicator\Search\Controller;
 
 
 use Mathematicator\Engine\Box;
@@ -13,19 +13,16 @@ final class CrossMultiplicationController extends BaseController
 	public function actionDefault(): void
 	{
 		$this->setInterpret(Box::TYPE_HTML)
-			->setText('Trojčlenka');
+			->setText($this->translator->translate('search.crossMultiplication.title'));
 
 		$this->addBox(Box::TYPE_HTML)
-			->setTitle('Definice')
-			->setText(
-				'<b>Trojčlenka</b> je mechanický matematický postup používaný '
-				. 'při výpočtech založených na přímé a nepřímé úměrnosti.'
-			);
+			->setTitle($this->translator->translate('search.definition'))
+			->setText($this->translator->translate('search.crossMultiplication.description'));
 
 		$this->addBox(Box::TYPE_HTML)
-			->setTitle('Výpočet')
+			->setTitle($this->translator->translate('search.calculation'))
 			->setText(
-				'<p>Zadejte 3 libovolné hodnoty, čtvrtá bude vypočítána.</p>
+				'<p>' . $this->translator->translate('search.crossMultiplication.enter3Vals') . '</p>
 
 				<div class="row">
 					<div class="col">
@@ -52,13 +49,13 @@ final class CrossMultiplicationController extends BaseController
 				<div class="row mt-2 mb-4 pb-3" style="border-bottom: 1px solid black">
 					<div class="col-5">
 						<select class="form-control">
-							<option>Přímá úměra</option>
-							<option>Nepřímá úměra</option>
+							<option>' . $this->translator->translate('search.crossMultiplication.directProportionality') . '</option>
+							<option>' . $this->translator->translate('search.crossMultiplication.indirectProportionality') . '</option>
 						</select>
 					</div>
 					<div class="col"></div>
 					<div class="col-5 text-right">
-						<input class="btn btn-primary" value="Vypočítat">
+						<input class="btn btn-primary" value="' . $this->translator->translate('search.calculate') . '">
 					</div>
 				</div>
 
