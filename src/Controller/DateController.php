@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mathematicator\SearchController;
+namespace Mathematicator\Search\Controller;
 
 
 use Martindilling\Sunny\Sunny;
@@ -132,7 +132,7 @@ final class DateController extends BaseController
 			'https://github.com/martindilling/Sunny',
 			'Otevřená knihovna pro práci s datem a časem.'
 		);
-		$source->setAuthor('Martin Dilling-Hansen');
+		$source->addAuthor('Martin Dilling-Hansen');
 
 		$this->addSource($source);
 	}
@@ -181,7 +181,7 @@ final class DateController extends BaseController
 			'http://aa.usno.navy.mil/faq/docs/moon_phases.php',
 			'Informace o fázích měsíce a Keplerovy rovnice.'
 		);
-		$source->setAuthor('Antonio Cidadao');
+		$source->addAuthor('Antonio Cidadao');
 
 		$this->addSource($source);
 	}

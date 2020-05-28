@@ -19,64 +19,78 @@
 	"require": {
 		"php": ">=7.2",
 		"janbarasek/php-moon-phase": "^2.0",
-		"martindilling/sunny": "^0.5.3",
-		"mathematicator-core/calculator": "^2.0",
-		"mathematicator-core/integral-solver": "^2.0",
-		"mathematicator-core/mandelbrot-set": "^2.0",
-		"mathematicator-core/numbers": "^2.0",
-		"mathematicator-core/statistic": "^2.0",
-		"mathematicator-core/tokenizer": "^2.0",
-		"mathematicator-core/vizualizator": "^2.0",
+		"martindilling/sunny": "^0.5.4",
+		"mathematicator-core/calculator": "^2.0@dev",
+		"mathematicator-core/engine": "^2.0@dev",
+		"mathematicator-core/integral-solver": "^2.0@dev",
+		"mathematicator-core/mandelbrot-set": "^2.0@dev",
+		"mathematicator-core/numbers": "^2.0@dev",
+		"mathematicator-core/statistic": "^2.0@dev",
+		"mathematicator-core/tokenizer": "^2.0@dev",
+		"mathematicator-core/vizualizator": "^2.0@dev",
 		"nette/utils": "^3.0",
 		"symfony/translation": "^4.0 || ^5.0",
 		"symfony/yaml": "^5.0"
 	},
 	"require-dev": {
+		"brainmaestro/composer-git-hooks": "dev-master",
 		"nette/tester": "^2.3",
 		"phpstan/phpstan": "^0.12.18",
 		"phpstan/phpstan-nette": "^0.12.6"
 	},
 	"suggest": {
-		"tracy/tracy": "For advance debugging"
+		"tracy/tracy": "(^2.7) For advance debugging"
 	},
 	"autoload": {
-		"classmap": [
-			"src/"
-		]
+		"psr-4": {
+			"Mathematicator\\Search\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Mathematicator\\Search\\Tests\\": "tests/SearchTests/"
+		}
 	},
 	"scripts": {
-		"codecheck:install": [
+		"post-install-cmd": "cghooks add --ignore-lock",
+		"post-update-cmd": "cghooks update",
+		"cs:install": [
 			"composer create-project nette/code-checker temp/code-checker ^3 --no-progress",
 			"composer create-project nette/coding-standard temp/coding-standard ^2 --no-progress"
 		],
-		"codecheck:check": [
+		"cs:check": [
 			"php temp/code-checker/code-checker --short-arrays --strict-types --no-progress",
 			"php temp/coding-standard/ecs check src --config temp/coding-standard/coding-standard-php71.yml"
 		],
-		"codecheck:fix": [
-			"php temp/code-checker/code-checker --short-arrays --strict-types --fix --no-progress",
+		"cs:fix": [
+			"php temp/code-checker/code-checker -d src -d tests --short-arrays --strict-types --fix --no-progress",
 			"php temp/coding-standard/ecs check src --config temp/coding-standard/coding-standard-php71.yml --fix"
 		],
-		"phpstan": [
-			"vendor/bin/phpstan analyse src -c phpstan.neon --level 8 --no-progress"
+		"phpstan": "vendor/bin/phpstan analyse src -c phpstan.neon --level 8 --no-progress",
+		"fix": [
+			"composer update",
+			"composer cs:fix",
+			"composer phpstan",
+			"composer test"
 		],
-		"check": [
-			"composer run codecheck:fix",
-			"composer run phpstan",
-			"composer run test"
-		],
-		"test": [
-			"vendor/bin/tester -s -c tests/php.ini -p php tests --coverage coverage.xml --coverage-src src"
-		]
+		"test": "vendor/bin/tester -s -c tests/php.ini -p php tests --coverage coverage.xml --coverage-src src",
+		"cghooks": "vendor/bin/cghooks"
 	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
+	"minimum-stability": "stable",
 	"config": {
 		"sort-packages": true
 	},
 	"extra": {
 		"branch-alias": {
 			"dev-master": "2.0.x-dev"
+		},
+		"hooks": {
+			"post-merge": "composer install",
+			"pre-commit": [
+				"composer cs:check",
+				"composer phpstan",
+				"composer test"
+			]
 		}
 	}
 }

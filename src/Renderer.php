@@ -8,6 +8,7 @@ namespace Mathematicator\Search;
 use function json_decode;
 use Mathematicator\Engine\Box;
 use Mathematicator\Engine\MathematicatorException;
+use Mathematicator\Engine\Translator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 use function strlen;
@@ -24,6 +25,15 @@ final class Renderer
 		Box::TYPE_IMAGE => 'renderImage',
 		Box::TYPE_TABLE => 'renderTable',
 	];
+
+	/** @var Translator */
+	private $translator;
+
+
+	public function __construct(Translator $translator)
+	{
+		$this->translator = $translator;
+	}
 
 
 	/**
@@ -88,7 +98,7 @@ final class Renderer
 	{
 		$return = '';
 
-		foreach (explode('|', $title ?: 'Box bez názvu') as $item) {
+		foreach (explode('|', $title ?: $this->translator->translate('search.untitledBox')) as $item) {
 			$return .= $return !== '' && preg_match('/.+\:\s+.+/', $item = trim($item), $itemParser)
 				? '<span class="search-box-header-hightlight">' . $item . '</span>'
 				: '<span class="search-box-header-text">' . $item . '</span>';
