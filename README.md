@@ -10,14 +10,14 @@
 
 [![Integrity check](https://github.com/mathematicator-core/search/workflows/Integrity%20check/badge.svg)](https://github.com/mathematicator-core/search/actions?query=workflow%3A%22Integrity+check%22)
 [![codecov](https://codecov.io/gh/mathematicator-core/search/branch/master/graph/badge.svg)](https://codecov.io/gh/mathematicator-core/search)
+[![Latest Stable Version](https://poser.pugx.org/mathematicator-core/search/v/stable)](https://packagist.org/packages/mathematicator-core/search)
+[![Latest Unstable Version](https://poser.pugx.org/mathematicator-core/search/v/unstable)](https://packagist.org/packages/mathematicator-core/search)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](./LICENSE)
 [![PHPStan Enabled](https://img.shields.io/badge/PHPStan-enabled%20L8-brightgreen.svg?style=flat)](https://phpstan.org/)
 
-This is official version of Mathematicator/VikiTron math search engine for computing your math problems.
+This is an official version of Mathematicator/VikiTron math search engine for computing your math problems.
 
 Online demo: http://vikitron.com
-
-> Please help improve this documentation by sending a Pull request.
 
 Developed by [Baraja](https://baraja.cz)
 
@@ -83,6 +83,9 @@ one to the most abstract one:
             <b>
             <a href="https://github.com/mathematicator-core/integral-solver">
                 Integral Solver
+            </a>,
+            <a href="https://github.com/mathematicator-core/statistic">
+                Statistics
             </a>
             </b>
         </td>
@@ -128,7 +131,31 @@ one to the most abstract one:
     </tr>
 </table>
 
+**Third-party packages:**
+
+⚠️ Not guaranteed!
+
+<table>
+    <tr>
+        <td>
+            <b>
+            <a href="https://github.com/cothema/math-php-api">
+                REST API
+            </a>
+            </b>
+        </td>
+        <td>
+            Install the whole pack as a REST API service
+            on your server (Docker ready) or
+            access it via public cloud REST API.
+        </td>
+    </tr>
+</table>
+
+
 ## Contribution
+
+> Please help to improve this documentation by sending a Pull request.
 
 ### Tests
 

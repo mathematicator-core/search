@@ -6,10 +6,10 @@ namespace Mathematicator\Search\Controller;
 
 
 use Mathematicator\Calculator\Operation\AddNumbers;
-use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
-use Mathematicator\Engine\Source;
-use Mathematicator\Engine\Step;
+use Mathematicator\Engine\Entity\Box;
+use Mathematicator\Engine\Entity\Source;
+use Mathematicator\Engine\Step\Step;
 use Mathematicator\Statistics\Entity\Sequence;
 use Mathematicator\Statistics\StatisticsManager;
 use Mathematicator\Tokenizer\Token\IToken;
@@ -62,7 +62,7 @@ final class SequenceController extends BaseController
 				$numberLatex .= ($numberLatex ? ';\ ' : '') . $object->getNumber();
 
 				if ($object->getNumber()->isInteger()) {
-					$integers[] = $object->getNumber()->getInteger();
+					$integers[] = (string) $object->getNumber()->toBigInteger();
 				} else {
 					$allIntegers = false;
 				}

@@ -8,9 +8,9 @@ namespace Mathematicator\Search\Controller;
 use Baraja\Doctrine\EntityManagerException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
-use Mathematicator\Engine\Source;
+use Mathematicator\Engine\Entity\Box;
+use Mathematicator\Engine\Entity\Source;
 use Mathematicator\Statistics\StatisticsManager;
 use Nette\Utils\Strings;
 

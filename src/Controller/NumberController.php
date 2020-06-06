@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Controller;
 
 
+use Brick\Math\RoundingMode;
 use function count;
 use function in_array;
-use Mathematicator\Engine\Box;
+use Mathematicator\Calculator\Numbers\NumberHelper;
+use Mathematicator\Calculator\Step\Model\RomanIntSteps;
 use Mathematicator\Engine\Controller\BaseController;
-use Mathematicator\Engine\DivisionByZero;
+use Mathematicator\Engine\Entity\Box;
+use Mathematicator\Engine\Exception\DivisionByZeroException;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Helper\DateTime;
-use Mathematicator\Engine\Step;
-use Mathematicator\NumberHelper;
-use Mathematicator\Numbers\NumberFactory;
+use Mathematicator\Engine\Step\Step;
+use Mathematicator\Numbers\Latex\MathLatexToolkit;
 use Mathematicator\Numbers\SmartNumber;
-use Mathematicator\Step\RomanIntSteps;
 use Nette\Utils\Strings;
-use Nette\Utils\Validators;
 use function strlen;
 use function time;
 
@@ -30,12 +30,6 @@ final class NumberController extends BaseController
 	 * @inject
 	 */
 	public $numberHelper;
-
-	/**
-	 * @var NumberFactory
-	 * @inject
-	 */
-	public $numberFactory;
 
 	/**
 	 * @var RomanIntSteps
@@ -76,9 +70,9 @@ final class NumberController extends BaseController
 		}
 
 		try {
-			$this->number = $this->numberFactory->create($number);
+			$this->number = SmartNumber::of($number);
 			$this->actionNumericalField($this->number);
-		} catch (DivisionByZero $e) {
+		} catch (DivisionByZeroException $e) {
 			$this->actionDivisionByZero((string) $number);
 
 			return;
@@ -88,18 +82,19 @@ final class NumberController extends BaseController
 			$this->setInterpret(
 				Box::TYPE_LATEX,
 				$isRoman
-					? '\\text{' . Strings::upper($this->getQuery()) . '} = ' . $this->number->getString()
-					: $this->number->getString()
+					? '\\text{' . Strings::upper($this->getQuery()) . '} = ' . $this->number->toLatex()
+					: (string) $this->number->toLatex()
 			);
 
 			$this->actionInteger();
-		} elseif ($this->number->isFloat()) {
-			$fraction = $this->number->getFraction();
+		} elseif (!$this->number->isInteger()) {
+			$fraction = $this->number->toBigRational();
+
 			$this->setInterpret(
 				Box::TYPE_LATEX,
-				'\frac{' . $fraction[0] . '}{' . $fraction[1]
-				. '} ≈ '
-				. number_format($this->number->getFloat(), $this->getQueryEntity()->getDecimals(), '.', ' ')
+				MathLatexToolkit::frac((string) $fraction->getNumerator(), (string) $fraction->getDenominator())
+				. ' ≈ '
+				. number_format($this->number->toFloat(), $this->getQueryEntity()->getDecimals(), '.', ' ')
 			);
 
 			$this->actionFloat();
@@ -109,38 +104,39 @@ final class NumberController extends BaseController
 
 	private function actionInteger(): void
 	{
-		$int = $this->number->getInteger();
+		$int = $this->number->toBigInteger();
 
-		if ($int >= 1750 && $int <= 2300) {
-			$this->actionYear((int) date('Y'), (int) $int);
+		if ($int->isGreaterThanOrEqualTo(1750) && $int->isLessThanOrEqualTo(2300)) {
+			$this->actionYear((int) date('Y'), $int->toInt());
 		}
 
-		if ($int === '42') {
+		if ($int->isEqualTo(42)) {
+			// Easter egg
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Ahoj, stopaři!')
 				->setText('Odpověď na Základní otázku života, Vesmíru a tak vůbec');
 		}
 
-		if ($int <= 1000000) {
-			$this->numberSystem($int);
+		if ($int->isLessThanOrEqualTo(1000000)) {
+			$this->numberSystem((string) $int);
 			$this->alternativeRewrite();
 		} else {
-			if ($int < 18446744073709551616) { // 2^64
-				$this->timestamp($int);
+			if ($int->isLessThan('2^64')) {
+				$this->timestamp((string) $int);
 			}
 
-			$this->bigNumber($int);
+			$this->bigNumber((string) $int);
 		}
 
-		if ($int > 0) {
+		if ($int->isGreaterThan(0)) {
 			$this->primeFactorization();
 		}
 
-		if ($int > 0 && $int <= 1000000) {
+		if ($int->isGreaterThan(0) && $int->isLessThanOrEqualTo(1000000)) {
 			$this->divisors();
 		}
 
-		if ($int > 0 && $int <= 50) {
+		if ($int->isGreaterThan(0) && $int->isLessThanOrEqualTo(50)) {
 			$this->graphicInt();
 		}
 	}
@@ -172,7 +168,7 @@ final class NumberController extends BaseController
 
 	private function actionFloat(): void
 	{
-		if ($this->number->getFraction()[1] !== 1) {
+		if (!$this->number->toBigRational()->getDenominator()->isEqualTo(1)) {
 			$this->convertToFraction();
 		}
 	}
@@ -217,10 +213,10 @@ final class NumberController extends BaseController
 			$text = 'Celé reálné číslo';
 			$stepDescription[] = 'Je celé číslo.';
 
-			if ($number->getInteger() > 0) {
+			if ($number->toBigInteger()->isGreaterThan(0)) {
 				$text = 'Přirozené celé reálné číslo';
 				$stepDescription[] = 'Je větší než nula.';
-			} elseif ($number->getInteger() < 0) {
+			} elseif ($number->toBigInteger()->isLessThan(0)) {
 				$stepDescription[] = 'Je záporné číslo.';
 			} else {
 				$stepDescription[] = 'Je nula.';
@@ -229,7 +225,7 @@ final class NumberController extends BaseController
 			$text = 'Reálné číslo';
 			$stepDescription[] = 'Není celé číslo.';
 
-			if ($number->getFloat() === round($number->getFloat(), 3)) {
+			if ($number->isEqualTo($number->toBigDecimal()->toScale(3, RoundingMode::HALF_UP))) {
 				$text = 'Racionální reálné číslo (vyjádřitelné zlomkem)';
 				$stepDescription[] = 'Má konečně dlouhý desetinný rozvoj (počet cifer za desetinnou čárkou), proto lze vyjádřit zlomkem.';
 			}
@@ -241,7 +237,7 @@ final class NumberController extends BaseController
 
 		$this->addBox(Box::TYPE_TEXT)
 			->setTitle('Číselný obor')
-			->setText($text . ($number->getInteger() < 0 ? ' (záporné číslo)' : ''))
+			->setText($text . ($number->toBigInteger()->isNegative() ? ' (záporné číslo)' : ''))
 			->setSteps($steps);
 	}
 
@@ -253,7 +249,6 @@ final class NumberController extends BaseController
 	private function actionYear(int $currentYear, int $year): void
 	{
 		$diff = abs($currentYear - $year);
-		$step = new Step(null, null);
 		$stepDescription = null;
 
 		if ($diff === 0) {
@@ -270,9 +265,11 @@ final class NumberController extends BaseController
 			$stepDescription = 'Od aktuálního roku odečteme požadovaný rok.';
 		}
 
-		$step->setTitle($this->translator->translate('search.solution'));
-		$step->setDescription($stepDescription);
-		$step->setLatex($stepText);
+		$step = new Step(
+			$this->translator->translate('search.solution'),
+			$stepText,
+			$stepDescription
+		);
 
 		$this->addBox(Box::TYPE_TEXT)
 			->setTitle('Čas od dnes')
@@ -305,8 +302,8 @@ final class NumberController extends BaseController
 	{
 		$this->addBox(Box::TYPE_LATEX)
 			->setTitle('Převod do Římských číslic')
-			->setText(NumberHelper::intToRoman($this->number->getInteger()))
-			->setSteps($this->romanToIntSteps->getIntToRomanSteps($this->number->getInteger()));
+			->setText(NumberHelper::intToRoman((string) $this->number->toBigInteger()))
+			->setSteps($this->romanToIntSteps->getIntToRomanSteps($this->number->toBigInteger()));
 	}
 
 
@@ -337,8 +334,8 @@ final class NumberController extends BaseController
 
 	private function primeFactorization(): void
 	{
-		$int = $this->number->getInteger();
-		$factors = $this->numberHelper->pfactor($int);
+		$int = $this->number->toBigInteger();
+		$factors = $this->numberHelper->pfactor((string) $int);
 
 		if (count($factors) === 1) {
 			$this->addBox(Box::TYPE_TEXT)
@@ -377,8 +374,8 @@ final class NumberController extends BaseController
 
 	private function divisors(): void
 	{
-		$int = $this->number->getInteger();
-		$divisors = $this->sort($this->numberHelper->getDivisors($int));
+		$int = $this->number->toBigInteger();
+		$divisors = $this->sort($this->numberHelper->getDivisors((string) $int));
 		$title = 'Dělitelé čísla ' . $int
 			. ' | ' . Czech::inflection(count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
 			. ' | Součet: ' . array_sum($divisors);
@@ -423,9 +420,9 @@ final class NumberController extends BaseController
 
 	private function graphicInt(): void
 	{
-		$int = $this->number->getInteger();
+		$int = $this->number->toBigInteger();
 		$render = '';
-		for ($i = 1; $i <= $int; $i++) {
+		for ($i = 1; $int->isGreaterThanOrEqualTo($i); $i++) {
 			$render .= '<div style="float: left; width: 8px; height: 8px; background: #EA4437; margin: 3px;"></div>';
 		}
 
@@ -437,7 +434,7 @@ final class NumberController extends BaseController
 
 	private function aboutPi(): void
 	{
-		$this->setInterpret(Box::TYPE_LATEX, '\pi');
+		$this->setInterpret(Box::TYPE_LATEX, MathLatexToolkit::PI);
 
 		$this->addBox(Box::TYPE_TEXT)
 			->setTitle('Přibližná hodnota π | Ludolfovo číslo | Přesnost: ' . $this->getQueryEntity()->getDecimals())
@@ -447,23 +444,24 @@ final class NumberController extends BaseController
 
 	private function convertToFraction(): void
 	{
-		$factor = $this->number->getFraction();
+		$factor = $this->number->toBigRational();
 
 		$this->addBox(Box::TYPE_LATEX)
 			->setTitle('Zlomkový zápis | Nejlepší odhad')
 			->setText(
-				'\frac{' . $factor[0] . '}{' . $factor[1] . '} ≈ '
-				. number_format($factor[0] / $factor[1], $this->getQueryEntity()->getDecimals(), '.', ' ')
+				MathLatexToolkit::frac((string) $factor->getNumerator(), (string) $factor->getDenominator())
+				. ' ≈ '
+				. number_format($factor->toFloat(), $this->getQueryEntity()->getDecimals(), '.', ' ')
 			);
 
-		if ($factor[0] > $factor[1] && Validators::isNumericInt($factor[0]) && Validators::isNumericInt($factor[1])) {
-			$int = (int) floor($factor[0] / $factor[1]);
+		if ($factor->getNumerator()->isGreaterThan($factor->getDenominator())) {
+			$int = $factor->getNumerator()->dividedBy($factor->getDenominator(), RoundingMode::DOWN);
 
-			$fraction = (int) $factor[0] - $int * (int) $factor[1];
+			$fraction = $factor->getNumerator()->minus($int)->multipliedBy($factor->getDenominator());
 
 			$this->addBox(Box::TYPE_LATEX)
 				->setTitle('Složený zlomek')
-				->setText($int . '\ \frac{' . $fraction . '}{' . $factor[1] . '}');
+				->setText($int . '\ ' . MathLatexToolkit::frac((string) $fraction->toBigInteger(), (string) $factor->getDenominator()));
 		}
 	}
 
