@@ -62,7 +62,7 @@ final class SequenceController extends BaseController
 				$numberLatex .= ($numberLatex ? ';\ ' : '') . $object->getNumber();
 
 				if ($object->getNumber()->isInteger()) {
-					$integers[] = $object->getNumber()->getInteger();
+					$integers[] = (string) $object->getNumber()->toBigInteger();
 				} else {
 					$allIntegers = false;
 				}

@@ -5,56 +5,33 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Controller;
 
 
+use function count;
+use function in_array;
 use Mathematicator\Calculator\Calculator;
-use Mathematicator\Calculator\CalculatorResult;
+use Mathematicator\Calculator\Entity\CalculatorResult;
+use Mathematicator\Calculator\MathFunction\FunctionDoesNotExistsException;
+use Mathematicator\Calculator\Numbers\NumberHelper;
 use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\Entity\Box;
-use Mathematicator\Engine\Entity\Box;
-use Mathematicator\Engine\Entity\Query;
 use Mathematicator\Engine\Entity\Query;
 use Mathematicator\Engine\Exception\DivisionByZeroException;
 use Mathematicator\Engine\Exception\MathematicatorException;
-use Mathematicator\Engine\Exception\MathematicatorException;
 use Mathematicator\Engine\Exception\MathErrorException;
-use Mathematicator\Engine\Exception\MathErrorException;
-use Mathematicator\Engine\Helper\Czech;
+use Mathematicator\Engine\Exception\UndefinedOperationException;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\MathFunction\FunctionManager;
-use Mathematicator\Engine\MathFunction\FunctionManager;
 use Mathematicator\Engine\Step\Step;
-use Mathematicator\Engine\Step\Step;
-use Mathematicator\Engine\UndefinedOperationException;
-use Mathematicator\Engine\UndefinedOperationException;
-use Mathematicator\MathFunction\FunctionDoesNotExistsException;
-use Mathematicator\MathFunction\FunctionDoesNotExistsException;
-use Mathematicator\NumberHelper;
-use Mathematicator\NumberHelper;
-use Mathematicator\Tokenizer\Token\ComparatorToken;
+use Mathematicator\Numbers\Latex\MathLatexToolkit;
 use Mathematicator\Tokenizer\Token\ComparatorToken;
 use Mathematicator\Tokenizer\Token\EquationToken;
-use Mathematicator\Tokenizer\Token\EquationToken;
-use Mathematicator\Tokenizer\Token\InfinityToken;
 use Mathematicator\Tokenizer\Token\InfinityToken;
 use Mathematicator\Tokenizer\Token\IToken;
-use Mathematicator\Tokenizer\Token\IToken;
-use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Token\OperatorToken;
-use Mathematicator\Tokenizer\Token\OperatorToken;
-use Mathematicator\Tokenizer\Tokenizer;
 use Mathematicator\Tokenizer\Tokenizer;
 use Mathematicator\Vizualizator\MathFunctionRenderer;
-use Mathematicator\Vizualizator\MathFunctionRenderer;
-use Nette\Utils\Strings;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
-use Nette\Utils\Validators;
-use function count;
-use function count;
-use function in_array;
-use function in_array;
-use function strlen;
-use function strlen;
 use function strlen;
 
 final class NumberCounterController extends BaseController
@@ -103,7 +80,7 @@ final class NumberCounterController extends BaseController
 			$calculatorResult = $this->calculate($objects);
 			$calculator = $calculatorResult->getResultTokens();
 			$steps = $calculatorResult->getSteps();
-		} catch (DivisionByZero $e) {
+		} catch (DivisionByZeroException $e) {
 			$fraction = $e->getFraction();
 
 			$step = new Step(null, null);
@@ -195,7 +172,7 @@ final class NumberCounterController extends BaseController
 	 * @param IToken[] $tokens
 	 * @param int $basicTtl
 	 * @return CalculatorResult
-	 * @throws MathematicatorException|DivisionByZero|UndefinedOperationException|FunctionDoesNotExistsException|MathErrorException
+	 * @throws MathematicatorException|DivisionByZeroException|UndefinedOperationException|FunctionDoesNotExistsException|MathErrorException
 	 */
 	private function calculate(array $tokens, int $basicTtl = 3): CalculatorResult
 	{
@@ -226,16 +203,16 @@ final class NumberCounterController extends BaseController
 			$buffer .= '<div style="border:1px solid #aaa;float:left;min-height:70px;margin:4px;padding:4px">';
 
 			if ($token instanceof NumberToken) {
-				$int = $token->getNumber()->getInteger();
-				if ($int >= 0) {
-					$buffer .= $this->renderNumber($int);
+				$int = $token->getNumber()->toBigInteger();
+				if ($int->isGreaterThanOrEqualTo(0)) {
+					$buffer .= $this->renderNumber((string) $int);
 				} else {
 					$buffer .= '<div style="overflow:auto;margin:-8px">'
 						. '<div style="float:left;min-height:70px;margin:4px 4px 4px 12px">'
 						. '<span style="font-size:27pt;padding:8px">-</span>'
 						. '</div>'
 						. '<div style="border-left:1px solid #aaa;float:left;min-height:70px;margin:4px;padding:4px">'
-						. $this->renderNumber((string) abs($int))
+						. $this->renderNumber((string) $int->abs())
 						. '</div></div>';
 				}
 			} else {
@@ -265,8 +242,8 @@ final class NumberCounterController extends BaseController
 			->setTitle('Sčítání pod sebou')
 			->setText(
 				$this->number->getAddStepAsHtml(
-					$numberToken->getNumber()->getInput(),
-					$numberToken->getNumber()->getInput(),
+					(string) $numberToken->getNumber()->getInput(),
+					(string) $numberToken->getNumber()->getInput(),
 					true
 				)
 			);
@@ -419,9 +396,8 @@ final class NumberCounterController extends BaseController
 		if ($calculatorShare[0] instanceof NumberToken) {
 			$this->addBox(Box::TYPE_LATEX)
 				->setTitle('Podíl řešení')
-				->setText('\frac{' . $numberA . '}{' . $numberB . '}'
-					. '\ =\ ' . $calculatorShare[0]->getToken()
-					. '\ ≈\ ' . $calculatorShare[0]->getNumber()->getFloatString())
+				->setText(MathLatexToolkit::frac($numberA, $numberB)->equals($calculatorShare[0]->getToken())
+					. '\ ≈\ ' . $calculatorShare[0]->getNumber()->toLatex())
 				->setSteps($stepsShare);
 		}
 
@@ -437,13 +413,13 @@ final class NumberCounterController extends BaseController
 	{
 		if ($token instanceof NumberToken) {
 			if ($token->getNumber()->isInteger()) {
-				$result = '\(' . $token->getNumber()->getInteger() . '\)';
+				$result = '\(' . $token->getNumber()->toBigInteger() . '\)';
 			} else {
-				$fraction = $token->getNumber()->getFraction();
-				$result = '\(' . ($fraction[0] < 0 ? '-' : '')
-					. '\frac{' . abs($fraction[0]) . '}'
-					. '{' . $fraction[1] . '} ≈ '
-					. preg_replace('/^(.+)[eE](.+)$/', '$1\ \cdot\ {10}^{$2}', $token->getNumber()->getFloatString()) . '\)'
+				$fraction = $token->getNumber()->toBigRational();
+				$result = '\(' . ($fraction->getNumerator()->isLessThan(0) ? '-' : '')
+					. MathLatexToolkit::frac((string) $fraction->getNumerator()->abs(), (string) $fraction->getDenominator())
+					. ' ≈ '
+					. preg_replace('/^(.+)[eE](.+)$/', '$1\ \cdot\ {10}^{$2}', (string) $token->getNumber()->toLatex()) . '\)'
 					. '<br><br><span class="text-secondary">Upozornění: Řešení může být zobrazeno jen přibližně.</span>';
 			}
 
@@ -453,21 +429,21 @@ final class NumberCounterController extends BaseController
 				->setSteps($steps);
 
 			if ($token->getNumber()->isInteger()) {
-				$int = $token->getNumber()->getInteger();
-				$numberLength = strlen($int);
+				$int = $token->getNumber()->toBigInteger();
+				$numberLength = strlen((string) $int);
 				if ($numberLength > 8) {
 					$this->addBox(Box::TYPE_TEXT)
 						->setTitle('Délka čísla')
 						->setText(Czech::inflection($numberLength, ['cifra', 'cifry', 'cifer']));
 
-					if (preg_match('/^(\d)((\d{1,7}).*?)$/', $int, $intParser)) {
+					if (preg_match('/^(\d)((\d{1,7}).*?)$/', (string) $int, $intParser)) {
 						$this->addBox(Box::TYPE_LATEX)
 							->setTitle('Desetinná aproximace')
-							->setText($intParser[1] . '.' . $intParser[3] . '\ \cdot\ {10}^{' . strlen($intParser[2]) . '}');
+							->setText($intParser[1] . '.' . $intParser[3] . '\ \cdot\ ' . MathLatexToolkit::pow(10, strlen($intParser[2])));
 					}
 
-					if (Strings::endsWith($int, '0')) {
-						$zeros = preg_replace('/^\d+?(0+)$/', '$1', $int);
+					if (Strings::endsWith((string) $int, '0')) {
+						$zeros = (string) preg_replace('/^\d+?(0+)$/', '$1', (string) $int);
 						$trailingZerosBox = $this->addBox(Box::TYPE_LATEX)
 							->setTitle('Počet nul na konci')
 							->setText((string) ($zeros ? strlen($zeros) : 0));
@@ -525,7 +501,7 @@ final class NumberCounterController extends BaseController
 				) || (
 					$token instanceof NumberToken
 					&& $token->getNumber()->isInteger()
-					&& $token->getNumber()->getInteger() <= 20
+					&& $token->getNumber()->toBigInteger()->isLessThanOrEqualTo(20)
 				)
 			)) {
 				return false;

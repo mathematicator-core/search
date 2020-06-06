@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
+use function is_array;
 use Mathematicator\Engine\Engine;
-use Mathematicator\Engine\EngineMultiResult;
-use Mathematicator\Engine\EngineResult;
+use Mathematicator\Engine\Entity\EngineMultiResult;
+use Mathematicator\Engine\Entity\EngineResult;
 use Mathematicator\Engine\Entity\EngineSingleResult;
 use Mathematicator\Engine\Exception\InvalidDataException;
 use Mathematicator\Engine\Exception\NoResultsException;
@@ -28,7 +29,6 @@ use Mathematicator\Search\Entity\AutoCompleteResult;
 use Mathematicator\Search\Entity\Result;
 use Nette\Localization\ITranslator;
 use Tracy\Debugger;
-use function is_array;
 
 class Search
 {
