@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Controller;
 
 
-use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
+use Mathematicator\Engine\Entity\Box;
 use Mathematicator\Tokenizer\Tokenizer;
 
 final class TreeController extends BaseController

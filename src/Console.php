@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
-use function is_array;
-use Mathematicator\Engine\EngineSingleResult;
+use Mathematicator\Engine\Entity\EngineSingleResult;
 use Mathematicator\Engine\Helper\Terminal;
 use Nette\Utils\Strings;
 use Symfony\Component\Console\Command\Command;
@@ -15,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\Dumper;
+use function is_array;
 
 class Console extends Command
 {

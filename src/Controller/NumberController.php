@@ -5,20 +5,33 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Controller;
 
 
-use function count;
-use function in_array;
-use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
-use Mathematicator\Engine\DivisionByZero;
+use Mathematicator\Engine\Entity\Box;
+use Mathematicator\Engine\Exception\DivisionByZeroException;
 use Mathematicator\Engine\Helper\Czech;
 use Mathematicator\Engine\Helper\DateTime;
-use Mathematicator\Engine\Step;
+use Mathematicator\Engine\Step\Step;
 use Mathematicator\NumberHelper;
 use Mathematicator\Numbers\NumberFactory;
 use Mathematicator\Numbers\SmartNumber;
 use Mathematicator\Step\RomanIntSteps;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
+use function count;
+use function in_array;
+use function strlen;
+use function time;
+use Mathematicator\Engine\Helper\Czech;
+use Mathematicator\Engine\Helper\DateTime;
+use Mathematicator\Engine\Step\Step;
+use Mathematicator\NumberHelper;
+use Mathematicator\Numbers\NumberFactory;
+use Mathematicator\Numbers\SmartNumber;
+use Mathematicator\Step\RomanIntSteps;
+use Nette\Utils\Strings;
+use Nette\Utils\Validators;
+use function count;
+use function in_array;
 use function strlen;
 use function time;
 

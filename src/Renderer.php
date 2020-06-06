@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
-use function json_decode;
-use Mathematicator\Engine\Box;
-use Mathematicator\Engine\MathematicatorException;
+use Mathematicator\Engine\Entity\Box;
+use Mathematicator\Engine\Exception\MathematicatorException;
 use Mathematicator\Engine\Translator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
+use function json_decode;
 use function strlen;
 
 final class Renderer

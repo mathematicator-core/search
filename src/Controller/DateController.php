@@ -6,10 +6,10 @@ namespace Mathematicator\Search\Controller;
 
 
 use Martindilling\Sunny\Sunny;
-use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
+use Mathematicator\Engine\Entity\Box;
+use Mathematicator\Engine\Entity\Source;
 use Mathematicator\Engine\Helper\Czech;
-use Mathematicator\Engine\Source;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 use Solaris\MoonPhase;

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Controller;
 
 
-use Mathematicator\Engine\Box;
 use Mathematicator\Engine\Controller\BaseController;
-use Mathematicator\Engine\MathematicatorException;
+use Mathematicator\Engine\Entity\Box;
+use Mathematicator\Engine\Exception\MathematicatorException;
 use Mathematicator\Integral\IntegralSolver;
 use Mathematicator\Tokenizer\Tokenizer;
 use Nette\Tokenizer\Exception;

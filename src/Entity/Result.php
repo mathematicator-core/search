@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Entity;
 
 
-use Mathematicator\Engine\Box;
+use Mathematicator\Engine\Entity\Box;
 use Nette\SmartObject;
 
 /**
