@@ -386,7 +386,7 @@ final class NumberController extends BaseController
 
 			for ($i = 0; isset($divisors[$i]); $i++) {
 				$divisor[] = '=' . $divisors[$i] . '=';
-				$share[] = '=' . ($int / $divisors[$i]) . '=';
+				$share[] = '=' . $int->dividedBy($divisors[$i]) . '=';
 			}
 
 			$box = $this->addBox(Box::TYPE_TABLE)->setTable([$divisor, $share]);
