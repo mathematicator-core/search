@@ -18,7 +18,6 @@
 	],
 	"require": {
 		"php": ">=7.2",
-		"contributte/psr6-caching": "^0.2@dev",
 		"janbarasek/php-moon-phase": "^2.0",
 		"martindilling/sunny": "^0.5.4",
 		"mathematicator-core/calculator": "^2.0",
