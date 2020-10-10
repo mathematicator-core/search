@@ -10,8 +10,6 @@ use Mathematicator\Engine\Exception\MathematicatorException;
 use Mathematicator\Engine\Translator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
-use function json_decode;
-use function strlen;
 
 final class Renderer
 {
@@ -54,7 +52,7 @@ final class Renderer
 	public function renderTable(string $data): string
 	{
 		$return = '';
-		foreach (json_decode($data) as $row) {
+		foreach (\json_decode($data) as $row) {
 			$return .= '<tr>';
 			foreach ($row as $column) {
 				if (Strings::startsWith($column, '!')) {
@@ -164,7 +162,7 @@ final class Renderer
 	{
 		$return = null;
 
-		if (strlen($number) <= 3) {
+		if (\strlen($number) <= 3) {
 			$return = $number;
 		} elseif (preg_match('/^-?\d+\z/', $number)) {
 			$return = '';

@@ -28,7 +28,6 @@ use Mathematicator\Search\Entity\AutoCompleteResult;
 use Mathematicator\Search\Entity\Result;
 use Nette\Localization\ITranslator;
 use Tracy\Debugger;
-use function is_array;
 
 class Search
 {
@@ -103,7 +102,7 @@ class Search
 	{
 		$searchResult = $this->search($query);
 		/** @var EngineSingleResult $resultEntity */
-		$resultEntity = is_array($searchResult) ? $searchResult['left'] : $searchResult;
+		$resultEntity = \is_array($searchResult) ? $searchResult['left'] : $searchResult;
 
 		return (new AutoCompleteResult())
 			->setResult((new Result())->setBoxes($resultEntity->getBoxes()));

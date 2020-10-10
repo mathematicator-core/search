@@ -11,10 +11,8 @@ use Nette\Utils\Strings;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 use Tracy\Debugger;
 use Tracy\Dumper;
-use function is_array;
 
 class Console extends Command
 {
@@ -56,7 +54,7 @@ EOT;
 				if ($query !== null) {
 					$result = $this->search->search($query);
 
-					if (is_array($result)) {
+					if (\is_array($result)) {
 						foreach ($result as $resultItem) {
 							if ($resultItem instanceof EngineSingleResult) {
 								$this->render($resultItem);
@@ -68,7 +66,7 @@ EOT;
 					}
 				}
 			}
-		} catch (Throwable $e) {
+		} catch (\Throwable $e) {
 			$output->writeLn('<error>' . $e->getMessage() . '</error>');
 			echo "\n\n";
 			Terminal::code($e->getFile(), $e->getLine());

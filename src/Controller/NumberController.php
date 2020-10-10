@@ -17,10 +17,6 @@ use Mathematicator\Engine\Step\Step;
 use Mathematicator\Numbers\Latex\MathLatexToolkit;
 use Mathematicator\Numbers\SmartNumber;
 use Nette\Utils\Strings;
-use function count;
-use function in_array;
-use function strlen;
-use function time;
 
 final class NumberController extends BaseController
 {
@@ -54,7 +50,7 @@ final class NumberController extends BaseController
 				->setText($number)
 				->setSteps($this->romanToIntSteps->getRomanToIntSteps($this->getQuery()));
 		}
-		if (in_array(strtolower(Strings::toAscii((string) $number)), ['pi', 'ludolfovo cislo'], true) === true) {
+		if (\in_array(strtolower(Strings::toAscii((string) $number)), ['pi', 'ludolfovo cislo'], true) === true) {
 			$this->aboutPi();
 
 			return;
@@ -290,7 +286,7 @@ final class NumberController extends BaseController
 
 	private function timestamp(string $int): void
 	{
-		$currentTimestamp = time();
+		$currentTimestamp = \time();
 		$dateDiff = abs($currentTimestamp - (int) $int);
 
 		$timestamp = '<p><b>' . DateTime::getDateTimeIso((int) $int) . '</b></p>'
@@ -315,7 +311,7 @@ final class NumberController extends BaseController
 		$int = $this->number->toBigInteger();
 		$factors = $this->numberHelper->pfactor((string) $int);
 
-		if (count($factors) === 1) {
+		if (\count($factors) === 1) {
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Prvočíselný rozklad')
 				->setText('Číslo ' . $int . ' je prvočíslo, proto nelze dále rozložit.')
@@ -325,7 +321,7 @@ final class NumberController extends BaseController
 			$items = 0;
 			$primaries = 0;
 
-			foreach (array_count_values($factors) as $b => $e) {
+			foreach (\array_count_values($factors) as $b => $e) {
 				if ($outputFactor) {
 					$outputFactor .= ' \cdot ';
 				}
@@ -355,10 +351,10 @@ final class NumberController extends BaseController
 		$int = $this->number->toBigInteger();
 		$divisors = $this->sort($this->numberHelper->getDivisors((string) $int));
 		$title = 'Dělitelé čísla ' . $int
-			. ' | ' . Czech::inflection(count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
+			. ' | ' . Czech::inflection(\count($divisors), ['dělitel', 'dělitelé', 'dělitelů'])
 			. ' | Součet: ' . array_sum($divisors);
 
-		if (count($divisors) < 5) {
+		if (\count($divisors) < 5) {
 			$divisor = ['!Dělitel'];
 			$share = ['!Podíl'];
 
@@ -444,8 +440,8 @@ final class NumberController extends BaseController
 
 	private function bigNumber(string $int): void
 	{
-		$countNumbers = strlen($int);
-		$uniqueNumbers = count(array_unique(str_split($int)));
+		$countNumbers = \strlen($int);
+		$uniqueNumbers = \count(\array_unique(str_split($int)));
 
 		if ($uniqueNumbers <= 4 && $uniqueNumbers >= 2) {
 			for ($i = $countNumbers - 1; $i >= 4; $i--) {
@@ -471,7 +467,7 @@ final class NumberController extends BaseController
 		for ($i = 0; $i < $x; $i++) {
 			for ($j = 0; $j < $y; $j++) {
 				$char = $data[$iterator];
-				$return .= '<span style="color:' . ($colorCache[$char] ?? $colors[count($colorCache)]) . '">'
+				$return .= '<span style="color:' . ($colorCache[$char] ?? $colors[\count($colorCache)]) . '">'
 					. htmlspecialchars($char, ENT_QUOTES)
 					. '</span>';
 				$iterator++;
