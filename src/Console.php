@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tracy\Debugger;
 use Tracy\Dumper;
 
-class Console extends Command
+final class Console extends Command
 {
 
 	/** @var Search */
