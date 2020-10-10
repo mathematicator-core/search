@@ -19,19 +19,12 @@ class AutoCompleteResult
 	private $result;
 
 
-	/**
-	 * @return Result
-	 */
 	public function getResult(): Result
 	{
 		return $this->result;
 	}
 
 
-	/**
-	 * @param Result $result
-	 * @return AutoCompleteResult
-	 */
 	public function setResult(Result $result): self
 	{
 		$this->result = $result;
@@ -51,7 +44,7 @@ class AutoCompleteResult
 
 	/**
 	 * @param VideoResult[] $videos
-	 * @return AutoCompleteResult
+	 * @return self
 	 */
 	public function setVideos(array $videos): self
 	{

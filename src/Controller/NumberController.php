@@ -6,8 +6,6 @@ namespace Mathematicator\Search\Controller;
 
 
 use Brick\Math\RoundingMode;
-use function count;
-use function in_array;
 use Mathematicator\Calculator\Numbers\NumberHelper;
 use Mathematicator\Calculator\Step\Model\RomanIntSteps;
 use Mathematicator\Engine\Controller\BaseController;
@@ -19,6 +17,8 @@ use Mathematicator\Engine\Step\Step;
 use Mathematicator\Numbers\Latex\MathLatexToolkit;
 use Mathematicator\Numbers\SmartNumber;
 use Nette\Utils\Strings;
+use function count;
+use function in_array;
 use function strlen;
 use function time;
 
@@ -54,13 +54,11 @@ final class NumberController extends BaseController
 				->setText($number)
 				->setSteps($this->romanToIntSteps->getRomanToIntSteps($this->getQuery()));
 		}
-
 		if (in_array(strtolower(Strings::toAscii((string) $number)), ['pi', 'ludolfovo cislo'], true) === true) {
 			$this->aboutPi();
 
 			return;
 		}
-
 		if ($number > 10e10) {
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle($this->translator->translate('search.information'))
@@ -68,7 +66,6 @@ final class NumberController extends BaseController
 
 			return;
 		}
-
 		try {
 			$this->number = SmartNumber::of($number);
 			$this->actionNumericalField($this->number);
@@ -77,7 +74,6 @@ final class NumberController extends BaseController
 
 			return;
 		}
-
 		if ($this->number->isInteger()) {
 			$this->setInterpret(
 				Box::TYPE_LATEX,
@@ -109,14 +105,12 @@ final class NumberController extends BaseController
 		if ($int->isGreaterThanOrEqualTo(1750) && $int->isLessThanOrEqualTo(2300)) {
 			$this->actionYear((int) date('Y'), $int->toInt());
 		}
-
 		if ($int->isEqualTo(42)) {
 			// Easter egg
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Ahoj, stopaři!')
 				->setText('Odpověď na Základní otázku života, Vesmíru a tak vůbec');
 		}
-
 		if ($int->isLessThanOrEqualTo(1000000)) {
 			$this->numberSystem((string) $int);
 			$this->alternativeRewrite();
@@ -127,15 +121,12 @@ final class NumberController extends BaseController
 
 			$this->bigNumber((string) $int);
 		}
-
 		if ($int->isGreaterThan(0)) {
 			$this->primeFactorization();
 		}
-
 		if ($int->isGreaterThan(0) && $int->isLessThanOrEqualTo(1000000)) {
 			$this->divisors();
 		}
-
 		if ($int->isGreaterThan(0) && $int->isLessThanOrEqualTo(50)) {
 			$this->graphicInt();
 		}
@@ -174,9 +165,6 @@ final class NumberController extends BaseController
 	}
 
 
-	/**
-	 * @param SmartNumber $number
-	 */
 	private function actionNumericalField(SmartNumber $number): void
 	{
 		$steps = [];
@@ -242,10 +230,6 @@ final class NumberController extends BaseController
 	}
 
 
-	/**
-	 * @param int $currentYear
-	 * @param int $year
-	 */
 	private function actionYear(int $currentYear, int $year): void
 	{
 		$diff = abs($currentYear - $year);
@@ -278,9 +262,6 @@ final class NumberController extends BaseController
 	}
 
 
-	/**
-	 * @param string $int
-	 */
 	private function numberSystem(string $int): void
 	{
 		if ($int < 0) {
@@ -307,9 +288,6 @@ final class NumberController extends BaseController
 	}
 
 
-	/**
-	 * @param string $int
-	 */
 	private function timestamp(string $int): void
 	{
 		$currentTimestamp = time();
@@ -406,15 +384,14 @@ final class NumberController extends BaseController
 	 */
 	private function sort(array $array): array
 	{
-		$toStr = [];
-
+		$return = [];
 		foreach ($array as $item) {
-			$toStr[] = (string) $item;
+			$return[] = (string) $item;
 		}
 
-		sort($toStr);
+		sort($return);
 
-		return $toStr;
+		return $return;
 	}
 
 
@@ -456,7 +433,6 @@ final class NumberController extends BaseController
 
 		if ($factor->getNumerator()->isGreaterThan($factor->getDenominator())) {
 			$int = $factor->getNumerator()->dividedBy($factor->getDenominator(), RoundingMode::DOWN);
-
 			$fraction = $factor->getNumerator()->minus($int)->multipliedBy($factor->getDenominator());
 
 			$this->addBox(Box::TYPE_LATEX)
@@ -485,12 +461,6 @@ final class NumberController extends BaseController
 	}
 
 
-	/**
-	 * @param string $data
-	 * @param int $x
-	 * @param int $y
-	 * @return string
-	 */
 	private function renderTable(string $data, int $x, int $y): string
 	{
 		$return = '';
@@ -501,7 +471,9 @@ final class NumberController extends BaseController
 		for ($i = 0; $i < $x; $i++) {
 			for ($j = 0; $j < $y; $j++) {
 				$char = $data[$iterator];
-				$return .= '<span style="color:' . ($colorCache[$char] ?? $colors[count($colorCache)]) . '">' . $char . '</span>';
+				$return .= '<span style="color:' . ($colorCache[$char] ?? $colors[count($colorCache)]) . '">'
+					. htmlspecialchars($char, ENT_QUOTES)
+					. '</span>';
 				$iterator++;
 			}
 			$return .= '<br>';

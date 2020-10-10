@@ -7,8 +7,5 @@ namespace Mathematicator\Search;
 
 interface ISearchAccessor
 {
-	/**
-	 * @return Search
-	 */
 	public function get(): Search;
 }

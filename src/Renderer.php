@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
-use function json_decode;
 use Mathematicator\Engine\Entity\Box;
 use Mathematicator\Engine\Exception\MathematicatorException;
 use Mathematicator\Engine\Translator;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
+use function json_decode;
 use function strlen;
 
 final class Renderer
@@ -38,7 +38,6 @@ final class Renderer
 
 	/**
 	 * @param mixed $data
-	 * @param string $type
 	 * @return string
 	 * @throws MathematicatorException
 	 */
@@ -52,14 +51,9 @@ final class Renderer
 	}
 
 
-	/**
-	 * @param string $data
-	 * @return string
-	 */
 	public function renderTable(string $data): string
 	{
 		$return = '';
-
 		foreach (json_decode($data) as $row) {
 			$return .= '<tr>';
 			foreach ($row as $column) {
@@ -90,10 +84,6 @@ final class Renderer
 	}
 
 
-	/**
-	 * @param string $title
-	 * @return string
-	 */
 	public function renderTitle(string $title): string
 	{
 		$return = '';
@@ -109,8 +99,6 @@ final class Renderer
 
 
 	/**
-	 * @param string $data
-	 * @return string
 	 * @internal
 	 */
 	public function renderText(string $data): string
@@ -120,14 +108,11 @@ final class Renderer
 
 
 	/**
-	 * @param string $data
-	 * @return string
 	 * @internal
 	 */
 	public function renderLatex(string $data): string
 	{
 		$return = '';
-
 		foreach (explode("\n", $data) as $line) {
 			$return .= Validators::isNumeric($line)
 				? '<div>' . str_replace('\ ', '&nbsp;', $this->numberFormat($line)) . '</div>'
@@ -141,14 +126,11 @@ final class Renderer
 
 
 	/**
-	 * @param string $data
-	 * @return string
 	 * @internal
 	 */
 	public function renderKeyword(string $data): string
 	{
 		$return = '';
-
 		foreach (explode(';', $data) as $item) {
 			$return .= '<span style="margin:.25em;border:1px solid #E6CF67;background:#FFF2BF;padding:.25em .5em;color:#735E00;display:inline-block">'
 				. htmlspecialchars(trim($item))
@@ -160,8 +142,6 @@ final class Renderer
 
 
 	/**
-	 * @param string $data
-	 * @return string
 	 * @internal
 	 */
 	public function renderImage(string $data): string
@@ -169,7 +149,6 @@ final class Renderer
 		if (strncmp($data, 'data:', 5) === 0) {
 			return '<img src="' . $data . '">';
 		}
-
 		if (strncmp($data, '<div class="vizualizator"', 25) === 0) {
 			return $data . '<style>.vizualizator{border:1px solid #aaa}</style>';
 		}
@@ -179,9 +158,6 @@ final class Renderer
 
 
 	/**
-	 * @param string $number
-	 * @param bool $isLookLeft
-	 * @return string
 	 * @internal
 	 */
 	public function numberFormat(string $number, bool $isLookLeft = true): string
@@ -230,8 +206,6 @@ final class Renderer
 
 
 	/**
-	 * @param string $data
-	 * @return string
 	 * @internal
 	 */
 	public function renderHtml(string $data): string

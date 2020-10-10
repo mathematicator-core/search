@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
-use function is_array;
 use Mathematicator\Engine\Entity\EngineSingleResult;
 use Mathematicator\Engine\Helper\Terminal;
 use Nette\Utils\Strings;
@@ -15,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\Dumper;
+use function is_array;
 
 class Console extends Command
 {
@@ -23,9 +23,6 @@ class Console extends Command
 	private $search;
 
 
-	/**
-	 * @param Search $search
-	 */
 	public function __construct(Search $search)
 	{
 		parent::__construct();
@@ -40,11 +37,6 @@ class Console extends Command
 	}
 
 
-	/**
-	 * @param InputInterface $input
-	 * @param OutputInterface $output
-	 * @return int
-	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		try {
@@ -90,9 +82,6 @@ EOT;
 	}
 
 
-	/**
-	 * @param EngineSingleResult $result
-	 */
 	private function render(EngineSingleResult $result): void
 	{
 		if ($result->getInterpret() !== null) {

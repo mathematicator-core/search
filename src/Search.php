@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mathematicator\Search;
 
 
-use function is_array;
 use Mathematicator\Engine\Engine;
 use Mathematicator\Engine\Entity\EngineMultiResult;
 use Mathematicator\Engine\Entity\EngineResult;
@@ -29,6 +28,7 @@ use Mathematicator\Search\Entity\AutoCompleteResult;
 use Mathematicator\Search\Entity\Result;
 use Nette\Localization\ITranslator;
 use Tracy\Debugger;
+use function is_array;
 
 class Search
 {
@@ -43,18 +43,8 @@ class Search
 	private $translatorHelper;
 
 
-	/**
-	 * @param Engine $engine
-	 * @param Router $router
-	 * @param TranslatorHelper $translatorHelper
-	 * @param Translator $translator
-	 */
-	public function __construct(
-		Engine $engine,
-		Router $router,
-		TranslatorHelper $translatorHelper,
-		Translator $translator
-	) {
+	public function __construct(Engine $engine, Router $router, TranslatorHelper $translatorHelper, Translator $translator)
+	{
 		$this->engine = $engine;
 		$this->translatorHelper = $translatorHelper;
 		$this->translator = $translator;
@@ -78,9 +68,7 @@ class Search
 
 
 	/**
-	 * Set language for translator
-	 *
-	 * @param string $lang
+	 * Set language for translator.
 	 */
 	public function setLocale(string $lang): void
 	{
@@ -89,7 +77,6 @@ class Search
 
 
 	/**
-	 * @param string $query
 	 * @return EngineResult|EngineResult[]
 	 * @throws InvalidDataException|NoResultsException
 	 */
@@ -98,7 +85,6 @@ class Search
 		if (class_exists('\Tracy\Debugger')) {
 			Debugger::timer('search_request');
 		}
-
 		if (($engineResult = $this->engine->compute($query)) instanceof EngineMultiResult) {
 			return [
 				'left' => $engineResult->getResult('left'),
@@ -111,8 +97,6 @@ class Search
 
 
 	/**
-	 * @param string $query
-	 * @return AutoCompleteResult
 	 * @throws InvalidDataException|NoResultsException
 	 */
 	public function searchAutocomplete(string $query): AutoCompleteResult
