@@ -37,7 +37,7 @@
 		"nette/tester": "^2.3",
 		"phpstan/phpstan": "^0.12.18",
 		"phpstan/phpstan-nette": "^0.12.6",
-		"symplify/easy-coding-standard": "^7.2"
+		"symplify/easy-coding-standard": "^7.2 || ^8.0"
 	},
 	"suggest": {
 		"tracy/tracy": "(^2.7) For advance debugging"
