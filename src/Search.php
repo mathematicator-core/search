@@ -9,12 +9,10 @@ use Mathematicator\Engine\Engine;
 use Mathematicator\Engine\Entity\EngineMultiResult;
 use Mathematicator\Engine\Entity\EngineResult;
 use Mathematicator\Engine\Entity\EngineSingleResult;
-use Mathematicator\Engine\Exception\InvalidDataException;
 use Mathematicator\Engine\Exception\NoResultsException;
 use Mathematicator\Engine\Router\DynamicRoute;
 use Mathematicator\Engine\Router\Router;
 use Mathematicator\Engine\Translation\TranslatorHelper;
-use Mathematicator\Engine\Translator;
 use Mathematicator\Search\Controller\CrossMultiplicationController;
 use Mathematicator\Search\Controller\DateController;
 use Mathematicator\Search\Controller\IntegralController;
@@ -26,28 +24,21 @@ use Mathematicator\Search\Controller\SequenceController;
 use Mathematicator\Search\Controller\TreeController;
 use Mathematicator\Search\Entity\AutoCompleteResult;
 use Mathematicator\Search\Entity\Result;
-use Nette\Localization\ITranslator;
-use Tracy\Debugger;
 
-class Search
+final class Search
 {
 
 	/** @var Engine */
 	private $engine;
 
-	/** @var ITranslator */
-	private $translator;
-
 	/** @var TranslatorHelper */
 	private $translatorHelper;
 
 
-	public function __construct(Engine $engine, Router $router, TranslatorHelper $translatorHelper, Translator $translator)
+	public function __construct(Engine $engine, Router $router, TranslatorHelper $translatorHelper)
 	{
 		$this->engine = $engine;
 		$this->translatorHelper = $translatorHelper;
-		$this->translator = $translator;
-
 		$translatorHelper->addResource(__DIR__ . '/../translations', 'search');
 
 		$router->addDynamicRoute(new DynamicRoute(DynamicRoute::TYPE_REGEX, '(?:strom|tree)\s+.+', TreeController::class));
@@ -77,32 +68,43 @@ class Search
 
 	/**
 	 * @return EngineResult|EngineResult[]
-	 * @throws InvalidDataException|NoResultsException
+	 * @throws NoResultsException
 	 */
-	public function search(string $query)
+	public function search(string $query, bool $rewriteExceptionToResult = false)
 	{
-		if (class_exists('\Tracy\Debugger')) {
-			Debugger::timer('search_request');
-		}
-		if (($engineResult = $this->engine->compute($query)) instanceof EngineMultiResult) {
-			return [
-				'left' => $engineResult->getResult('left'),
-				'right' => $engineResult->getResult('right'),
-			];
-		}
+		try {
+			return (static function (EngineResult $result) {
+				if ($result instanceof EngineMultiResult) {
+					return [
+						'left' => $result->getResult('left'),
+						'right' => $result->getResult('right'),
+					];
+				}
 
-		return $engineResult;
+				return $result;
+			})($this->engine->compute($query));
+		} catch (\Throwable $e) {
+			if ($rewriteExceptionToResult === true) {
+				try {
+					return $this->engine->createNoResult($query, $e);
+				} catch (\Throwable $eNoResult) {
+					throw new \RuntimeException('Can not create no result response: ' . $e->getMessage(), $e->getCode(), $e);
+				}
+			}
+
+			throw new NoResultsException('Can not find result for "' . $query . '": ' . $e->getMessage(), $e->getCode(), $e);
+		}
 	}
 
 
 	/**
-	 * @throws InvalidDataException|NoResultsException
+	 * @throws NoResultsException
 	 */
 	public function searchAutocomplete(string $query): AutoCompleteResult
 	{
 		$searchResult = $this->search($query);
 		/** @var EngineSingleResult $resultEntity */
-		$resultEntity = \is_array($searchResult) ? $searchResult['left'] : $searchResult;
+		$resultEntity = \is_array($searchResult) && isset($searchResult['left']) ? $searchResult['left'] : $searchResult;
 
 		return (new AutoCompleteResult())
 			->setResult((new Result())->setBoxes($resultEntity->getBoxes()));
