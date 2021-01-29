@@ -104,9 +104,11 @@ final class Search
 	{
 		$searchResult = $this->search($query);
 		/** @var EngineSingleResult $resultEntity */
-		$resultEntity = \is_array($searchResult) && isset($searchResult['left']) ? $searchResult['left'] : $searchResult;
+		$resultEntity = \is_array($searchResult) && isset($searchResult['left'])
+			? $searchResult['left']
+			: $searchResult;
 
-		return (new AutoCompleteResult())
-			->setResult((new Result())->setBoxes($resultEntity->getBoxes()));
+		return (new AutoCompleteResult)
+			->setResult((new Result)->setBoxes($resultEntity->getBoxes()));
 	}
 }

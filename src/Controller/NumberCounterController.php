@@ -521,10 +521,6 @@ final class NumberCounterController extends BaseController
 	}
 
 
-	/**
-	 * @param string $int
-	 * @return string
-	 */
 	private function renderNumber(string $int): string
 	{
 		$render = '';

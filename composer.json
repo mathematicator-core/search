@@ -35,9 +35,11 @@
 	"require-dev": {
 		"brainmaestro/composer-git-hooks": "dev-master",
 		"nette/tester": "^2.3",
+		"symplify/easy-coding-standard": "^7.2",
 		"phpstan/phpstan": "^0.12.18",
 		"phpstan/phpstan-nette": "^0.12.6",
-		"symplify/easy-coding-standard": "^7.2"
+		"spaze/phpstan-disallowed-calls": "^1.1",
+		"roave/security-advisories": "dev-master"
 	},
 	"suggest": {
 		"tracy/tracy": "(^2.7) For advance debugging"

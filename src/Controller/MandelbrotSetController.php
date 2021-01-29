@@ -57,7 +57,8 @@ final class MandelbrotSetController extends BaseController
 			new MandelbrotSetRequest(
 				(int) $config->getValue('deltaA', '2'),
 				(int) $config->getValue('deltaB', '2'),
-				700, 500
+				700,
+				500
 			)
 		);
 

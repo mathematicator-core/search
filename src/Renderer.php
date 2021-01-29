@@ -13,8 +13,6 @@ use Nette\Utils\Validators;
 
 final class Renderer
 {
-
-	/** @var string[] */
 	private const SERVICES = [
 		Box::TYPE_TEXT => 'renderText',
 		Box::TYPE_LATEX => 'renderLatex',
@@ -71,7 +69,9 @@ final class Renderer
 								}
 
 								return (string) $row[0];
-							}, $column)
+							},
+							$column
+						)
 						. '</td>';
 				}
 			}
@@ -181,15 +181,17 @@ final class Renderer
 				while (true) {
 					if (preg_match('/^(\d{3})(\d+)$/', $number, $temp)) {
 						$number = $temp[2];
-						$return = $return . '\ ' . $temp[1];
+						$return .= '\ ' . $temp[1];
 					} else {
-						$return = $return . '\ ' . $number;
+						$return .= '\ ' . $number;
 						break;
 					}
 				}
 			}
 		} elseif (preg_match('/^0*(?<left>.+?)\.(?<right>.+?)0*$/', $number, $parser)) {
-			$return = (string) preg_replace('/\.0*$/', '',
+			$return = (string) preg_replace(
+				'/\.0*$/',
+				'',
 				$this->numberFormat($parser['left'])
 				. '.' . $this->numberFormat($parser['right'], false)
 			);

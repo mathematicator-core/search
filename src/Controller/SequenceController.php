@@ -30,11 +30,6 @@ final class SequenceController extends BaseController
 	private $addNumbers;
 
 
-	/**
-	 * @param StatisticsManager $statisticManager
-	 * @param Tokenizer $tokenizer
-	 * @param AddNumbers $addNumbers
-	 */
 	public function __construct(StatisticsManager $statisticManager, Tokenizer $tokenizer, AddNumbers $addNumbers)
 	{
 		$this->statisticManager = $statisticManager;
@@ -203,12 +198,6 @@ final class SequenceController extends BaseController
 	}
 
 
-	/**
-	 * @param Sequence $sequence
-	 * @param string $data
-	 * @param int $limit
-	 * @return string
-	 */
 	private function formatBr(Sequence $sequence, string $data, int $limit = 10): string
 	{
 		$return = '';
@@ -238,10 +227,6 @@ final class SequenceController extends BaseController
 	}
 
 
-	/**
-	 * @param string $data
-	 * @return string
-	 */
 	private function formatLinks(string $data): string
 	{
 		return (string) preg_replace_callback('/\s(A\d{6})\s/', function (array $row): string {

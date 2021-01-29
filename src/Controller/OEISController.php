@@ -28,9 +28,6 @@ final class OEISController extends BaseController
 	private $statisticManager;
 
 
-	/**
-	 * @param StatisticsManager $statisticManager
-	 */
 	public function __construct(StatisticsManager $statisticManager)
 	{
 		$this->statisticManager = $statisticManager;
@@ -105,10 +102,6 @@ final class OEISController extends BaseController
 	}
 
 
-	/**
-	 * @param string $data
-	 * @return string
-	 */
 	private function formatBr(string $data): string
 	{
 		$return = '';
@@ -128,10 +121,6 @@ final class OEISController extends BaseController
 	}
 
 
-	/**
-	 * @param string $data
-	 * @return string
-	 */
 	private function formatHr(string $data): string
 	{
 		return '<div class="text-center p-2 mt-2" style="background:#eee">'
@@ -140,10 +129,6 @@ final class OEISController extends BaseController
 	}
 
 
-	/**
-	 * @param string $data
-	 * @return string
-	 */
 	private function formatLinks(string $data): string
 	{
 		return (string) preg_replace_callback('/\s(A\d{6})\s/', function (array $row): string {
