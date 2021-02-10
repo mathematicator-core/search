@@ -20,21 +20,18 @@ use Nette\Utils\Strings;
 
 final class NumberController extends BaseController
 {
+	private NumberHelper $numberHelper;
 
-	/**
-	 * @var NumberHelper
-	 * @inject
-	 */
-	public $numberHelper;
+	private RomanIntSteps $romanToIntSteps;
 
-	/**
-	 * @var RomanIntSteps
-	 * @inject
-	 */
-	public $romanToIntSteps;
+	private SmartNumber $number;
 
-	/** @var SmartNumber */
-	private $number;
+
+	public function __construct(NumberHelper $numberHelper, RomanIntSteps $romanToIntSteps)
+	{
+		$this->numberHelper = $numberHelper;
+		$this->romanToIntSteps = $romanToIntSteps;
+	}
 
 
 	public function actionDefault(): void
@@ -101,8 +98,7 @@ final class NumberController extends BaseController
 		if ($int->isGreaterThanOrEqualTo(1750) && $int->isLessThanOrEqualTo(2300)) {
 			$this->actionYear((int) date('Y'), $int->toInt());
 		}
-		if ($int->isEqualTo(42)) {
-			// Easter egg
+		if ($int->isEqualTo(42)) { // Easter egg
 			$this->addBox(Box::TYPE_TEXT)
 				->setTitle('Ahoj, stopaři!')
 				->setText('Odpověď na Základní otázku života, Vesmíru a tak vůbec');

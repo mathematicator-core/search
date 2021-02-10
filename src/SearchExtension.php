@@ -11,7 +11,7 @@ final class SearchExtension extends CompilerExtension
 {
 
 	/** @var string[] */
-	public static $controllers = [
+	public static array $controllers = [
 		'\Mathematicator\Search\Controller\NumberController',
 		'\Mathematicator\Search\Controller\DateController',
 		'\Mathematicator\Search\Controller\NumberCounterController',

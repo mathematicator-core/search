@@ -18,14 +18,14 @@ final class DateController extends BaseController
 {
 
 	/** @var string[] */
-	private static $months = [
+	private static array $months = [
 		1 => 'leden', 'únor', 'březen', 'duben', 'květen',
 		'červen', 'červenec', 'srpen', 'září', 'říjen',
 		'listopad', 'prosinec',
 	];
 
 	/** @var string[] */
-	private static $days = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
+	private static array $days = ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'];
 
 
 	public function actionDefault(): void
@@ -54,10 +54,9 @@ final class DateController extends BaseController
 
 
 	/**
-	 * @param DateTime $date
 	 * @param int[][][] $dates
 	 */
-	private function renderCalendar(DateTime $date, array $dates): void
+	private function renderCalendar(\DateTimeInterface $date, array $dates): void
 	{
 		$weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 		$weekdaysCzech = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'];
@@ -93,7 +92,6 @@ final class DateController extends BaseController
 
 
 	/**
-	 * @param int $year
 	 * @return int[][][]
 	 */
 	private function getDates(int $year): array
@@ -114,7 +112,7 @@ final class DateController extends BaseController
 	}
 
 
-	private function sun(DateTime $date): void
+	private function sun(\DateTimeInterface $date): void
 	{
 		$day = new Sunny($date->format('Y-m-d H:i:s.u'), 'Europe/Prague');
 		$day->setLocation(50.0755381, 14.4378005); // Prague
@@ -138,7 +136,7 @@ final class DateController extends BaseController
 	}
 
 
-	private function moon(DateTime $date): void
+	private function moon(\DateTimeInterface $date): void
 	{
 		$moon = new MoonPhase($date->getTimestamp());
 

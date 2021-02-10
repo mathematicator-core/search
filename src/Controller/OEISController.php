@@ -12,20 +12,18 @@ use Mathematicator\Engine\Controller\BaseController;
 use Mathematicator\Engine\Entity\Box;
 use Mathematicator\Engine\Entity\Source;
 use Mathematicator\Statistics\StatisticsManager;
-use Nette\Utils\Strings;
 
 final class OEISController extends BaseController
 {
 
 	/** @var string[] */
-	private static $types = [
+	private static array $types = [
 		'O' => 'Offset',
 		'K' => 'Klíčová slova',
 		'A' => 'Autor',
 	];
 
-	/** @var StatisticsManager */
-	private $statisticManager;
+	private StatisticsManager $statisticManager;
 
 
 	public function __construct(StatisticsManager $statisticManager)
@@ -46,7 +44,7 @@ final class OEISController extends BaseController
 
 		try {
 			$sequence = $this->statisticManager->getSequence($this->getQuery());
-		} catch (NoResultException | NonUniqueResultException | EntityManagerException $e) {
+		} catch (NoResultException | NonUniqueResultException | EntityManagerException) {
 			return;
 		}
 
@@ -54,33 +52,22 @@ final class OEISController extends BaseController
 			->setTitle('Posloupnost')
 			->setText(implode(', ', $sequence->getSequence()) . ', ...');
 
-		$formula = $sequence->getDataType('F');
-
-		if ($formula !== null) {
+		if (($formula = $sequence->getDataType('F')) !== null) {
 			$this->addBox(Box::TYPE_HTML)
 				->setTitle('Předpis')
 				->setText($this->formatHr($formula));
 		}
-
-		$example = $sequence->getDataType('e');
-
-		if ($example !== null) {
+		if (($example = $sequence->getDataType('e')) !== null) {
 			$this->addBox(Box::TYPE_HTML)
 				->setTitle('Příklad')
 				->setText($this->formatBr($example));
 		}
-
-		$comment = $sequence->getDataType('C');
-
-		if ($comment !== null) {
+		if (($comment = $sequence->getDataType('C')) !== null) {
 			$this->addBox(Box::TYPE_HTML)
 				->setTitle('Komentář')
 				->setText($this->formatBr($comment));
 		}
-
-		$author = $sequence->getDataType('A');
-
-		if ($author) {
+		if (($author = $sequence->getDataType('A')) !== null) {
 			$source = new Source(
 				'OEIS',
 				'https://oeis.org/' . $sequence->getAId(),
@@ -91,9 +78,7 @@ final class OEISController extends BaseController
 		}
 
 		foreach (self::$types as $type => $label) {
-			$data = $sequence->getDataType($type);
-
-			if ($data !== null) {
+			if (($data = $sequence->getDataType($type)) !== null) {
 				$this->addBox(Box::TYPE_HTML)
 					->setTitle($label)
 					->setText(str_replace("\n", '<hr>', $this->formatLinks(htmlspecialchars($data))));
@@ -108,7 +93,7 @@ final class OEISController extends BaseController
 		$lastPre = false;
 
 		foreach (explode("\n", $this->formatLinks(htmlspecialchars($data))) as $line) {
-			if (Strings::contains($line, '   ')) {
+			if (str_contains($line, '   ')) {
 				$return .= ($lastPre ? '' : '<pre class="p-2 my-2" style="border:1px solid #aaa">') . $line . "\n";
 				$lastPre = true;
 			} else {

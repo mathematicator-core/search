@@ -16,9 +16,7 @@ use Tracy\Dumper;
 
 final class Console extends Command
 {
-
-	/** @var Search */
-	private $search;
+	private Search $search;
 
 
 	public function __construct(Search $search)
@@ -50,10 +48,8 @@ EOT;
 
 			while (true) {
 				$query = Terminal::ask('Query');
-
 				if ($query !== null) {
 					$result = $this->search->search($query);
-
 					if (\is_array($result)) {
 						foreach ($result as $resultItem) {
 							if ($resultItem instanceof EngineSingleResult) {

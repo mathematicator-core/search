@@ -13,12 +13,13 @@ use Mathematicator\MandelbrotSet\MandelbrotSetRequest;
 
 final class MandelbrotSetController extends BaseController
 {
+	private MandelbrotSet $mandelbrotSet;
 
-	/**
-	 * @var MandelbrotSet
-	 * @inject
-	 */
-	public $mandelbrotSet;
+
+	public function __construct(MandelbrotSet $mandelbrotSet)
+	{
+		$this->mandelbrotSet = $mandelbrotSet;
+	}
 
 
 	public function actionDefault(): void

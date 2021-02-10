@@ -14,23 +14,20 @@ use Nette\Tokenizer\Exception;
 
 final class IntegralController extends BaseController
 {
+	private IntegralSolver $integral;
 
-	/**
-	 * @var IntegralSolver
-	 * @inject
-	 */
-	public $integral;
+	private Tokenizer $tokenizer;
 
-	/**
-	 * @var Tokenizer
-	 * @inject
-	 */
-	public $tokenizer;
+
+	public function __construct(IntegralSolver $integral, Tokenizer $tokenizer)
+	{
+		$this->integral = $integral;
+		$this->tokenizer = $tokenizer;
+	}
 
 
 	/**
-	 * @throws Exception
-	 * @throws MathematicatorException
+	 * @throws Exception|MathematicatorException
 	 */
 	public function actionDefault(): void
 	{

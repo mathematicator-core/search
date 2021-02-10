@@ -11,19 +11,22 @@ use Mathematicator\Tokenizer\Tokenizer;
 
 final class TreeController extends BaseController
 {
+	private Tokenizer $tokenizer;
 
-	/**
-	 * @var Tokenizer
-	 * @inject
-	 */
-	public $tokenizer;
+
+	public function __construct(Tokenizer $tokenizer)
+	{
+		$this->tokenizer = $tokenizer;
+	}
 
 
 	public function actionDefault(): void
 	{
-		preg_match('/^(?:strom|tree)\s+(.+)$/', $this->getQuery(), $parser);
+		if (!preg_match('/^(?:strom|tree)\s+(.+)$/', $this->getQuery(), $parser)) {
+			throw new \LogicException('Invalid query.');
+		}
 
-		$tokens = $this->tokenizer->tokenize($parser[1]);
+		$tokens = $this->tokenizer->tokenize($parser[1] ?? '');
 		$objects = $this->tokenizer->tokensToObject($tokens);
 
 		$this->setInterpret(Box::TYPE_LATEX, $this->tokenizer->tokensToLatex($objects));

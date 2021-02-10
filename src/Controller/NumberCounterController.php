@@ -33,33 +33,28 @@ use Nette\Utils\Validators;
 
 final class NumberCounterController extends BaseController
 {
+	private Tokenizer $tokenizer;
 
-	/**
-	 * @var Tokenizer
-	 * @inject
-	 */
-	public $tokenizer;
+	private Calculator $calculator;
 
-	/**
-	 * @var Calculator
-	 * @inject
-	 */
-	public $calculator;
+	private NumberHelper $number;
 
-	/**
-	 * @var NumberHelper
-	 * @inject
-	 */
-	public $number;
+	private MathFunctionRenderer $mathFunctionRenderer;
 
-	/**
-	 * @var MathFunctionRenderer
-	 * @inject
-	 */
-	public $mathFunctionRenderer;
+	private bool $haveResult = false;
 
-	/** @var bool */
-	private $haveResult = false;
+
+	public function __construct(
+		Tokenizer $tokenizer,
+		Calculator $calculator,
+		NumberHelper $number,
+		MathFunctionRenderer $mathFunctionRenderer
+	) {
+		$this->tokenizer = $tokenizer;
+		$this->calculator = $calculator;
+		$this->number = $number;
+		$this->mathFunctionRenderer = $mathFunctionRenderer;
+	}
 
 
 	public function actionDefault(): void
@@ -167,8 +162,6 @@ final class NumberCounterController extends BaseController
 	 * Bridge for define types of possible exceptions.
 	 *
 	 * @param IToken[] $tokens
-	 * @param int $basicTtl
-	 * @return CalculatorResult
 	 * @throws MathematicatorException|DivisionByZeroException|UndefinedOperationException|FunctionDoesNotExistsException|MathErrorException
 	 */
 	private function calculate(array $tokens, int $basicTtl = 3): CalculatorResult
@@ -195,10 +188,8 @@ final class NumberCounterController extends BaseController
 	private function actionSimpleProblem(array $tokens): void
 	{
 		$buffer = '';
-
 		foreach ($tokens as $token) {
 			$buffer .= '<div style="border:1px solid #aaa;float:left;min-height:70px;margin:4px;padding:4px">';
-
 			if ($token instanceof NumberToken) {
 				$int = $token->getNumber()->toBigInteger();
 				if ($int->isGreaterThanOrEqualTo(0)) {
@@ -283,18 +274,14 @@ final class NumberCounterController extends BaseController
 
 
 	/**
-	 * @param IToken $tokenA
-	 * @param IToken $tokenB
-	 * @param ComparatorToken $comparator
 	 * @param Step[] $steps
-	 * @return bool
 	 */
 	private function actionBoolean(IToken $tokenA, IToken $tokenB, ComparatorToken $comparator, array $steps): bool
 	{
 		$numberA = $tokenA->getToken();
 		$numberB = $tokenB->getToken();
 
-		$isTrue = function (IToken $a, IToken $b, ComparatorToken $comparator) {
+		$isTrue = static function (IToken $a, IToken $b, ComparatorToken $comparator) {
 			$numberA = $a->getToken();
 			$numberB = $b->getToken();
 
@@ -347,7 +334,6 @@ final class NumberCounterController extends BaseController
 		}
 
 		$overlap = '';
-
 		if (Validators::isNumeric($numberA) && Validators::isNumeric($numberB)) {
 			for ($i = 0; isset($numberA[$i], $numberB[$i]); $i++) {
 				if ($numberA[$i] === $numberB[$i]) {
@@ -389,7 +375,6 @@ final class NumberCounterController extends BaseController
 		$stepsShare = $calculatorShareResult->getSteps();
 
 		/** @var NumberToken[] $calculatorShare */
-
 		if ($calculatorShare[0] instanceof NumberToken) {
 			$this->addBox(Box::TYPE_LATEX)
 				->setTitle('Podíl řešení')
@@ -403,7 +388,6 @@ final class NumberCounterController extends BaseController
 
 
 	/**
-	 * @param IToken $token
 	 * @param Step[] $steps
 	 */
 	private function renderResultToken(IToken $token, array $steps = []): void
@@ -480,14 +464,12 @@ final class NumberCounterController extends BaseController
 
 	/**
 	 * @param IToken[] $tokens
-	 * @return bool
 	 */
 	private function isSimpleProblem(array $tokens): bool
 	{
 		if (($tokensCount = \count($tokens)) < 3 || $tokensCount > 12) {
 			return false;
 		}
-
 		foreach ($tokens as $token) {
 			if (!(
 				(
@@ -509,7 +491,6 @@ final class NumberCounterController extends BaseController
 
 	/**
 	 * @param IToken[] $tokens
-	 * @return bool
 	 */
 	private function isAddNumbers(array $tokens): bool
 	{
@@ -533,13 +514,11 @@ final class NumberCounterController extends BaseController
 
 
 	/**
-	 * @param int $factorial
 	 * @return Step[]
 	 */
 	private function getStepsFactorialTrailingZeros(int $factorial): array
 	{
 		$return = [];
-
 		$return[] = new Step(
 			'Výpočet počtu nul na konci pro faktoriál ' . $factorial . '!',
 			'\begin{aligned} f(n) &= \sum_{i=1}^k \left\lfloor{\frac{n}{5^i}}\right\rfloor = \left\lfloor{\frac{n}{5}}\right\rfloor+\left\lfloor{\frac{n}{5^2}}\right\rfloor+\left\lfloor{\frac{n}{5^3}}\right\rfloor+\dots+\left\lfloor{\frac{n}{5^k}}\right\rfloor \end{aligned}',

@@ -15,19 +15,14 @@ use Mathematicator\Statistics\StatisticsManager;
 use Mathematicator\Tokenizer\Token\IToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Tokenizer;
-use Nette\Utils\Strings;
 
 final class SequenceController extends BaseController
 {
+	private StatisticsManager $statisticManager;
 
-	/** @var StatisticsManager */
-	private $statisticManager;
+	private Tokenizer $tokenizer;
 
-	/** @var Tokenizer */
-	private $tokenizer;
-
-	/** @var AddNumbers */
-	private $addNumbers;
+	private AddNumbers $addNumbers;
 
 
 	public function __construct(StatisticsManager $statisticManager, Tokenizer $tokenizer, AddNumbers $addNumbers)
@@ -45,17 +40,13 @@ final class SequenceController extends BaseController
 		);
 
 		$numberLatex = '';
-		$numbers = [];
 		$numberTokens = [];
 		$integers = [];
 		$allIntegers = true;
-
 		foreach ($objects as $object) {
 			if ($object instanceof NumberToken) {
 				$numberTokens[] = $object;
-				$numbers[] = $object->getNumber();
 				$numberLatex .= ($numberLatex ? ';\ ' : '') . $object->getNumber();
-
 				if ($object->getNumber()->isInteger()) {
 					$integers[] = (string) $object->getNumber()->toBigInteger();
 				} else {
@@ -119,7 +110,7 @@ final class SequenceController extends BaseController
 				->setTitle('Součet')
 				->setText(
 					'\\sum\ \{ '
-					. (Strings::length($numberLatexSum) < 64
+					. (mb_strlen($numberLatexSum) < 64
 						? $numberLatexSum
 						: '\ \\dotsb\ '
 					)
@@ -174,7 +165,7 @@ final class SequenceController extends BaseController
 				$sequencesBuffer .= '</div>';
 			}
 
-			if ($example && Strings::contains($example, '   ')) {
+			if ($example && str_contains($example, '   ')) {
 				$sequencesBuffer .= '<div class="p-2 mt-2" style="border:1px solid #aaa">'
 					. $this->formatBr($sequence, $example)
 					. '</div>';
@@ -205,7 +196,7 @@ final class SequenceController extends BaseController
 		$lines = 1;
 
 		foreach (explode("\n", $this->formatLinks(htmlspecialchars($data))) as $line) {
-			if (Strings::contains($line, '   ')) {
+			if (str_contains($line, '   ')) {
 				$return .= ($lastPre ? '' : '<pre class="p-2 my-2" style="border:1px solid #aaa">') . $line . "\n";
 				$lastPre = true;
 			} else {

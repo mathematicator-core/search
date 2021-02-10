@@ -17,7 +17,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.2",
+		"php": "^8.0",
 		"janbarasek/php-moon-phase": "^2.0",
 		"martindilling/sunny": "^0.5.4",
 		"mathematicator-core/calculator": "^2.0",
@@ -33,13 +33,14 @@
 		"symfony/yaml": "^5.0"
 	},
 	"require-dev": {
-		"brainmaestro/composer-git-hooks": "dev-master",
-		"nette/tester": "^2.3",
-		"symplify/easy-coding-standard": "^7.2",
 		"phpstan/phpstan": "^0.12.74",
+		"tracy/tracy": "^2.8",
 		"phpstan/phpstan-nette": "^0.12.14",
 		"spaze/phpstan-disallowed-calls": "^1.1",
-		"roave/security-advisories": "dev-master"
+		"roave/security-advisories": "dev-master",
+		"jetbrains/phpstorm-attributes": "^1.0",
+		"brainmaestro/composer-git-hooks": "dev-master",
+		"nette/tester": "^2.3"
 	},
 	"suggest": {
 		"tracy/tracy": "(^2.7) For advance debugging"

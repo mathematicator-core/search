@@ -5,33 +5,17 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Entity;
 
 
-use Nette\SmartObject;
-
-/**
- * @property string $name
- * @property string $link
- * @property string $thumbnail
- * @property string $description
- * @property float $score
- */
 class VideoResult
 {
-	use SmartObject;
+	private string $name;
 
-	/** @var string */
-	private $name;
+	private string $link;
 
-	/** @var string */
-	private $link;
+	private string $thumbnail;
 
-	/** @var string */
-	private $thumbnail;
+	private string $description;
 
-	/** @var string */
-	private $description;
-
-	/** @var float */
-	private $score = 0;
+	private float $score = 0;
 
 
 	public function getLink(): string

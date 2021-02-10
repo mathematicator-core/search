@@ -6,41 +6,23 @@ namespace Mathematicator\Search\Entity;
 
 
 use Mathematicator\Engine\Entity\Box;
-use Nette\SmartObject;
 
-/**
- * @property float $time
- * @property string $query
- * @property int $length
- * @property int $userRequests
- * @property Box $interpret
- * @property string $matchedRoute
- * @property Box[] $boxes
- */
 final class Result
 {
-	use SmartObject;
+	private float $time;
 
-	/** @var float */
-	private $time;
+	private string $query;
 
-	/** @var string */
-	private $query;
+	private int $length = 0;
 
-	/** @var int */
-	private $length = 0;
+	private int $userRequests = 0;
 
-	/** @var int */
-	private $userRequests = 0;
+	private ?Box $interpret = null;
 
-	/** @var Box */
-	private $interpret;
-
-	/** @var string */
-	private $matchedRoute;
+	private string $matchedRoute;
 
 	/** @var Box[] */
-	private $boxes;
+	private array $boxes = [];
 
 
 	public function getQuery(): string
@@ -124,7 +106,6 @@ final class Result
 
 	/**
 	 * @param Box[] $boxes
-	 * @return Result
 	 */
 	public function setBoxes(array $boxes): self
 	{

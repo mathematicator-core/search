@@ -27,12 +27,9 @@ use Mathematicator\Search\Entity\Result;
 
 final class Search
 {
+	private Engine $engine;
 
-	/** @var Engine */
-	private $engine;
-
-	/** @var TranslatorHelper */
-	private $translatorHelper;
+	private TranslatorHelper $translatorHelper;
 
 
 	public function __construct(Engine $engine, Router $router, TranslatorHelper $translatorHelper)
@@ -70,7 +67,7 @@ final class Search
 	 * @return EngineResult|EngineResult[]
 	 * @throws NoResultsException
 	 */
-	public function search(string $query, bool $rewriteExceptionToResult = false)
+	public function search(string $query, bool $rewriteExceptionToResult = false): EngineResult|array
 	{
 		try {
 			return (static function (EngineResult $result) {

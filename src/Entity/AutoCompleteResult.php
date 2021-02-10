@@ -5,18 +5,12 @@ declare(strict_types=1);
 namespace Mathematicator\Search\Entity;
 
 
-use Nette\SmartObject;
-
-/**
- * @property Result $result
- * @property VideoResult[] $videos
- */
 class AutoCompleteResult
 {
-	use SmartObject;
+	private Result $result;
 
-	/** @var Result */
-	private $result;
+	/** @var VideoResult[] */
+	private array $videos = [];
 
 
 	public function getResult(): Result
@@ -44,7 +38,6 @@ class AutoCompleteResult
 
 	/**
 	 * @param VideoResult[] $videos
-	 * @return self
 	 */
 	public function setVideos(array $videos): self
 	{

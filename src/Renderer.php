@@ -22,8 +22,7 @@ final class Renderer
 		Box::TYPE_TABLE => 'renderTable',
 	];
 
-	/** @var Translator */
-	private $translator;
+	private Translator $translator;
 
 
 	public function __construct(Translator $translator)
@@ -33,11 +32,9 @@ final class Renderer
 
 
 	/**
-	 * @param mixed $data
-	 * @return string
 	 * @throws MathematicatorException
 	 */
-	public function render($data, string $type): string
+	public function render(mixed $data, string $type): string
 	{
 		if (isset(self::SERVICES[$type])) {
 			return $this->{self::SERVICES[$type]}($data);
@@ -50,7 +47,7 @@ final class Renderer
 	public function renderTable(string $data): string
 	{
 		$return = '';
-		foreach (\json_decode($data) as $row) {
+		foreach (\json_decode($data, JSON_THROW_ON_ERROR) as $row) {
 			$return .= '<tr>';
 			foreach ($row as $column) {
 				if (Strings::startsWith($column, '!')) {
@@ -85,9 +82,8 @@ final class Renderer
 	public function renderTitle(string $title): string
 	{
 		$return = '';
-
 		foreach (explode('|', $title ?: $this->translator->translate('search.untitledBox')) as $item) {
-			$return .= $return !== '' && preg_match('/.+\:\s+.+/', $item = trim($item), $itemParser)
+			$return .= $return !== '' && preg_match('/.+:\s+.+/', $item = trim($item), $itemParser)
 				? '<span class="search-box-header-hightlight">' . $item . '</span>'
 				: '<span class="search-box-header-text">' . $item . '</span>';
 		}
@@ -161,12 +157,10 @@ final class Renderer
 	public function numberFormat(string $number, bool $isLookLeft = true): string
 	{
 		$return = null;
-
 		if (\strlen($number) <= 3) {
 			$return = $number;
 		} elseif (preg_match('/^-?\d+\z/', $number)) {
 			$return = '';
-
 			if ($isLookLeft === true) {
 				while (true) {
 					if (preg_match('/^(\d+)(\d{3})$/', $number, $temp)) {
