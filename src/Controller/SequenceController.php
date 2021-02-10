@@ -36,7 +36,7 @@ final class SequenceController extends BaseController
 	public function actionDefault(): void
 	{
 		$objects = $this->tokenizer->tokensToObject(
-			$this->tokenizer->tokenize($this->getQuery())
+			$this->tokenizer->tokenize($this->getQuery()),
 		);
 
 		$numberLatex = '';
@@ -115,7 +115,7 @@ final class SequenceController extends BaseController
 						: '\ \\dotsb\ '
 					)
 					. '\}\ =\ '
-					. $sum->getNumber()
+					. $sum->getNumber(),
 				)
 				->setSteps($sumSteps);
 		}
@@ -148,7 +148,7 @@ final class SequenceController extends BaseController
 					'<span style="background:rgba(253,245,206,1);border-radius:2px;padding:0 4px">'
 					. $integersString
 					. '</span>',
-					implode(', ', $sequence->getSequence())
+					implode(', ', $sequence->getSequence()),
 				) . ', ...';
 
 			if ($formula) {
@@ -180,7 +180,7 @@ final class SequenceController extends BaseController
 			$source = new Source(
 				'OEIS',
 				'https://oeis.org',
-				'On-line Encyklopedie celočíselných posloupností.'
+				'On-line Encyklopedie celočíselných posloupností.',
 			);
 			$source->setAuthors($sequenceAuthors);
 
@@ -220,8 +220,6 @@ final class SequenceController extends BaseController
 
 	private function formatLinks(string $data): string
 	{
-		return (string) preg_replace_callback('/\s(A\d{6})\s/', function (array $row): string {
-			return ' <a href="' . $this->linkToSearch($row[1]) . '">' . $row[1] . '</a> ';
-		}, $data);
+		return (string) preg_replace_callback('/\s(A\d{6})\s/', fn (array $row): string => ' <a href="' . $this->linkToSearch($row[1]) . '">' . $row[1] . '</a> ', $data);
 	}
 }

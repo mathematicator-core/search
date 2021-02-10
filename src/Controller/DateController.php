@@ -39,14 +39,14 @@ final class DateController extends BaseController
 			. ' ' . $date->format('H:i:s')
 			. '<div class="text-right text-secondary" style="font-size:10pt">'
 			. '(GMT+1) Informace pro Prahu, Česká republika'
-			. '</div>'
+			. '</div>',
 		);
 
 		$dates = $this->getDates((int) $date->format('Y'));
 
 		$this->renderCalendar($date, $dates);
 
-		if ($date->format('Y') < 3000) {
+		if ($date->format('Y') < 3_000) {
 			$this->sun($date);
 			$this->moon($date);
 		}
@@ -67,7 +67,7 @@ final class DateController extends BaseController
 			. implode('</th><th class="text-center" style="width:14.28%">', $weekdaysCzech)
 			. '</th></tr>';
 
-		foreach ($dates[(int) $date->format('m')] as $week => $days) {
+		foreach ($dates[(int) $date->format('m')] as $days) {
 			$buffer .= '<tr>';
 			foreach ($weekdays as $day) {
 				if (isset($days[$day]) && $days[$day] === $dayInt) {
@@ -86,7 +86,7 @@ final class DateController extends BaseController
 			->setTitle(
 				'Kalendář | Zobrazený měsíc: '
 				. Strings::firstUpper(self::$months[(int) $date->format('m')])
-				. ' ' . $date->format('Y')
+				. ' ' . $date->format('Y'),
 			)->setText($buffer);
 	}
 
@@ -115,7 +115,7 @@ final class DateController extends BaseController
 	private function sun(\DateTimeInterface $date): void
 	{
 		$day = new Sunny($date->format('Y-m-d H:i:s.u'), 'Europe/Prague');
-		$day->setLocation(50.0755381, 14.4378005); // Prague
+		$day->setLocation(50.0_755_381, 14.4_378_005); // Prague
 
 		$this->addBox(Box::TYPE_HTML)
 			->setTitle('Slunce | Vypočítáno pro: Praha [50.0755381, 14.4378005]')
@@ -128,7 +128,7 @@ final class DateController extends BaseController
 		$source = new Source(
 			'Konfigurace slunce',
 			'https://github.com/martindilling/Sunny',
-			'Otevřená knihovna pro práci s datem a časem.'
+			'Otevřená knihovna pro práci s datem a časem.',
 		);
 		$source->addAuthor('Martin Dilling-Hansen');
 
@@ -177,7 +177,7 @@ final class DateController extends BaseController
 		$source = new Source(
 			'Fáze měsíce',
 			'http://aa.usno.navy.mil/faq/docs/moon_phases.php',
-			'Informace o fázích měsíce a Keplerovy rovnice.'
+			'Informace o fázích měsíce a Keplerovy rovnice.',
 		);
 		$source->addAuthor('Antonio Cidadao');
 

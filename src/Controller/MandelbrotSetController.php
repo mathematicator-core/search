@@ -33,14 +33,14 @@ final class MandelbrotSetController extends BaseController
 				. 's komplexními čísly patřícími této množině a jejímu okolí. Mandelbrotova množina je jeden '
 				. 'z nejznámějších fraktálů, přesněji řečeno fraktálem je její okraj. K jejímu určení se používá '
 				. 'zobrazení, které každému komplexnímu číslu \(\displaystyle c\) přiřazuje určitou posloupnost '
-				. 'komplexních čísel \(\displaystyle z_{n}\). Tato posloupnost je určena rekurzivním předpisem.'
+				. 'komplexních čísel \(\displaystyle z_{n}\). Tato posloupnost je určena rekurzivním předpisem.',
 			);
 
 		$this->addBox(Box::TYPE_LATEX)
 			->setTitle('Rekurzivní předpis | Iterační pravidlo')
 			->setText(
 				'z_{n+1}\ =\ z^2_n\ +\ c' . "\n"
-				. 'z_0\ =\ 0'
+				. 'z_0\ =\ 0',
 			);
 
 		$config = $this->getDynamicConfiguration('mandelbrot-set')
@@ -59,8 +59,8 @@ final class MandelbrotSetController extends BaseController
 				(int) $config->getValue('deltaA', '2'),
 				(int) $config->getValue('deltaB', '2'),
 				700,
-				500
-			)
+				500,
+			),
 		);
 
 		$this->addBox(Box::TYPE_IMAGE)
@@ -70,16 +70,16 @@ final class MandelbrotSetController extends BaseController
 		$this->addSource(new Source(
 			'Generátor obrázků Mandelbrotovy množiny',
 			'https://github.com/mathematicator-core/mandelbrot-set',
-			'Veřejně dostupná opensource knihovna.'
+			'Veřejně dostupná opensource knihovna.',
 		));
 		$this->addSource(new Source(
 			'Pavol Hejný',
 			'https://www.pavolhejny.com/',
-			'Autor implementace grafického generátoru a konzultace s nasazením do vyhledávání.'
+			'Autor implementace grafického generátoru a konzultace s nasazením do vyhledávání.',
 		));
 		$this->addSource(new Source(
 			'Definice na Wikipedii',
-			'https://cs.wikipedia.org/wiki/Mandelbrotova_mno%C5%BEina'
+			'https://cs.wikipedia.org/wiki/Mandelbrotova_mno%C5%BEina',
 		));
 	}
 }

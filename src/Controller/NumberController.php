@@ -72,7 +72,7 @@ final class NumberController extends BaseController
 				Box::TYPE_LATEX,
 				$isRoman
 					? '\\text{' . Strings::upper($this->getQuery()) . '} = ' . $this->number->toLatex()
-					: (string) $this->number->toLatex()
+					: (string) $this->number->toLatex(),
 			);
 
 			$this->actionInteger();
@@ -83,7 +83,7 @@ final class NumberController extends BaseController
 				Box::TYPE_LATEX,
 				MathLatexToolkit::frac((string) $fraction->getNumerator(), (string) $fraction->getDenominator())
 				. ' ≈ '
-				. number_format($this->number->toFloat(), $this->getQueryEntity()->getDecimals(), '.', ' ')
+				. number_format($this->number->toFloat(), $this->getQueryEntity()->getDecimals(), '.', ' '),
 			);
 
 			$this->actionFloat();
@@ -95,7 +95,7 @@ final class NumberController extends BaseController
 	{
 		$int = $this->number->toBigInteger();
 
-		if ($int->isGreaterThanOrEqualTo(1750) && $int->isLessThanOrEqualTo(2300)) {
+		if ($int->isGreaterThanOrEqualTo(1_750) && $int->isLessThanOrEqualTo(2_300)) {
 			$this->actionYear((int) date('Y'), $int->toInt());
 		}
 		if ($int->isEqualTo(42)) { // Easter egg
@@ -103,7 +103,7 @@ final class NumberController extends BaseController
 				->setTitle('Ahoj, stopaři!')
 				->setText('Odpověď na Základní otázku života, Vesmíru a tak vůbec');
 		}
-		if ($int->isLessThanOrEqualTo(1000000)) {
+		if ($int->isLessThanOrEqualTo(1_000_000)) {
 			$this->numberSystem((string) $int);
 			$this->alternativeRewrite();
 		} else {
@@ -116,7 +116,7 @@ final class NumberController extends BaseController
 		if ($int->isGreaterThan(0)) {
 			$this->primeFactorization();
 		}
-		if ($int->isGreaterThan(0) && $int->isLessThanOrEqualTo(1000000)) {
+		if ($int->isGreaterThan(0) && $int->isLessThanOrEqualTo(1_000_000)) {
 			$this->divisors();
 		}
 		if ($int->isGreaterThan(0) && $int->isLessThanOrEqualTo(50)) {
@@ -131,7 +131,7 @@ final class NumberController extends BaseController
 
 		$this->setInterpret(
 			Box::TYPE_LATEX,
-			'\frac{' . $match['top'] . '}{' . $match['bottom'] . '}\ \simeq\ ???'
+			'\frac{' . $match['top'] . '}{' . $match['bottom'] . '}\ \simeq\ ???',
 		);
 
 		$step = new Step(
@@ -139,7 +139,7 @@ final class NumberController extends BaseController
 			null,
 			$this->translator->translate('search.divisionByZeroDesc', [
 				'number' => (int) $match['top'],
-			])
+			]),
 		);
 
 		$this->addBox(Box::TYPE_TEXT)
@@ -244,7 +244,7 @@ final class NumberController extends BaseController
 		$step = new Step(
 			$this->translator->translate('search.solution'),
 			$stepText,
-			$stepDescription
+			$stepDescription,
 		);
 
 		$this->addBox(Box::TYPE_TEXT)
@@ -292,7 +292,7 @@ final class NumberController extends BaseController
 				: 'Bylo před ' . $dateDiff . ' sekundami (' . DateTime::formatTimeAgo((int) $int) . ').'
 			)
 			. '</p>'
-			. ((int) date('Y', (int) $int) >= 2038
+			. ((int) date('Y', (int) $int) >= 2_038
 				? '<p class="text-secondary">Pozor: Po roce 2038 nemusí tento timestamp fungovat na 32-bitových počítačích, protože překračuje maximální hodnotu, kterou je možné uložit do 32-bitového integeru.</p>'
 				: '');
 
@@ -334,7 +334,7 @@ final class NumberController extends BaseController
 				->setTitle(
 					'Prvočíselný rozklad'
 					. ' | ' . Czech::inflection($items, ['člen', 'členy', 'členů'])
-					. ' | ' . Czech::inflection($primaries, ['prvočíslo', 'prvočísla', 'prvočísel'])
+					. ' | ' . Czech::inflection($primaries, ['prvočíslo', 'prvočísla', 'prvočísel']),
 				)
 				->setText($outputFactor)
 				->setTag('prime-factorization');
@@ -420,7 +420,7 @@ final class NumberController extends BaseController
 			->setText(
 				MathLatexToolkit::frac((string) $factor->getNumerator(), (string) $factor->getDenominator())
 				. ' ≈ '
-				. number_format($factor->toFloat(), $this->getQueryEntity()->getDecimals(), '.', ' ')
+				. number_format($factor->toFloat(), $this->getQueryEntity()->getDecimals(), '.', ' '),
 			);
 
 		if ($factor->getNumerator()->isGreaterThan($factor->getDenominator())) {
@@ -445,7 +445,7 @@ final class NumberController extends BaseController
 					$this->addBox(Box::TYPE_HTML)
 						->setTitle('Vizualizace | Rozměr: ' . $i . ' x ' . ($countNumbers / $i))
 						->setText(
-							$this->renderTable($int, $countNumbers / $i, $i)
+							$this->renderTable($int, $countNumbers / $i, $i),
 						);
 				}
 			}

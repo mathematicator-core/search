@@ -39,7 +39,7 @@ final class OEISController extends BaseController
 				'<a href="https://oeis.org/' . $this->getQuery() . '" target="_blank">'
 				. $this->getQuery()
 				. '</a>'
-				. '<br>On-line Encyklopedie celočíselných posloupností'
+				. '<br>On-line Encyklopedie celočíselných posloupností',
 			);
 
 		try {
@@ -71,7 +71,7 @@ final class OEISController extends BaseController
 			$source = new Source(
 				'OEIS',
 				'https://oeis.org/' . $sequence->getAId(),
-				'On-line Encyklopedie celočíselných posloupností.'
+				'On-line Encyklopedie celočíselných posloupností.',
 			);
 			$source->addAuthor($author);
 			$this->addSource($source);
@@ -116,8 +116,6 @@ final class OEISController extends BaseController
 
 	private function formatLinks(string $data): string
 	{
-		return (string) preg_replace_callback('/\s(A\d{6})\s/', function (array $row): string {
-			return ' <a href="' . $this->linkToSearch($row[1]) . '">' . $row[1] . '</a> ';
-		}, $data);
+		return (string) preg_replace_callback('/\s(A\d{6})\s/', fn (array $row): string => ' <a href="' . $this->linkToSearch($row[1]) . '">' . $row[1] . '</a> ', $data);
 	}
 }

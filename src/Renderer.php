@@ -67,7 +67,7 @@ final class Renderer
 
 								return (string) $row[0];
 							},
-							$column
+							$column,
 						)
 						. '</td>';
 				}
@@ -110,9 +110,7 @@ final class Renderer
 		foreach (explode("\n", $data) as $line) {
 			$return .= Validators::isNumeric($line)
 				? '<div>' . str_replace('\ ', '&nbsp;', $this->numberFormat($line)) . '</div>'
-				: '<div>\(' . preg_replace_callback('/(-?\d*[.]?\d+)/', function (array $number) {
-					return $this->numberFormat($number[1]);
-				}, $line) . '\)</div>';
+				: '<div>\(' . preg_replace_callback('/(-?\d*[.]?\d+)/', fn (array $number) => $this->numberFormat($number[1]), $line) . '\)</div>';
 		}
 
 		return $return;
@@ -187,7 +185,7 @@ final class Renderer
 				'/\.0*$/',
 				'',
 				$this->numberFormat($parser['left'])
-				. '.' . $this->numberFormat($parser['right'], false)
+				. '.' . $this->numberFormat($parser['right'], false),
 			);
 		} else {
 			$return = ($formattedNumber = (string) preg_replace('/\.0+$/', '', number_format((float) $number, 64, '.', ' '))) === 'inf'

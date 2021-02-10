@@ -27,7 +27,6 @@ use Mathematicator\Tokenizer\Token\IToken;
 use Mathematicator\Tokenizer\Token\NumberToken;
 use Mathematicator\Tokenizer\Token\OperatorToken;
 use Mathematicator\Tokenizer\Tokenizer;
-use Mathematicator\Vizualizator\MathFunctionRenderer;
 use Nette\Utils\Strings;
 use Nette\Utils\Validators;
 
@@ -39,21 +38,17 @@ final class NumberCounterController extends BaseController
 
 	private NumberHelper $number;
 
-	private MathFunctionRenderer $mathFunctionRenderer;
-
 	private bool $haveResult = false;
 
 
 	public function __construct(
 		Tokenizer $tokenizer,
 		Calculator $calculator,
-		NumberHelper $number,
-		MathFunctionRenderer $mathFunctionRenderer
+		NumberHelper $number
 	) {
 		$this->tokenizer = $tokenizer;
 		$this->calculator = $calculator;
 		$this->number = $number;
-		$this->mathFunctionRenderer = $mathFunctionRenderer;
 	}
 
 
@@ -116,7 +111,7 @@ final class NumberCounterController extends BaseController
 				->setTitle($this->translator->translate('solution'))
 				->setText(
 					'Tato úloha nemá řešení, protože provádíte nepovolenou matematickou operaci.'
-					. "\n\n" . 'Detaily: ' . $e->getMessage()
+					. "\n\n" . 'Detaily: ' . $e->getMessage(),
 				);
 
 			$this->haveResult = true;
@@ -232,8 +227,8 @@ final class NumberCounterController extends BaseController
 				$this->number->getAddStepAsHtml(
 					(string) $numberToken->getNumber()->getInput(),
 					(string) $numberToken->getNumber()->getInput(),
-					true
-				)
+					true,
+				),
 			);
 
 		$this->haveResult = true;
@@ -352,13 +347,13 @@ final class NumberCounterController extends BaseController
 			$this->addBox(Box::TYPE_LATEX)
 				->setTitle(
 					'Překryv řešení | Přesnost: '
-					. Czech::inflection(\strlen($overlap), ['místo', 'místa', 'míst'])
+					. Czech::inflection(\strlen($overlap), ['místo', 'místa', 'míst']),
 				)
 				->setText($overlap);
 		}
 
 		$calculatorResult = $this->calculator->calculateString(
-			new Query($numberA . '-' . $numberB, $numberA . '-' . $numberB)
+			new Query($numberA . '-' . $numberB, $numberA . '-' . $numberB),
 		);
 		$calculator = $calculatorResult->getResultTokens();
 		$steps = $calculatorResult->getSteps();
@@ -369,7 +364,7 @@ final class NumberCounterController extends BaseController
 			->setSteps($steps);
 
 		$calculatorShareResult = $this->calculator->calculateString(
-			new Query($numberA . '-' . $numberB, $numberA . '-' . $numberB)
+			new Query($numberA . '-' . $numberB, $numberA . '-' . $numberB),
 		);
 		$calculatorShare = $calculatorShareResult->getResultTokens();
 		$stepsShare = $calculatorShareResult->getSteps();
@@ -436,7 +431,7 @@ final class NumberCounterController extends BaseController
 								new Step(
 									'Manuální výpočet',
 									null,
-									'Pro tuto úlohu neznáme elegantní způsob, jak zjistit počet nul na konci, proto je potřeba celkový počet spočítat ručně přímo z výsledku.'
+									'Pro tuto úlohu neznáme elegantní způsob, jak zjistit počet nul na konci, proto je potřeba celkový počet spočítat ručně přímo z výsledku.',
 								),
 							]);
 						}
@@ -522,7 +517,7 @@ final class NumberCounterController extends BaseController
 		$return[] = new Step(
 			'Výpočet počtu nul na konci pro faktoriál ' . $factorial . '!',
 			'\begin{aligned} f(n) &= \sum_{i=1}^k \left\lfloor{\frac{n}{5^i}}\right\rfloor = \left\lfloor{\frac{n}{5}}\right\rfloor+\left\lfloor{\frac{n}{5^2}}\right\rfloor+\left\lfloor{\frac{n}{5^3}}\right\rfloor+\dots+\left\lfloor{\frac{n}{5^k}}\right\rfloor \end{aligned}',
-			'Počet nul, kterými končí faktoriál libovolného celého čísla \(n\) lze vypočítat součtem řady zlomků. Řadu je potřeba sčítat až do hodnoty \(k=\left\lfloor \log_5{n} \right\rfloor\).'
+			'Počet nul, kterými končí faktoriál libovolného celého čísla \(n\) lze vypočítat součtem řady zlomků. Řadu je potřeba sčítat až do hodnoty \(k=\left\lfloor \log_5{n} \right\rfloor\).',
 		);
 
 		$fractions = '';
@@ -538,28 +533,15 @@ final class NumberCounterController extends BaseController
 		$return[] = new Step(
 			'Sestavíme řadu zlomků',
 			'\begin{aligned} f(n) &= \sum_{i=1}^k \left\lfloor{\frac{n}{5^i}}\right\rfloor = ' . $fractions . ' \end{aligned}',
-			'Řešíme úlohu pro \(n = ' . $factorial . '\). U zlomků si všimněte závorky, která značí zaokrouhlení směrem dolů.'
+			'Řešíme úlohu pro \(n = ' . $factorial . '\). U zlomků si všimněte závorky, která značí zaokrouhlení směrem dolů.',
 		);
 
 		$return[] = new Step(
 			'Vypočítáme hodnotu zlomků a sečteme',
 			$fractionValues . ' = ' . $count,
-			null
+			null,
 		);
 
 		return $return;
-	}
-
-
-	/**
-	 * @param IToken[] $tokens
-	 */
-	private function plotFunction(array $tokens): void
-	{
-		$image = $this->mathFunctionRenderer->plot($tokens);
-
-		$this->addBox(Box::TYPE_IMAGE)
-			->setTitle('Graf funkce')
-			->setText($image);
 	}
 }
