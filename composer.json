@@ -25,7 +25,7 @@
 		"mathematicator-core/integral-solver": "^2.0",
 		"mathematicator-core/mandelbrot-set": "^2.0",
 		"mathematicator-core/numbers": "^2.1",
-		"mathematicator-core/statistic": "^2.0",
+		"mathematicator-core/statistic": "^2.0 || ^3.0",
 		"mathematicator-core/tokenizer": "^2.1",
 		"mathematicator-core/vizualizator": "^2.0",
 		"nette/utils": "^3.0",
