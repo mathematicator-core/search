@@ -27,7 +27,7 @@
 		"mathematicator-core/numbers": "^2.1",
 		"mathematicator-core/statistic": "^2.0 || ^3.0",
 		"mathematicator-core/tokenizer": "^2.1",
-		"mathematicator-core/vizualizator": "^2.0",
+		"mathematicator-core/vizualizator": "^2.0 || ^3.0",
 		"nette/utils": "^3.0",
 		"symfony/translation": "^4.0 || ^5.0",
 		"symfony/yaml": "^5.0"
